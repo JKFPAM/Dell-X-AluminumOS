@@ -6,12 +6,15 @@ type TrackingEventName =
   | 'section_view'
   | 'presentation_exit'
 
+import { getVisitorSessionId } from './visitorSession'
+
 export const trackPresentationEvent = (eventName: TrackingEventName, payload: EventPayload = {}) => {
   if (typeof window === 'undefined') {
     return
   }
 
   const body = JSON.stringify({
+    sessionId: getVisitorSessionId(),
     eventName,
     payload,
     timestamp: new Date().toISOString(),

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import PartnerLockup from '../components/PartnerLockup'
 import { INTRO_HERO_SYNC_EVENT, type IntroHeroSyncDetail } from '../lib/heroSync'
+import { getVisitorSessionId } from '../lib/visitorSession'
 import './GateScreen.css'
 
 type GateScreenProps = {
@@ -49,6 +50,7 @@ function GateScreen({ isUnlocking, onUnlocked }: GateScreenProps) {
         body: JSON.stringify({
           email: trimmedEmail,
           passcode,
+          sessionId: getVisitorSessionId(),
         }),
       })
 

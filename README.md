@@ -1,73 +1,150 @@
-# React + TypeScript + Vite
+# ALOS Secure Presentation Deck
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-screen, gated presentation experience built with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+Visitors must submit an email and passcode before viewing the presentation. Once unlocked, the deck supports smooth section-to-section navigation, URL hash deep-linking, keyboard controls, and lightweight analytics events.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Highlights
 
-## React Compiler
+- Email + passcode gate before content access
+- Local unlock session persistence via `localStorage`
+- Full-screen section deck with:
+  - scroll snapping behavior
+  - keyboard navigation (`ArrowUp/Down/Left/Right`)
+  - hash navigation (`#01`, `#02`, ...)
+  - reduced-motion support
+- Client-side tracking hooks for unlock, load, section views, and exit
+- `/legal` route for legal/disclosure content
+- API handlers for unlock validation and event intake
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- React 19
+- TypeScript 5
+- Vite 7
+- Vercel serverless API routes (`/api/*`)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Project Structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+.
+├── api/                  # Serverless API handlers
+│   ├── unlock.js         # Email + passcode validation
+│   └── track.js          # Tracking event intake endpoint
+├── public/               # Static assets and media
+├── src/
+│   ├── gate/             # Gate UI + unlock flow
+│   ├── legal/            # Legal page
+│   ├── sections/         # Presentation sections
+│   ├── lib/              # Tracking + hero sync helpers
+│   └── PresentationDeck.tsx
+├── vite.config.ts        # Vite config + local API middleware
+└── vercel.json           # Vercel build/runtime config
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 1. Install dependencies
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
+
+### 2. Configure environment
+
+Create a `.env.local` file in the project root:
+
+```bash
+PASSCODE=your-secure-passcode
+AIRTABLE_API_TOKEN=pat_xxxxxxxxxxxxxxxxx
+AIRTABLE_BASE_ID=appXXXXXXXXXXXXXX
+AIRTABLE_VISITORS_TABLE=Visitors
+```
+
+`PASSCODE` is required. Airtable variables are optional but required for visitor logging persistence.
+
+### 3. Run locally
+
+```bash
+npm run dev
+```
+
+Open the local URL printed by Vite.
+
+## Available Scripts
+
+- `npm run dev` - Start Vite dev server
+- `npm run build` - Type-check and build production assets
+- `npm run preview` - Preview production build locally
+- `npm run lint` - Run ESLint
+
+## API Endpoints
+
+### `POST /api/unlock`
+
+Validates email format and passcode.
+
+Request body:
+
+```json
+{
+  "email": "viewer@example.com",
+  "passcode": "your-passcode",
+  "sessionId": "browser-session-id"
+}
+```
+
+Responses:
+
+- `200` success
+- `400` invalid email
+- `401` invalid passcode
+- `500` server not configured with `PASSCODE`
+
+### `POST /api/track`
+
+Accepts presentation telemetry events and returns `202`.
+
+Example payload:
+
+```json
+{
+  "sessionId": "browser-session-id",
+  "eventName": "section_view",
+  "payload": {
+    "sectionIndex": 2,
+    "totalSections": 4
+  },
+  "timestamp": "2026-02-21T00:00:00.000Z"
+}
+```
+
+## Tracked Client Events
+
+- `presentation_unlock`
+- `presentation_load`
+- `section_view`
+- `presentation_exit`
+
+## Deployment Notes
+
+- Production deploy target is Vercel.
+- Set these Vercel environment variables:
+  - `PASSCODE`
+  - `AIRTABLE_API_TOKEN`
+  - `AIRTABLE_BASE_ID`
+  - `AIRTABLE_VISITORS_TABLE` (optional, defaults to `Visitors`)
+- Ensure your Airtable personal access token has write access to the selected base/table.
+
+## Airtable Table Setup
+
+Create a table named `Visitors` (or set your own name in `AIRTABLE_VISITORS_TABLE`) and add these fields:
+
+- `Session ID` (single line text)
+- `Email` (email)
+- `Browser` (single line text)
+- `Country` (single line text)
+- `Date` (single line text)
+- `Time` (single line text)
+
+If Airtable is not configured, the app still works and API endpoints continue returning success responses.
