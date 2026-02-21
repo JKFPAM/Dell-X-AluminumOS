@@ -15,7 +15,7 @@ const sanitizeFields = (fields) =>
     Object.entries(fields).filter(([, value]) => value !== undefined && value !== null && value !== ''),
   )
 
-const OPTIONAL_RETURN_FIELDS = ['Visit Count', 'Returning']
+const OPTIONAL_RETURN_FIELDS = ['Visit Count', 'Returning', 'Reached Last Section']
 
 const getEmail = (payload) => {
   const raw = payload?.email
@@ -119,6 +119,39 @@ const getVisitCount = (fields) => {
   return typeof raw === 'number' && Number.isFinite(raw) && raw >= 0 ? raw : 0
 }
 
+const getNumber = (value) => {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value
+  }
+
+  if (typeof value === 'string' && value.trim()) {
+    const parsed = Number(value)
+    return Number.isFinite(parsed) ? parsed : null
+  }
+
+  return null
+}
+
+const didReachLastSectionOnEvent = (eventName, payload) => {
+  if (eventName !== 'section_view') {
+    return false
+  }
+
+  const sectionIndex = getNumber(payload?.sectionIndex)
+  const totalSections = getNumber(payload?.totalSections)
+
+  if (!sectionIndex || !totalSections || totalSections <= 0) {
+    return false
+  }
+
+  return sectionIndex >= totalSections
+}
+
+const getReachedLastSection = (existingFields, eventName, payload) => {
+  const alreadyReached = existingFields?.['Reached Last Section'] === true
+  return alreadyReached || didReachLastSectionOnEvent(eventName, payload)
+}
+
 const writeWithOptionalFallback = async (writeFn, fields) => {
   try {
     await writeFn(fields)
@@ -174,6 +207,7 @@ export const writeVisitorEvent = async ({
   const existingRecord = await findRecordBySessionId(visitorsTable, normalizedSessionId)
   const existingVisitCount = getVisitCount(existingRecord?.fields)
   const nextVisitCount = isPresentationLoad ? existingVisitCount + 1 : existingVisitCount
+  const reachedLastSection = getReachedLastSection(existingRecord?.fields, eventName, payload)
 
   const fields = sanitizeFields({
     Email: email,
@@ -183,6 +217,7 @@ export const writeVisitorEvent = async ({
     Time: time,
     'Visit Count': nextVisitCount > 0 ? nextVisitCount : undefined,
     Returning: nextVisitCount > 1,
+    'Reached Last Section': reachedLastSection,
   })
 
   if (existingRecord?.id) {

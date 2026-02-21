@@ -1,2 +1,2 @@
-Session ID,Email,Browser,Country,Date,Time
-sample-session-id,viewer@example.com,Chrome,United Kingdom,2026-02-21,3:57 PM
+Session ID,Email,Browser,Country,Date,Time,Visit Count,Returning,Reached Last Section
+sample-session-id,viewer@example.com,Chrome,United Kingdom,2026-02-21,3:57 PM,2,TRUE,FALSE

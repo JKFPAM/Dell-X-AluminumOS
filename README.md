@@ -146,5 +146,8 @@ Create a table named `Visitors` (or set your own name in `AIRTABLE_VISITORS_TABL
 - `Country` (single line text)
 - `Date` (single line text)
 - `Time` (single line text)
+- `Visit Count` (number)
+- `Returning` (checkbox)
+- `Reached Last Section` (checkbox)
 
 If Airtable is not configured, the app still works and API endpoints continue returning success responses.
