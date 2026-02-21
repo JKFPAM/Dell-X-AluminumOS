@@ -15,6 +15,8 @@ const sanitizeFields = (fields) =>
     Object.entries(fields).filter(([, value]) => value !== undefined && value !== null && value !== ''),
   )
 
+const OPTIONAL_RETURN_FIELDS = ['Visit Count', 'Returning']
+
 const getEmail = (payload) => {
   const raw = payload?.email
 
@@ -78,7 +80,7 @@ const requestAirtable = async (path, init) => {
   throw new Error(`Airtable request failed (${response.status}): ${errorText}`)
 }
 
-const findRecordIdBySessionId = async (tableName, sessionId) => {
+const findRecordBySessionId = async (tableName, sessionId) => {
   const formula = `{Session ID}='${escapeFormulaValue(sessionId)}'`
   const params = new URLSearchParams({
     maxRecords: '1',
@@ -89,7 +91,7 @@ const findRecordIdBySessionId = async (tableName, sessionId) => {
     method: 'GET',
   })
 
-  return data.records?.[0]?.id || null
+  return data.records?.[0] ?? null
 }
 
 const createRecord = async (tableName, fields) => {
@@ -112,12 +114,41 @@ const updateRecord = async (tableName, recordId, fields) => {
   })
 }
 
+const getVisitCount = (fields) => {
+  const raw = fields?.['Visit Count']
+  return typeof raw === 'number' && Number.isFinite(raw) && raw >= 0 ? raw : 0
+}
+
+const writeWithOptionalFallback = async (writeFn, fields) => {
+  try {
+    await writeFn(fields)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    const normalizedMessage = message.toLowerCase()
+
+    if (
+      !normalizedMessage.includes('unknown field') &&
+      !normalizedMessage.includes('unknown_field_name')
+    ) {
+      throw error
+    }
+
+    const fallbackFields = { ...fields }
+    OPTIONAL_RETURN_FIELDS.forEach((fieldName) => {
+      delete fallbackFields[fieldName]
+    })
+
+    await writeFn(fallbackFields)
+  }
+}
+
 export const isAirtableConfigured = () => {
   const { token, baseId, visitorsTable } = getConfig()
   return Boolean(token && baseId && visitorsTable)
 }
 
 export const writeVisitorEvent = async ({
+  eventName,
   timestamp,
   payload = {},
   sessionId = null,
@@ -137,6 +168,12 @@ export const writeVisitorEvent = async ({
   const country = getText(requestMeta.country)
   const email = getEmail(payload)
   const { date, time } = getDateAndTime(timestamp)
+  const isPresentationLoad = eventName === 'presentation_load'
+
+  const { visitorsTable } = getConfig()
+  const existingRecord = await findRecordBySessionId(visitorsTable, normalizedSessionId)
+  const existingVisitCount = getVisitCount(existingRecord?.fields)
+  const nextVisitCount = isPresentationLoad ? existingVisitCount + 1 : existingVisitCount
 
   const fields = sanitizeFields({
     Email: email,
@@ -144,20 +181,27 @@ export const writeVisitorEvent = async ({
     Country: country,
     Date: date,
     Time: time,
+    'Visit Count': nextVisitCount > 0 ? nextVisitCount : undefined,
+    Returning: nextVisitCount > 1,
   })
 
-  const { visitorsTable } = getConfig()
-  const existingRecordId = await findRecordIdBySessionId(visitorsTable, normalizedSessionId)
-
-  if (existingRecordId) {
-    await updateRecord(visitorsTable, existingRecordId, fields)
+  if (existingRecord?.id) {
+    await writeWithOptionalFallback(
+      (nextFields) => updateRecord(visitorsTable, existingRecord.id, nextFields),
+      fields,
+    )
     return true
   }
 
-  await createRecord(visitorsTable, {
+  const createFields = {
     'Session ID': normalizedSessionId,
     ...fields,
-  })
+  }
+
+  await writeWithOptionalFallback(
+    (nextFields) => createRecord(visitorsTable, nextFields),
+    createFields,
+  )
 
   return true
 }
