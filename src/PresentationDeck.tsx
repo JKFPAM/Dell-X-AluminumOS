@@ -1,0 +1,267 @@
+import { useEffect, useRef } from 'react'
+import { presentationSections } from './sections'
+
+const forwardKeys = new Set(['ArrowDown', 'ArrowRight'])
+const backwardKeys = new Set(['ArrowUp', 'ArrowLeft'])
+
+const getSectionHash = (index: number) => `#${String(index + 1).padStart(2, '0')}`
+
+type PresentationDeckProps = {
+  onSectionChange?: (index: number, totalSections: number) => void
+}
+
+function PresentationDeck({ onSectionChange }: PresentationDeckProps) {
+  const appRef = useRef<HTMLElement | null>(null)
+  const sectionRefs = useRef<Array<HTMLDivElement | null>>([])
+
+  useEffect(() => {
+    const container = appRef.current
+
+    if (!container) {
+      return
+    }
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let scrollRaf = 0
+    let initRaf = 0
+    let activeSectionIndex = -1
+    let hasInitializedHash = false
+
+    const getSections = () => sectionRefs.current.filter(Boolean) as HTMLDivElement[]
+
+    const parseSectionHash = (hashValue: string) => {
+      const match = hashValue.match(/^#?(\d{1,2})$/)
+
+      if (!match) {
+        return null
+      }
+
+      const number = Number(match[1])
+
+      if (!Number.isInteger(number) || number < 1) {
+        return null
+      }
+
+      const index = number - 1
+      return index < getSections().length ? index : null
+    }
+
+    const syncHashToIndex = (index: number) => {
+      const nextHash = getSectionHash(index)
+
+      if (window.location.hash === nextHash) {
+        return
+      }
+
+      window.history.replaceState(
+        null,
+        '',
+        `${window.location.pathname}${window.location.search}${nextHash}`,
+      )
+    }
+
+    const getActiveSectionIndex = () => {
+      const sections = getSections()
+
+      if (!sections.length) {
+        return 0
+      }
+
+      const scrollTop = container.scrollTop
+      let bestIndex = 0
+      let bestDistance = Number.POSITIVE_INFINITY
+
+      sections.forEach((section, index) => {
+        const distance = Math.abs(section.offsetTop - scrollTop)
+
+        if (distance < bestDistance) {
+          bestDistance = distance
+          bestIndex = index
+        }
+      })
+
+      return bestIndex
+    }
+
+    const scrollToSection = (index: number, behavior: ScrollBehavior) => {
+      const sections = getSections()
+
+      if (!sections.length || index < 0 || index >= sections.length) {
+        return
+      }
+
+      sections[index].scrollIntoView({
+        behavior,
+        block: 'start',
+      })
+    }
+
+    const moveSection = (direction: 1 | -1) => {
+      const sections = getSections()
+
+      if (!sections.length) {
+        return
+      }
+
+      const currentIndex = getActiveSectionIndex()
+      const nextIndex = Math.max(0, Math.min(sections.length - 1, currentIndex + direction))
+
+      if (nextIndex === currentIndex) {
+        return
+      }
+
+      scrollToSection(nextIndex, prefersReducedMotion ? 'auto' : 'smooth')
+    }
+
+    const notifySectionChange = (index: number) => {
+      const sectionCount = getSections().length
+      onSectionChange?.(index, sectionCount)
+    }
+
+    const updateSectionMotion = () => {
+      const viewportHeight = container.clientHeight || 1
+      const viewportCenter = viewportHeight * 0.5
+      const maxScroll = container.scrollHeight - container.clientHeight
+      const scrollProgress = maxScroll > 0 ? container.scrollTop / maxScroll : 0
+      const currentIndex = getActiveSectionIndex()
+
+      container.style.setProperty('--scroll-progress', scrollProgress.toFixed(4))
+
+      sectionRefs.current.forEach((section) => {
+        if (!section) {
+          return
+        }
+
+        const rect = section.getBoundingClientRect()
+        const containerRect = container.getBoundingClientRect()
+        const sectionCenter = rect.top - containerRect.top + rect.height * 0.5
+        const offset = (sectionCenter - viewportCenter) / viewportHeight
+        const parallaxY = prefersReducedMotion ? 0 : -offset * 16
+
+        section.style.setProperty('--section-parallax-y', `${parallaxY.toFixed(2)}px`)
+      })
+
+      if (currentIndex !== activeSectionIndex) {
+        activeSectionIndex = currentIndex
+
+        if (hasInitializedHash) {
+          syncHashToIndex(currentIndex)
+        }
+
+        notifySectionChange(currentIndex)
+      }
+    }
+
+    const scheduleSectionMotion = () => {
+      if (scrollRaf) {
+        return
+      }
+
+      scrollRaf = window.requestAnimationFrame(() => {
+        scrollRaf = 0
+        updateSectionMotion()
+      })
+    }
+
+    const handleKeydown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) {
+        return
+      }
+
+      const target = event.target as HTMLElement | null
+      const tagName = target?.tagName ?? ''
+      const isEditing =
+        target?.isContentEditable ||
+        tagName === 'INPUT' ||
+        tagName === 'TEXTAREA' ||
+        tagName === 'SELECT'
+
+      if (isEditing) {
+        return
+      }
+
+      if (forwardKeys.has(event.key)) {
+        event.preventDefault()
+        moveSection(1)
+        return
+      }
+
+      if (backwardKeys.has(event.key)) {
+        event.preventDefault()
+        moveSection(-1)
+      }
+    }
+
+    const handleHashChange = () => {
+      const targetIndex = parseSectionHash(window.location.hash)
+
+      if (targetIndex === null) {
+        return
+      }
+
+      scrollToSection(targetIndex, prefersReducedMotion ? 'auto' : 'smooth')
+    }
+
+    const initializeSectionHash = () => {
+      const targetIndex = parseSectionHash(window.location.hash)
+
+      if (targetIndex !== null) {
+        scrollToSection(targetIndex, 'auto')
+        activeSectionIndex = targetIndex
+      } else {
+        activeSectionIndex = getActiveSectionIndex()
+        syncHashToIndex(activeSectionIndex)
+      }
+
+      hasInitializedHash = true
+      notifySectionChange(activeSectionIndex)
+      scheduleSectionMotion()
+    }
+
+    container.addEventListener('scroll', scheduleSectionMotion, { passive: true })
+    window.addEventListener('resize', scheduleSectionMotion)
+    window.addEventListener('keydown', handleKeydown)
+    window.addEventListener('hashchange', handleHashChange)
+    initRaf = window.requestAnimationFrame(initializeSectionHash)
+
+    return () => {
+      if (scrollRaf) {
+        window.cancelAnimationFrame(scrollRaf)
+      }
+      if (initRaf) {
+        window.cancelAnimationFrame(initRaf)
+      }
+      container.removeEventListener('scroll', scheduleSectionMotion)
+      window.removeEventListener('resize', scheduleSectionMotion)
+      window.removeEventListener('keydown', handleKeydown)
+      window.removeEventListener('hashchange', handleHashChange)
+    }
+  }, [onSectionChange])
+
+  return (
+    <main className="presentation-app" ref={appRef}>
+      <div aria-hidden="true" className="scroll-preview">
+        <div className="scroll-preview-track">
+          <span className="scroll-preview-fill" />
+        </div>
+      </div>
+      <div className="presentation-track">
+        {presentationSections.map((Section, index) => (
+          <div
+            className="presentation-section"
+            key={`presentation-section-${index}`}
+            ref={(node) => {
+              sectionRefs.current[index] = node
+            }}
+          >
+            <div className="presentation-section-content">
+              <Section />
+            </div>
+          </div>
+        ))}
+      </div>
+    </main>
+  )
+}
+
+export default PresentationDeck

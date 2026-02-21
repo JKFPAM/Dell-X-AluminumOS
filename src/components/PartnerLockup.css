@@ -1,0 +1,91 @@
+.partner-lockup {
+  position: absolute;
+  left: 50%;
+  top: 80%;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  width: min(45%, 42rem);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10.305%;
+  animation: partner-lockup-rise 950ms cubic-bezier(0.2, 1, 0.26, 1) 240ms both;
+}
+
+.partner-dell-logo {
+  width: 30.39%;
+  height: auto;
+  display: block;
+  color: #fff;
+  flex-shrink: 0;
+  align-self: flex-end;
+}
+
+.partner-spark {
+  position: relative;
+  display: block;
+  width: 8%;
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  align-self: center;
+  overflow: hidden;
+  filter: drop-shadow(0 0 6px rgba(120, 205, 255, 0.5));
+}
+
+.partner-spark-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 360ms ease;
+}
+
+.partner-spark-video.is-visible {
+  opacity: 1;
+}
+
+.partner-spark-fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 120% at 18% 14%, #ffd659 0%, rgba(255, 214, 89, 0) 54%),
+    radial-gradient(120% 120% at 84% 16%, #53b7ff 0%, rgba(83, 183, 255, 0) 56%),
+    radial-gradient(120% 120% at 20% 88%, #7be4ca 0%, rgba(123, 228, 202, 0) 55%),
+    radial-gradient(120% 120% at 84% 86%, #4b8ff8 0%, rgba(75, 143, 248, 0) 56%);
+  transition: opacity 280ms ease;
+}
+
+.partner-spark-fallback.is-hidden {
+  opacity: 0;
+}
+
+.partner-google-wordmark {
+  display: block;
+  width: 41%;
+  height: auto;
+  flex-shrink: 0;
+  align-self: flex-end;
+  filter: drop-shadow(0 0 20px rgba(138, 192, 255, 0.24));
+}
+
+@keyframes partner-lockup-rise {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -2%) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@media (max-width: 1080px) {
+  .partner-lockup {
+    width: min(68%, 38rem);
+    top: 78%;
+  }
+}
+
+
