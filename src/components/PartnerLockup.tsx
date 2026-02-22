@@ -9,6 +9,10 @@ type PartnerLockupProps = {
 
 function PartnerLockup({ className, nodeId }: PartnerLockupProps) {
   const [isSparkVideoReady, setIsSparkVideoReady] = useState(false)
+  const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : ''
+  const isSafari =
+    /safari/i.test(userAgent) &&
+    !/chrome|chromium|android|crios|fxios|edgios|opr\//i.test(userAgent)
 
   const classes = ['partner-lockup', className].filter(Boolean).join(' ')
 
@@ -26,7 +30,9 @@ function PartnerLockup({ className, nodeId }: PartnerLockupProps) {
           playsInline
           preload="auto"
         >
+          {isSafari && <source src="/videos/gem-loop-alpha.mov" type="video/quicktime" />}
           <source src="/videos/gem-loop-alpha.webm" type="video/webm" />
+          <source src="/videos/gem-loop-alpha.mp4" type="video/mp4" />
         </video>
         <span className={`partner-spark-fallback ${isSparkVideoReady ? 'is-hidden' : ''}`} />
       </span>

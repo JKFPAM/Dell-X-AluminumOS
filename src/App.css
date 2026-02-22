@@ -69,10 +69,27 @@
   position: fixed;
   top: clamp(0.55rem, 1.2vw, 0.95rem);
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, calc(-100% - clamp(0.95rem, 2vw, 1.4rem)));
   width: min(45vw, 26rem);
   z-index: 25;
+  opacity: 0;
+  visibility: hidden;
   pointer-events: none;
+  will-change: transform, opacity;
+  transition:
+    transform 920ms cubic-bezier(0.12, 1, 0.22, 1),
+    opacity 640ms cubic-bezier(0.12, 1, 0.22, 1),
+    visibility 0s linear 920ms;
+}
+
+.scroll-preview.is-visible {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  visibility: visible;
+  transition:
+    transform 920ms cubic-bezier(0.12, 1, 0.22, 1),
+    opacity 640ms cubic-bezier(0.12, 1, 0.22, 1),
+    visibility 0s linear 0s;
 }
 
 .scroll-preview-track {
@@ -122,5 +139,15 @@
 
   .scroll-preview-fill {
     transition: none;
+  }
+
+  .scroll-preview {
+    transition: none;
+    transform: translate(-50%, 0);
+  }
+
+  .scroll-preview:not(.is-visible) {
+    opacity: 0;
+    visibility: hidden;
   }
 }

@@ -12,6 +12,7 @@ type PresentationDeckProps = {
 
 function PresentationDeck({ onSectionChange }: PresentationDeckProps) {
   const appRef = useRef<HTMLElement | null>(null)
+  const scrollPreviewRef = useRef<HTMLDivElement | null>(null)
   const sectionRefs = useRef<Array<HTMLDivElement | null>>([])
 
   useEffect(() => {
@@ -25,6 +26,7 @@ function PresentationDeck({ onSectionChange }: PresentationDeckProps) {
     let scrollRaf = 0
     let initRaf = 0
     let activeSectionIndex = -1
+    let isScrollPreviewVisible = false
     let hasInitializedHash = false
 
     const getSections = () => sectionRefs.current.filter(Boolean) as HTMLDivElement[]
@@ -118,14 +120,25 @@ function PresentationDeck({ onSectionChange }: PresentationDeckProps) {
       onSectionChange?.(index, sectionCount)
     }
 
+    const setScrollPreviewVisibility = (visible: boolean) => {
+      if (visible === isScrollPreviewVisible) {
+        return
+      }
+
+      isScrollPreviewVisible = visible
+      scrollPreviewRef.current?.classList.toggle('is-visible', visible)
+    }
+
     const updateSectionMotion = () => {
       const viewportHeight = container.clientHeight || 1
       const viewportCenter = viewportHeight * 0.5
       const maxScroll = container.scrollHeight - container.clientHeight
       const scrollProgress = maxScroll > 0 ? container.scrollTop / maxScroll : 0
       const currentIndex = getActiveSectionIndex()
+      const shouldShowScrollPreview = currentIndex > 0
 
       container.style.setProperty('--scroll-progress', scrollProgress.toFixed(4))
+      setScrollPreviewVisibility(shouldShowScrollPreview)
 
       sectionRefs.current.forEach((section) => {
         if (!section) {
@@ -214,6 +227,7 @@ function PresentationDeck({ onSectionChange }: PresentationDeckProps) {
       }
 
       hasInitializedHash = true
+      setScrollPreviewVisibility(activeSectionIndex > 0)
       notifySectionChange(activeSectionIndex)
       scheduleSectionMotion()
     }
@@ -240,7 +254,7 @@ function PresentationDeck({ onSectionChange }: PresentationDeckProps) {
 
   return (
     <main className="presentation-app" ref={appRef}>
-      <div aria-hidden="true" className="scroll-preview">
+      <div aria-hidden="true" className="scroll-preview" ref={scrollPreviewRef}>
         <div className="scroll-preview-track">
           <span className="scroll-preview-fill" />
         </div>
