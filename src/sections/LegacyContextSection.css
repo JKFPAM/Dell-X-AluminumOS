@@ -43,7 +43,7 @@
   min-height: clamp(3.15rem, 10vh, 6.75rem);
   display: flex;
   align-items: center;
-  gap: clamp(0.55rem, 1.25vw, 1.5rem);
+  /* gap: clamp(0.55rem, 1.25vw, 1.5rem); */
   opacity: 0;
   transform: translateY(20px);
   transition:
@@ -211,7 +211,7 @@
 .legacy-iphone-image {
   width: auto;
   height: 138%;
-  transform: translateY(16%);
+  transform: translateY(30%);
   object-fit: cover;
 }
 
