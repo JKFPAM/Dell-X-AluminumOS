@@ -113,6 +113,17 @@ function App() {
     trackPresentationEvent('presentation_unlock', { email })
   }, [])
 
+  const handleLogout = useCallback(() => {
+    window.localStorage.removeItem(GATE_UNLOCK_KEY)
+    window.localStorage.removeItem(GATE_EMAIL_KEY)
+    window.sessionStorage.removeItem(INTRO_HERO_SYNC_KEY)
+
+    window.history.replaceState(null, '', '/')
+    setCurrentPath('/')
+    setViewerEmail('')
+    setGatePhase('locked')
+  }, [])
+
   const handleSectionChange = useCallback(
     (index: number, totalSections: number) => {
       if (!isUnlocked) {
@@ -135,7 +146,9 @@ function App() {
 
   return (
     <div className={`app-root ${isUnlocking ? 'is-unlocking' : ''}`}>
-      {shouldRenderDeck && <PresentationDeck onSectionChange={handleSectionChange} />}
+      {shouldRenderDeck && (
+        <PresentationDeck onLogout={handleLogout} onSectionChange={handleSectionChange} />
+      )}
 
       {!isUnlocked && (
         <div className="gate-overlay">

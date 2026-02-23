@@ -1,19 +1,27 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { presentationSections } from './sections'
 
 const forwardKeys = new Set(['ArrowDown', 'ArrowRight'])
 const backwardKeys = new Set(['ArrowUp', 'ArrowLeft'])
+const logoutHoldDurationMs = 5000
 
 const getSectionHash = (index: number) => `#${String(index + 1).padStart(2, '0')}`
 
 type PresentationDeckProps = {
   onSectionChange?: (index: number, totalSections: number) => void
+  onLogout?: () => void
 }
 
-function PresentationDeck({ onSectionChange }: PresentationDeckProps) {
+function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) {
   const appRef = useRef<HTMLElement | null>(null)
   const scrollPreviewRef = useRef<HTMLDivElement | null>(null)
+  const logoutHoldRef = useRef<HTMLDivElement | null>(null)
   const sectionRefs = useRef<Array<HTMLDivElement | null>>([])
+  const logoutHoldStartRef = useRef<number | null>(null)
+  const logoutHoldRafRef = useRef(0)
+  const isLogoutHoldActiveRef = useRef(false)
+  const hasTriggeredLogoutRef = useRef(false)
+  const [isLogoutHoldVisible, setIsLogoutHoldVisible] = useState(false)
 
   useEffect(() => {
     const container = appRef.current
@@ -120,6 +128,56 @@ function PresentationDeck({ onSectionChange }: PresentationDeckProps) {
       onSectionChange?.(index, sectionCount)
     }
 
+    const setLogoutProgress = (progress: number) => {
+      logoutHoldRef.current?.style.setProperty('--logout-hold-progress', progress.toFixed(4))
+    }
+
+    const stopLogoutHold = () => {
+      isLogoutHoldActiveRef.current = false
+      logoutHoldStartRef.current = null
+
+      if (logoutHoldRafRef.current) {
+        window.cancelAnimationFrame(logoutHoldRafRef.current)
+        logoutHoldRafRef.current = 0
+      }
+
+      setLogoutProgress(0)
+      setIsLogoutHoldVisible(false)
+    }
+
+    const tickLogoutHold = (now: number) => {
+      if (!isLogoutHoldActiveRef.current || logoutHoldStartRef.current === null) {
+        return
+      }
+
+      const elapsed = now - logoutHoldStartRef.current
+      const progress = Math.min(1, elapsed / logoutHoldDurationMs)
+
+      setLogoutProgress(progress)
+
+      if (progress >= 1 && !hasTriggeredLogoutRef.current) {
+        hasTriggeredLogoutRef.current = true
+        stopLogoutHold()
+        onLogout?.()
+        return
+      }
+
+      logoutHoldRafRef.current = window.requestAnimationFrame(tickLogoutHold)
+    }
+
+    const startLogoutHold = () => {
+      if (isLogoutHoldActiveRef.current) {
+        return
+      }
+
+      hasTriggeredLogoutRef.current = false
+      isLogoutHoldActiveRef.current = true
+      logoutHoldStartRef.current = performance.now()
+      setLogoutProgress(0)
+      setIsLogoutHoldVisible(true)
+      logoutHoldRafRef.current = window.requestAnimationFrame(tickLogoutHold)
+    }
+
     const setScrollPreviewVisibility = (visible: boolean) => {
       if (visible === isScrollPreviewVisible) {
         return
@@ -193,6 +251,13 @@ function PresentationDeck({ onSectionChange }: PresentationDeckProps) {
         return
       }
 
+      if (event.key.toLowerCase() === 'q') {
+        if (!event.repeat) {
+          startLogoutHold()
+        }
+        return
+      }
+
       if (forwardKeys.has(event.key)) {
         event.preventDefault()
         moveSection(1)
@@ -203,6 +268,26 @@ function PresentationDeck({ onSectionChange }: PresentationDeckProps) {
         event.preventDefault()
         moveSection(-1)
       }
+    }
+
+    const handleKeyup = (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() !== 'q') {
+        return
+      }
+
+      stopLogoutHold()
+    }
+
+    const handleWindowBlur = () => {
+      stopLogoutHold()
+    }
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        return
+      }
+
+      stopLogoutHold()
     }
 
     const handleHashChange = () => {
@@ -235,10 +320,14 @@ function PresentationDeck({ onSectionChange }: PresentationDeckProps) {
     container.addEventListener('scroll', scheduleSectionMotion, { passive: true })
     window.addEventListener('resize', scheduleSectionMotion)
     window.addEventListener('keydown', handleKeydown)
+    window.addEventListener('keyup', handleKeyup)
+    window.addEventListener('blur', handleWindowBlur)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
     window.addEventListener('hashchange', handleHashChange)
     initRaf = window.requestAnimationFrame(initializeSectionHash)
 
     return () => {
+      stopLogoutHold()
       if (scrollRaf) {
         window.cancelAnimationFrame(scrollRaf)
       }
@@ -248,12 +337,23 @@ function PresentationDeck({ onSectionChange }: PresentationDeckProps) {
       container.removeEventListener('scroll', scheduleSectionMotion)
       window.removeEventListener('resize', scheduleSectionMotion)
       window.removeEventListener('keydown', handleKeydown)
+      window.removeEventListener('keyup', handleKeyup)
+      window.removeEventListener('blur', handleWindowBlur)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
       window.removeEventListener('hashchange', handleHashChange)
     }
-  }, [onSectionChange])
+  }, [onLogout, onSectionChange])
 
   return (
     <main className="presentation-app" ref={appRef}>
+      <div
+        aria-hidden="true"
+        className={`logout-hold-indicator ${isLogoutHoldVisible ? 'is-visible' : ''}`}
+        ref={logoutHoldRef}
+      >
+        <span className="logout-hold-fill" />
+        <span className="logout-hold-label">Hold Q to log out</span>
+      </div>
       <div aria-hidden="true" className="scroll-preview" ref={scrollPreviewRef}>
         <div className="scroll-preview-track">
           <span className="scroll-preview-fill" />
