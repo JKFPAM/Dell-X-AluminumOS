@@ -16,11 +16,17 @@
 }
 
 .project-context-lens-background {
+  --lens-anchor-x: 50%;
+  --lens-anchor-y: 54%;
+  --lens-offset-x: clamp(9rem, 14vmin, 16rem);
+  --lens-offset-y-top: clamp(8rem, 12vmin, 13.5rem);
+  --lens-offset-y-bottom: clamp(14rem, 22vmin, 24rem);
   position: absolute;
-  inset: -12% -18%;
+  inset: 0;
   z-index: 1;
   pointer-events: none;
   opacity: 0;
+  transform: scale(0.96);
   transition:
     opacity 1200ms var(--gem-ease-fluid) 80ms,
     transform 1500ms var(--gem-ease-fluid) 80ms;
@@ -28,28 +34,30 @@
 
 .project-context-lens-shape {
   position: absolute;
-  width: clamp(940px, 80vw, 1500px);
-  aspect-ratio: 1;
+  width: clamp(520px, 43.55vw, 836px);
+  aspect-ratio: 1688 / 1607;
   background: url('/assets/lens-effect.png') center / contain no-repeat;
   mix-blend-mode: screen;
+  /* filter: blur(10px); */
+  transform-origin: center center;
 }
 
 .project-context-lens-shape--top {
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%);
+  left: var(--lens-anchor-x);
+  top: calc(var(--lens-anchor-y) + var(--lens-offset-y-bottom));
+  transform: translate(-50%, -50%) rotate(0deg);
 }
 
 .project-context-lens-shape--left {
-  left: -6%;
-  top: 5%;
-  transform: rotate(120deg);
+  left: calc(var(--lens-anchor-x) - var(--lens-offset-x));
+  top: calc(var(--lens-anchor-y) - var(--lens-offset-y-top));
+  transform: translate(-50%, -50%) rotate(120deg);
 }
 
 .project-context-lens-shape--right {
-  right: -6%;
-  top: 10%;
-  transform: rotate(-120deg);
+  left: calc(var(--lens-anchor-x) + var(--lens-offset-x));
+  top: calc(var(--lens-anchor-y) - var(--lens-offset-y-top));
+  transform: translate(-50%, -50%) rotate(-120deg);
 }
 
 .project-context-lens-content.is-in-view .project-context-lens-background {
@@ -248,6 +256,13 @@
 }
 
 @media (max-width: 980px) {
+  .project-context-lens-background {
+    --lens-anchor-y: 52%;
+    --lens-offset-x: clamp(5.2rem, 13vmin, 8.5rem);
+    --lens-offset-y-top: clamp(5.6rem, 11vmin, 8.5rem);
+    --lens-offset-y-bottom: clamp(9rem, 18vmin, 14rem);
+  }
+
   .project-context-lens-kicker {
     top: 11vh;
     width: min(92vw, 42rem);
@@ -255,25 +270,11 @@
   }
 
   .project-context-lens-background {
-    inset: -14% -32%;
+    inset: 0;
   }
 
   .project-context-lens-shape {
-    width: min(165vw, 1080px);
-  }
-
-  .project-context-lens-shape--top {
-    top: -19%;
-  }
-
-  .project-context-lens-shape--left {
-    left: -34%;
-    top: 28%;
-  }
-
-  .project-context-lens-shape--right {
-    right: -34%;
-    top: 28%;
+    width: min(110vw, 710px);
   }
 
   .project-context-lens-copy p {

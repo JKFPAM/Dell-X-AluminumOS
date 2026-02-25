@@ -109,12 +109,12 @@
 }
 
 .narrative-ring--2 {
-  --ring-scale: 0.75;
+  --ring-scale: 0.66;
   --ring-delay: 360ms;
 }
 
 .narrative-ring--3 {
-  --ring-scale: 0.5;
+  --ring-scale: 0.33;
   --ring-delay: 580ms;
 }
 

@@ -76,7 +76,6 @@
   vertical-align: middle;
   margin-inline: clamp(0.45rem, 0.72vw, 0.8rem);
   line-height: 0;
-  backdrop-filter: blur(102px);
 }
 
 .project-context-pill--gemini {
