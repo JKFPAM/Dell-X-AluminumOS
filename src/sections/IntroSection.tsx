@@ -120,7 +120,7 @@ function IntroSection() {
             preload="auto"
             ref={heroVideoRef}
           >
-            <source src="/videos/gemini-animation.mp4" type="video/mp4" />
+            <source src="/assets/section-one/videos/gemini-animation.mp4" type="video/mp4" />
           </video>
           <div className={`intro-hero-fallback ${isHeroVideoReady ? 'is-hidden' : ''}`} />
 

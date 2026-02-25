@@ -1,0 +1,26 @@
+<svg width="445" height="378" viewBox="0 0 445 378" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_3396_859)">
+<foreignObject x="119.4" y="119.4" width="206.116" height="138.544"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(13.9px);clip-path:url(#bgblur_0_3396_859_clip_path);height:100%;width:100%"></div></foreignObject><g data-figma-bg-blur-radius="27.8">
+<rect x="147.2" y="147.2" width="150.516" height="82.9441" rx="41.4721" fill="#505DA4" fill-opacity="0.2" style="mix-blend-mode:screen"/>
+<rect x="147.7" y="147.7" width="149.516" height="81.9441" rx="40.9721" stroke="url(#paint0_linear_3396_859)" stroke-opacity="0.2"/>
+</g>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M181.208 196.572V196.572V180.123H186.074C190.188 180.123 193.523 183.807 193.523 188.349C193.523 192.888 190.188 196.572 186.074 196.572H181.208ZM186.073 202V202C192.426 202 197.762 197.66 199.285 191.784L214.731 203.85L230.164 191.793V202H247.776V196.572H236.367V174.696H230.164V184.903L215.356 196.477L212.048 193.884L219.135 188.35L226.856 182.319L222.447 178.877L207.64 190.442L204.331 187.854L219.135 176.288L214.731 172.846L199.285 184.912C197.762 179.036 192.426 174.696 186.073 174.696H175.009V202H186.073ZM267.491 196.572V196.572V202H249.884V174.696H256.082V196.572H267.491Z" fill="white"/>
+</g>
+<defs>
+<filter id="filter0_d_3396_859" x="-2.19121" y="-0.354477" width="447.4" height="378.4" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="73.6"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.436599 0 0 0 0 0.288531 0 0 0 0 0.843788 0 0 0 0.36 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3396_859"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_3396_859" result="shape"/>
+</filter>
+<clipPath id="bgblur_0_3396_859_clip_path" transform="translate(-119.4 -119.4)"><rect x="147.2" y="147.2" width="150.516" height="82.9441" rx="41.4721"/>
+</clipPath><linearGradient id="paint0_linear_3396_859" x1="273.432" y1="212.318" x2="228.886" y2="140.56" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+</defs>
+</svg>

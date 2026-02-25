@@ -85,7 +85,7 @@ function LegacyContextSection() {
                 playsInline
                 preload="auto"
               >
-                <source src="/videos/android.mp4" type="video/mp4" />
+                <source src="/assets/section-two/videos/android.mp4" type="video/mp4" />
               </video>
               <span className={`legacy-android-mark ${isAndroidVideoReady ? 'is-hidden' : ''}`} />
             </span>

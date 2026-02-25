@@ -1,0 +1,118 @@
+.stacked-narrative-section {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+
+.stacked-narrative-content {
+  --stack-center-top: 46.426vh;
+  --stack-top-base: 9.12vh;
+  --stack-top-step: 7.407vh;
+  --stack-carry-scale: 0.78125;
+  position: sticky;
+  top: 0;
+  width: min(87.3958vw, 1678px);
+  height: 100vh;
+  margin: 0 auto;
+  isolation: isolate;
+}
+
+.stacked-narrative-line {
+  position: absolute;
+  left: 50%;
+  width: min(100%, 1673px);
+  margin: 0;
+  color: #fff;
+  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(2rem, 3.333vw, 4rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-align: center;
+  text-shadow: 0 0 11.5px rgba(202, 157, 248, 0.7);
+  white-space: nowrap;
+  opacity: 0;
+  will-change: opacity, top, transform;
+}
+
+.stacked-narrative-line--focus {
+  top: var(--stack-center-top);
+  transform: translate(-50%, -50%) translateY(24px) scale(0.965);
+  transition:
+    opacity 1100ms var(--gem-ease-fluid) var(--stack-focus-delay, 160ms),
+    transform 1350ms var(--gem-ease-fluid) var(--stack-focus-delay, 160ms);
+}
+
+.stacked-narrative-content.is-in-view .stacked-narrative-line--focus {
+  opacity: 1;
+  transform: translate(-50%, -50%) translateY(0) scale(1);
+}
+
+.stacked-narrative-line--pinned,
+.stacked-narrative-line--moving {
+  --stack-line-index: 0;
+  opacity: 1;
+}
+
+.stacked-narrative-line--pinned {
+  top: calc(var(--stack-top-base) + (var(--stack-top-step) * var(--stack-line-index)));
+  transform: translate(-50%, 0) scale(var(--stack-carry-scale));
+  transition:
+    opacity 600ms var(--gem-ease-out),
+    transform 900ms var(--gem-ease-fluid);
+}
+
+.stacked-narrative-content.is-in-view .stacked-narrative-line--pinned {
+  opacity: 1;
+}
+
+.stacked-narrative-line--moving {
+  top: var(--stack-center-top);
+  transform: translate(-50%, -50%) scale(1);
+  transition:
+    top 1450ms var(--gem-ease-fluid),
+    transform 1450ms var(--gem-ease-fluid);
+}
+
+.stacked-narrative-content.is-active .stacked-narrative-line--moving {
+  top: calc(var(--stack-top-base) + (var(--stack-top-step) * var(--stack-line-index)));
+  transform: translate(-50%, 0) scale(var(--stack-carry-scale));
+  transition-delay: 30ms;
+}
+
+@media (max-width: 980px) {
+  .stacked-narrative-content {
+    --stack-center-top: 50vh;
+    --stack-top-base: 14vh;
+    --stack-top-step: 8.4vh;
+    --stack-carry-scale: 0.84;
+    width: 100%;
+    padding: 0 clamp(0.9rem, 4vw, 1.45rem);
+  }
+
+  .stacked-narrative-line {
+    width: 100%;
+    white-space: normal;
+    text-wrap: balance;
+    font-size: clamp(1.95rem, 6.4vw, 2.85rem);
+    line-height: 1.16;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stacked-narrative-line {
+    transition: none;
+  }
+
+  .stacked-narrative-content.is-in-view .stacked-narrative-line--focus {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+
+  .stacked-narrative-content.is-in-view .stacked-narrative-line--pinned,
+  .stacked-narrative-content.is-active .stacked-narrative-line--moving {
+    opacity: 1;
+  }
+}

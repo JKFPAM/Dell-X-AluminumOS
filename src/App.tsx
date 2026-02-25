@@ -134,7 +134,7 @@ function App() {
         email: viewerEmail || null,
         sectionIndex: index + 1,
         totalSections,
-        sectionHash: `#${String(index + 1).padStart(2, '0')}`,
+        sectionHash: window.location.hash || `#${String(index + 1).padStart(2, '0')}`,
       })
     },
     [isUnlocked, viewerEmail],

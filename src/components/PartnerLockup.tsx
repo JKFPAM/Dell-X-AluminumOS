@@ -30,9 +30,9 @@ function PartnerLockup({ className, nodeId }: PartnerLockupProps) {
           playsInline
           preload="auto"
         >
-          {isSafari && <source src="/videos/gem-loop-alpha.mov" type="video/quicktime" />}
-          <source src="/videos/gem-loop-alpha.webm" type="video/webm" />
-          <source src="/videos/gem-loop-alpha.mp4" type="video/mp4" />
+          {isSafari && <source src="/assets/section-one/videos/gem-loop-alpha.mov" type="video/quicktime" />}
+          <source src="/assets/section-one/videos/gem-loop-alpha.webm" type="video/webm" />
+          <source src="/assets/section-one/videos/gem-loop-alpha.mp4" type="video/mp4" />
         </video>
         <span className={`partner-spark-fallback ${isSparkVideoReady ? 'is-hidden' : ''}`} />
       </span>

@@ -1,11 +1,28 @@
 import { useEffect, useRef, useState } from 'react'
-import { presentationSections } from './sections'
+import NarrativePersistentOverlay from './components/NarrativePersistentOverlay'
+import { presentationSectionConfigs } from './sections'
 
 const forwardKeys = new Set(['ArrowDown', 'ArrowRight'])
 const backwardKeys = new Set(['ArrowUp', 'ArrowLeft'])
-const logoutHoldDurationMs = 5000
+const logoutHoldDurationMs = 2500
 
-const getSectionHash = (index: number) => `#${String(index + 1).padStart(2, '0')}`
+const formatHashValue = (value: number) => `#${String(value).padStart(2, '0')}`
+
+const getHashGroupForIndex = (index: number) => presentationSectionConfigs[index]?.hashGroup ?? index + 1
+
+const getSectionHash = (index: number) => formatHashValue(getHashGroupForIndex(index))
+
+const getIndexForHashGroup = (hashGroup: number, sectionCount: number) => {
+  for (let index = 0; index < sectionCount; index += 1) {
+    const configHashGroup = presentationSectionConfigs[index]?.hashGroup ?? index + 1
+
+    if (configHashGroup === hashGroup) {
+      return index
+    }
+  }
+
+  return null
+}
 
 type PresentationDeckProps = {
   onSectionChange?: (index: number, totalSections: number) => void
@@ -22,6 +39,9 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
   const isLogoutHoldActiveRef = useRef(false)
   const hasTriggeredLogoutRef = useRef(false)
   const [isLogoutHoldVisible, setIsLogoutHoldVisible] = useState(false)
+  const [activeSectionIndex, setActiveSectionIndex] = useState(0)
+  const [isActiveSectionSettled, setIsActiveSectionSettled] = useState(false)
+  const activeChapterLabel = presentationSectionConfigs[activeSectionIndex]?.chapterLabel ?? ''
 
   useEffect(() => {
     const container = appRef.current
@@ -52,8 +72,7 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
         return null
       }
 
-      const index = number - 1
-      return index < getSections().length ? index : null
+      return getIndexForHashGroup(number, getSections().length)
     }
 
     const syncHashToIndex = (index: number) => {
@@ -193,12 +212,18 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       const maxScroll = container.scrollHeight - container.clientHeight
       const scrollProgress = maxScroll > 0 ? container.scrollTop / maxScroll : 0
       const currentIndex = getActiveSectionIndex()
+      const currentSection = getSections()[currentIndex] ?? null
+      const settleTolerancePx = 8
+      const isSettled = currentSection
+        ? Math.abs(container.scrollTop - currentSection.offsetTop) <= settleTolerancePx
+        : false
       const shouldShowScrollPreview = currentIndex > 0
 
       container.style.setProperty('--scroll-progress', scrollProgress.toFixed(4))
       setScrollPreviewVisibility(shouldShowScrollPreview)
+      setIsActiveSectionSettled(isSettled)
 
-      sectionRefs.current.forEach((section) => {
+      sectionRefs.current.forEach((section, index) => {
         if (!section) {
           return
         }
@@ -207,13 +232,15 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
         const containerRect = container.getBoundingClientRect()
         const sectionCenter = rect.top - containerRect.top + rect.height * 0.5
         const offset = (sectionCenter - viewportCenter) / viewportHeight
-        const parallaxY = prefersReducedMotion ? 0 : -offset * 16
+        const isParallaxDisabled = Boolean(presentationSectionConfigs[index]?.disableParallax)
+        const parallaxY = prefersReducedMotion || isParallaxDisabled ? 0 : -offset * 16
 
         section.style.setProperty('--section-parallax-y', `${parallaxY.toFixed(2)}px`)
       })
 
       if (currentIndex !== activeSectionIndex) {
         activeSectionIndex = currentIndex
+        setActiveSectionIndex(currentIndex)
 
         if (hasInitializedHash) {
           syncHashToIndex(currentIndex)
@@ -312,6 +339,11 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       }
 
       hasInitializedHash = true
+      const initialSection = getSections()[activeSectionIndex] ?? null
+      setActiveSectionIndex(activeSectionIndex)
+      setIsActiveSectionSettled(
+        initialSection ? Math.abs(container.scrollTop - initialSection.offsetTop) <= 8 : false,
+      )
       setScrollPreviewVisibility(activeSectionIndex > 0)
       notifySectionChange(activeSectionIndex)
       scheduleSectionMotion()
@@ -355,21 +387,26 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
         <span className="logout-hold-label">Hold Q to log out</span>
       </div>
       <div aria-hidden="true" className="scroll-preview" ref={scrollPreviewRef}>
+        {activeChapterLabel && <span className="scroll-preview-chapter">{activeChapterLabel}</span>}
         <div className="scroll-preview-track">
           <span className="scroll-preview-fill" />
         </div>
       </div>
+      <NarrativePersistentOverlay
+        activeSectionIndex={activeSectionIndex}
+        isActiveSectionSettled={isActiveSectionSettled}
+      />
       <div className="presentation-track">
-        {presentationSections.map((Section, index) => (
+        {presentationSectionConfigs.map(({ Component, disableParallax }, index) => (
           <div
-            className="presentation-section"
+            className={`presentation-section ${disableParallax ? 'is-parallax-disabled' : ''}`}
             key={`presentation-section-${index}`}
             ref={(node) => {
               sectionRefs.current[index] = node
             }}
           >
             <div className="presentation-section-content">
-              <Section />
+              <Component />
             </div>
           </div>
         ))}

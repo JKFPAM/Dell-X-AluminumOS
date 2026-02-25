@@ -1,0 +1,60 @@
+.narrative-stage-section {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+
+.narrative-stage-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(760px, 78vw, 1460px);
+  aspect-ratio: 1;
+  background: url('/assets/ring.png') center / contain no-repeat;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 880ms var(--gem-ease-out);
+}
+
+.narrative-stage-ring--1 {
+  --ring-scale: 1;
+  --ring-delay: 140ms;
+}
+
+.narrative-stage-ring--2 {
+  --ring-scale: 0.6;
+  --ring-delay: 360ms;
+}
+
+.narrative-stage-ring--3 {
+  --ring-scale: 0.3;
+  --ring-delay: 580ms;
+}
+
+.narrative-stage-ring--1,
+.narrative-stage-ring--2,
+.narrative-stage-ring--3 {
+  transform: translate(-50%, -50%) scale(var(--ring-scale));
+  transition-delay: var(--ring-delay);
+}
+
+.narrative-stage-section.has-ring-background.is-in-view .narrative-stage-ring {
+  opacity: 0.92;
+}
+
+@media (max-width: 980px) {
+  .narrative-stage-ring {
+    width: min(140vw, 980px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .narrative-stage-ring {
+    transition: none;
+    opacity: 0.92;
+    transform: translate(-50%, -50%) scale(var(--ring-scale));
+  }
+}
