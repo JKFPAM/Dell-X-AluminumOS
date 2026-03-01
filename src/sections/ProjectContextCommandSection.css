@@ -1,0 +1,194 @@
+.project-context-command {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ecf1fe 0%, #d3e5fe 100%);
+}
+
+.project-context-command-content {
+  position: relative;
+  width: min(100vw, 1920px);
+  height: 100vh;
+  margin: 0 auto;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.project-context-command-kicker {
+  position: absolute;
+  left: 50%;
+  top: clamp(2.3rem, 6.94vh, 4.6875rem);
+  z-index: 2;
+  margin: 0;
+  width: min(94vw, 96rem);
+  transform: translate(-50%, 20px);
+  color: #000f19;
+  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(1.15rem, 1.823vw, 2.1875rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-align: center;
+  opacity: 0;
+  transition:
+    opacity 920ms var(--gem-ease-out),
+    transform 1020ms var(--gem-ease-fluid);
+}
+
+.project-context-command-main {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(68.5938vw, 1317px);
+  height: clamp(15rem, 30.93vh, 20.875rem);
+  transform: translate(-50%, -50%);
+}
+
+.project-context-command-copy {
+  margin: 0;
+  color: #000f19;
+  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(2rem, 3.385vw, 4.0625rem);
+  font-weight: 400;
+  line-height: 0.94;
+  letter-spacing: -0.03em;
+  opacity: 0;
+  transition:
+    opacity 1020ms var(--gem-ease-out),
+    transform 1220ms var(--gem-ease-fluid);
+}
+
+.project-context-command-copy--left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: min(27.7592vw, 375px);
+  transform: translateX(-22px);
+  text-align: left;
+}
+
+.project-context-command-copy--right {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: min(31.6667vw, 495px);
+  transform: translateX(22px);
+  text-align: right;
+}
+
+.project-context-command-arrow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(26.6667vw, 512px);
+  height: 0;
+  border-top: 2px solid #000f19;
+  transform: translate(-50%, -50%) scaleX(0.72);
+  transform-origin: left center;
+  opacity: 0;
+  transition:
+    opacity 700ms var(--gem-ease-out) 220ms,
+    transform 1180ms var(--gem-ease-fluid) 220ms;
+}
+
+.project-context-command-arrow::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: -7px;
+  width: 12px;
+  height: 12px;
+  border-top: 2px solid #000f19;
+  border-right: 2px solid #000f19;
+  transform: rotate(45deg);
+}
+
+.project-context-command-content.is-in-view .project-context-command-kicker,
+.project-context-command-content.is-in-view .project-context-command-copy,
+.project-context-command-content.is-in-view .project-context-command-arrow {
+  opacity: 1;
+}
+
+.project-context-command-content.is-in-view .project-context-command-kicker {
+  transform: translate(-50%, 0);
+}
+
+.project-context-command-content.is-in-view .project-context-command-copy--left,
+.project-context-command-content.is-in-view .project-context-command-copy--right {
+  transform: translateX(0);
+}
+
+.project-context-command-content.is-in-view .project-context-command-arrow {
+  transform: translate(-50%, -50%) scaleX(1);
+}
+
+@media (max-width: 980px) {
+  .project-context-command-kicker {
+    top: clamp(1.2rem, 4vh, 2rem);
+    font-size: clamp(1rem, 3.5vw, 1.45rem);
+    width: min(92vw, 42rem);
+  }
+
+  .project-context-command-main {
+    width: min(92vw, 43rem);
+    height: min(66vh, 34rem);
+  }
+
+  .project-context-command-copy {
+    font-size: clamp(1.75rem, 7.6vw, 3rem);
+    line-height: 0.98;
+  }
+
+  .project-context-command-copy--left,
+  .project-context-command-copy--right {
+    width: min(43vw, 18rem);
+  }
+
+  .project-context-command-arrow {
+    width: min(36vw, 16rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .project-context-command-main {
+    width: min(94vw, 25rem);
+    height: min(68vh, 31rem);
+  }
+
+  .project-context-command-copy {
+    font-size: clamp(1.55rem, 8.8vw, 2.45rem);
+    line-height: 1;
+  }
+
+  .project-context-command-copy--left {
+    top: 6%;
+    left: 0;
+    width: 12rem;
+  }
+
+  .project-context-command-copy--right {
+    right: 0;
+    bottom: 7%;
+    width: 12.5rem;
+  }
+
+  .project-context-command-arrow {
+    width: min(46vw, 12rem);
+    top: 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-context-command-kicker,
+  .project-context-command-copy,
+  .project-context-command-arrow {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .project-context-command-arrow {
+    transform: translate(-50%, -50%) scaleX(1);
+  }
+}

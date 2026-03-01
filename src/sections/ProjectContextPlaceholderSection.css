@@ -1,0 +1,15 @@
+.project-context-placeholder {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(180deg, #96c9ff 0%, #80b8ff 100%);
+}
+
+.project-context-placeholder-content {
+  position: relative;
+  width: min(100vw, 1920px);
+  min-height: 100vh;
+  margin: 0 auto;
+  color: #000;
+}

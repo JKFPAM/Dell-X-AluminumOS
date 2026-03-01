@@ -1,0 +1,165 @@
+.project-context-vision {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+
+.project-context-vision-content {
+  position: relative;
+  width: min(100vw);
+  height: 100vh;
+  margin: 0 auto;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.project-context-vision-light-band {
+  position: absolute;
+  inset: 56.0185% 0 0;
+  background: #eef2fe;
+}
+
+.project-context-vision-seam-glow {
+  position: absolute;
+  left: 50%;
+  top: 36.2963%;
+  width: min(100.0521vw, 1921px);
+  height: clamp(8rem, 19.72vh, 13.3125rem);
+  border-radius: 46.421px;
+  transform: translateX(-50%);
+  mix-blend-mode: plus-lighter;
+  opacity: 0.8;
+  filter: blur(90px);
+  background-image: linear-gradient(
+    257.771deg,
+    #000 2.7892%,
+    #2d6e8a 7.6635%,
+    #d1b0a9 31.705%,
+    #aa81c3 66.199%,
+    #3f489a 91.286%,
+    #000 101.74%
+  );
+}
+
+.project-context-vision-kicker {
+  position: absolute;
+  left: 50%;
+  top: 33.6111%;
+  z-index: 3;
+  margin: 0;
+  transform: translate(-50%, 20px);
+  color: #eef2fe;
+  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(1.3rem, 1.823vw, 2.1875rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0;
+  transition:
+    opacity 900ms var(--gem-ease-out),
+    transform 1000ms var(--gem-ease-fluid);
+}
+
+.project-context-vision-card {
+  position: absolute;
+  left: 50%;
+  top: 39.537%;
+  z-index: 2;
+  width: min(68.2813vw, 1311px);
+  min-height: clamp(17rem, 41.1111vh, 27.75rem);
+  border-radius: 39px;
+  background: #eef2fe;
+  transform: translate(-50%, 24px);
+  opacity: 0;
+  transition:
+    opacity 1000ms var(--gem-ease-out) 140ms,
+    transform 1200ms var(--gem-ease-fluid) 140ms;
+}
+
+.project-context-vision-headline {
+  margin: 0;
+  padding: clamp(2.6rem, 7.87vh, 5.3125rem) clamp(2rem, 4vw, 3.25rem);
+  color: #000f19;
+  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(2rem, 4.1667vw, 5rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.project-context-vision-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: baseline;
+  margin-inline: clamp(0.45rem, 0.88vw, 0.84rem);
+  line-height: 0;
+}
+
+.project-context-vision-pill img {
+  display: block;
+  width: auto;
+  height: clamp(2.8rem, 10vw, 6.75rem);
+}
+
+.project-context-vision-content.is-in-view .project-context-vision-kicker,
+.project-context-vision-content.is-in-view .project-context-vision-card {
+  opacity: 1;
+}
+
+.project-context-vision-content.is-in-view .project-context-vision-kicker {
+  transform: translate(-50%, 0);
+}
+
+.project-context-vision-content.is-in-view .project-context-vision-card {
+  transform: translate(-50%, 0);
+}
+
+@media (max-width: 980px) {
+  .project-context-vision-light-band {
+    inset: 58% 0 0;
+  }
+
+  .project-context-vision-seam-glow {
+    top: 42%;
+    filter: blur(58px);
+    opacity: 0.72;
+  }
+
+  .project-context-vision-kicker {
+    top: 31%;
+    font-size: clamp(1.2rem, 5vw, 1.75rem);
+  }
+
+  .project-context-vision-card {
+    top: 37%;
+    width: min(92vw, 44rem);
+    min-height: clamp(16rem, 34vh, 22rem);
+    border-radius: 24px;
+  }
+
+  .project-context-vision-headline {
+    padding: clamp(2rem, 4.6vh, 2.6rem) clamp(1.2rem, 4vw, 1.8rem);
+    font-size: clamp(1.8rem, 8vw, 3rem);
+    letter-spacing: -0.022em;
+  }
+
+  .project-context-vision-pill img {
+    height: clamp(2.6rem, 11vw, 4rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-context-vision-kicker,
+  .project-context-vision-card {
+    transition: none;
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}

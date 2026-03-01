@@ -1,4 +1,8 @@
 import type { ComponentType } from 'react'
+import ProjectContextCommandSection from './ProjectContextCommandSection'
+import ProjectContextAudienceSection from './ProjectContextAudienceSection'
+import ProjectContextModeSwitchersSection from './ProjectContextModeSwitchersSection'
+import ProjectContextPlaceholderSection from './ProjectContextPlaceholderSection'
 import EcosystemShiftSection from './EcosystemShiftSection'
 import FutureVisionSection from './FutureVisionSection'
 import IntroSection from './IntroSection'
@@ -7,6 +11,7 @@ import LifeDimensionsSection from './LifeDimensionsSection'
 import MultiProductShiftSection from './MultiProductShiftSection'
 import ProjectContextLensSection from './ProjectContextLensSection'
 import ProjectContextQuestionsSection from './ProjectContextQuestionsSection'
+import ProjectContextVisionSection from './ProjectContextVisionSection'
 import PurchaseShiftSection from './PurchaseShiftSection'
 import SystemShiftSection from './SystemShiftSection'
 
@@ -35,5 +40,30 @@ export const presentationSectionConfigs: PresentationSectionConfig[] = [
     Component: ProjectContextLensSection,
     chapterLabel: 'Project Context & Vision',
     hashGroup: 7,
+  },
+  {
+    Component: ProjectContextVisionSection,
+    chapterLabel: 'Project Context & Vision',
+    hashGroup: 8,
+  },
+  {
+    Component: ProjectContextCommandSection,
+    chapterLabel: 'Project Context & Vision',
+    hashGroup: 9,
+  },
+  {
+    Component: ProjectContextAudienceSection,
+    chapterLabel: 'Project Context & Vision',
+    hashGroup: 10,
+  },
+  {
+    Component: ProjectContextModeSwitchersSection,
+    chapterLabel: 'Project Context & Vision',
+    hashGroup: 11,
+  },
+  {
+    Component: ProjectContextPlaceholderSection,
+    chapterLabel: 'Project Context & Vision',
+    hashGroup: 12,
   },
 ]
