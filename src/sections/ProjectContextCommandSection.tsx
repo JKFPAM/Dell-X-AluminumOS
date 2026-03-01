@@ -37,21 +37,13 @@ function ProjectContextCommandSection() {
 
         <div className="project-context-command-main" data-name="content" data-node-id="4156:1765">
           <p className="project-context-command-copy project-context-command-copy--left" data-node-id="3435:10406">
-            From a place
-            <br />
-            where work
-            <br />
-            happens
+            From a place where work happens
           </p>
 
           <span aria-hidden="true" className="project-context-command-arrow" data-node-id="3435:10409" />
 
           <p className="project-context-command-copy project-context-command-copy--right" data-node-id="3435:10407">
-            to the command
-            <br />
-            center for an
-            <br />
-            ambitious life.
+            to the command center for an ambitious life.
           </p>
         </div>
       </div>

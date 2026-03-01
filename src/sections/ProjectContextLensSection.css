@@ -25,14 +25,15 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0;
-  transform: scale(0.96);
-  transition:
-    opacity 1200ms var(--gem-ease-fluid) 80ms,
-    transform 1500ms var(--gem-ease-fluid) 80ms;
+  opacity: 1;
+  transform: none;
 }
 
 .project-context-lens-shape {
+  --lens-shape-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --lens-shape-rotation: 0deg;
+  --lens-shape-enter-rotation: -30deg;
+  --lens-shape-enter-y: 26px;
   position: absolute;
   width: clamp(520px, 43.55vw, 836px);
   aspect-ratio: 1688 / 1607;
@@ -40,29 +41,54 @@
   mix-blend-mode: screen;
   /* filter: blur(10px); */
   transform-origin: center center;
+  opacity: 0;
+  transform: translate(-50%, -50%) translateY(var(--lens-shape-enter-y)) rotate(var(--lens-shape-enter-rotation));
+  transition:
+    opacity 1050ms var(--lens-shape-ease-out),
+    transform 1400ms var(--lens-shape-ease-out);
 }
 
 .project-context-lens-shape--top {
   left: var(--lens-anchor-x);
   top: calc(var(--lens-anchor-y) + var(--lens-offset-y-bottom));
-  transform: translate(-50%, -50%) rotate(0deg);
+  --lens-shape-rotation: 0deg;
+  --lens-shape-enter-rotation: -12deg;
 }
 
 .project-context-lens-shape--left {
   left: calc(var(--lens-anchor-x) - var(--lens-offset-x));
   top: calc(var(--lens-anchor-y) - var(--lens-offset-y-top));
-  transform: translate(-50%, -50%) rotate(120deg);
+  --lens-shape-rotation: 120deg;
+  --lens-shape-enter-rotation: 103deg;
 }
 
 .project-context-lens-shape--right {
   left: calc(var(--lens-anchor-x) + var(--lens-offset-x));
   top: calc(var(--lens-anchor-y) - var(--lens-offset-y-top));
-  transform: translate(-50%, -50%) rotate(-120deg);
+  --lens-shape-rotation: -120deg;
+  --lens-shape-enter-rotation: -102deg;
 }
 
 .project-context-lens-content.is-in-view .project-context-lens-background {
   opacity: 1;
-  transform: scale(1);
+  transform: none;
+}
+
+.project-context-lens-content.is-in-view .project-context-lens-shape {
+  opacity: 1;
+  transform: translate(-50%, -50%) rotate(var(--lens-shape-rotation));
+}
+
+.project-context-lens-content.is-in-view .project-context-lens-shape--top {
+  transition-delay: 140ms;
+}
+
+.project-context-lens-content.is-in-view .project-context-lens-shape--left {
+  transition-delay: 300ms;
+}
+
+.project-context-lens-content.is-in-view .project-context-lens-shape--right {
+  transition-delay: 460ms;
 }
 
 .project-context-lens-kicker {
@@ -338,6 +364,7 @@
 @media (prefers-reduced-motion: reduce) {
   .project-context-lens-kicker,
   .project-context-lens-background,
+  .project-context-lens-shape,
   .project-context-lens-copy,
   .project-context-pill-item {
     transition: none;
@@ -350,6 +377,10 @@
 
   .project-context-lens-background {
     transform: none;
+  }
+
+  .project-context-lens-shape {
+    transform: translate(-50%, -50%) rotate(var(--lens-shape-rotation));
   }
 
   .project-context-lens-copy,

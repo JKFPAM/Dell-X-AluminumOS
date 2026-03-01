@@ -11,18 +11,22 @@
   width: min(100vw, 1920px);
   height: 100vh;
   margin: 0 auto;
+  padding: clamp(2rem, 5vh, 4.25rem) clamp(1rem, 3vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(2rem, 6.2vh, 4.8rem);
   overflow: hidden;
   isolation: isolate;
 }
 
 .project-context-command-kicker {
-  position: absolute;
-  left: 50%;
-  top: clamp(2.3rem, 6.94vh, 4.6875rem);
+  position: relative;
   z-index: 2;
   margin: 0;
   width: min(94vw, 96rem);
-  transform: translate(-50%, 20px);
+  transform: translateY(20px);
   color: #000f19;
   font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
   font-size: clamp(1.15rem, 1.823vw, 2.1875rem);
@@ -37,15 +41,18 @@
 }
 
 .project-context-command-main {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(68.5938vw, 1317px);
-  height: clamp(15rem, 30.93vh, 20.875rem);
-  transform: translate(-50%, -50%);
+  position: relative;
+  width: min(67.6563vw, 1299px);
+  min-height: clamp(10.5rem, 19vh, 14rem);
+  display: grid;
+  grid-template-columns: minmax(14rem, 375px) minmax(10rem, 248px) minmax(14rem, 495px);
+  align-items: center;
+  justify-content: center;
+  column-gap: clamp(1rem, 1.4vw, 1.6rem);
 }
 
 .project-context-command-copy {
+  --copy-offset-y: 0px;
   margin: 0;
   color: #000f19;
   font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
@@ -60,31 +67,32 @@
 }
 
 .project-context-command-copy--left {
-  position: absolute;
-  left: 0;
-  top: 0;
+  grid-column: 1;
   width: min(27.7592vw, 375px);
-  transform: translateX(-22px);
+  --copy-offset-y: -1.4rem;
+  transform: translate(-22px, var(--copy-offset-y));
   text-align: left;
+  text-wrap: balance;
+  white-space: normal;
 }
 
 .project-context-command-copy--right {
-  position: absolute;
-  right: 0;
-  bottom: 0;
+  grid-column: 3;
   width: min(31.6667vw, 495px);
-  transform: translateX(22px);
+  --copy-offset-y: 1.4rem;
+  transform: translate(22px, var(--copy-offset-y));
   text-align: right;
+  text-wrap: balance;
+  white-space: normal;
 }
 
 .project-context-command-arrow {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(26.6667vw, 512px);
+  position: relative;
+  grid-column: 2;
+  width: 100%;
   height: 0;
   border-top: 2px solid #000f19;
-  transform: translate(-50%, -50%) scaleX(0.72);
+  transform: scaleX(0.72);
   transform-origin: left center;
   opacity: 0;
   transition:
@@ -111,28 +119,30 @@
 }
 
 .project-context-command-content.is-in-view .project-context-command-kicker {
-  transform: translate(-50%, 0);
+  transform: translateY(0);
 }
 
 .project-context-command-content.is-in-view .project-context-command-copy--left,
 .project-context-command-content.is-in-view .project-context-command-copy--right {
-  transform: translateX(0);
+  transform: translate(0, var(--copy-offset-y));
 }
 
 .project-context-command-content.is-in-view .project-context-command-arrow {
-  transform: translate(-50%, -50%) scaleX(1);
+  transform: scaleX(1);
 }
 
 @media (max-width: 980px) {
   .project-context-command-kicker {
-    top: clamp(1.2rem, 4vh, 2rem);
     font-size: clamp(1rem, 3.5vw, 1.45rem);
     width: min(92vw, 42rem);
   }
 
   .project-context-command-main {
     width: min(92vw, 43rem);
-    height: min(66vh, 34rem);
+    min-height: min(66vh, 34rem);
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    row-gap: clamp(1rem, 2.5vh, 1.8rem);
   }
 
   .project-context-command-copy {
@@ -142,18 +152,33 @@
 
   .project-context-command-copy--left,
   .project-context-command-copy--right {
-    width: min(43vw, 18rem);
+    --copy-offset-y: 0px;
+    width: min(82vw, 26rem);
+    justify-self: center;
+    text-align: center;
+    transform: translate(0, 0);
+  }
+
+  .project-context-command-copy--left {
+    grid-row: 1;
   }
 
   .project-context-command-arrow {
-    width: min(36vw, 16rem);
+    grid-row: 2;
+    width: min(44vw, 16rem);
+    justify-self: center;
+    transform: scaleX(0.72);
+  }
+
+  .project-context-command-copy--right {
+    grid-row: 3;
   }
 }
 
 @media (max-width: 640px) {
   .project-context-command-main {
     width: min(94vw, 25rem);
-    height: min(68vh, 31rem);
+    min-height: min(68vh, 31rem);
   }
 
   .project-context-command-copy {
@@ -162,20 +187,15 @@
   }
 
   .project-context-command-copy--left {
-    top: 6%;
-    left: 0;
-    width: 12rem;
+    width: min(88vw, 18rem);
   }
 
   .project-context-command-copy--right {
-    right: 0;
-    bottom: 7%;
-    width: 12.5rem;
+    width: min(88vw, 18rem);
   }
 
   .project-context-command-arrow {
-    width: min(46vw, 12rem);
-    top: 50%;
+    width: min(56vw, 12rem);
   }
 }
 
@@ -189,6 +209,6 @@
   }
 
   .project-context-command-arrow {
-    transform: translate(-50%, -50%) scaleX(1);
+    transform: scaleX(1);
   }
 }
