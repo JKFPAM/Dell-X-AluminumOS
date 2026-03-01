@@ -59,6 +59,10 @@
   scroll-snap-stop: always;
 }
 
+.presentation-track > .presentation-section + .presentation-section {
+  margin-top: -1px;
+}
+
 .presentation-section-content {
   transform: translate3d(0, var(--section-parallax-y), 0);
   will-change: transform;
