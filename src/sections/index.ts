@@ -14,6 +14,7 @@ import IntroSection from './IntroSection'
 import LegacyContextSection from './LegacyContextSection'
 import LifeDimensionsSection from './LifeDimensionsSection'
 import MultiProductShiftSection from './MultiProductShiftSection'
+import OutroSection from './OutroSection'
 import ProjectContextLensSection from './ProjectContextLensSection'
 import ProjectContextQuestionsSection from './ProjectContextQuestionsSection'
 import ProjectContextVisionSection from './ProjectContextVisionSection'
@@ -95,5 +96,10 @@ export const presentationSectionConfigs: PresentationSectionConfig[] = [
     Component: ExperienceEnablersContextualSwitchingSection,
     chapterLabel: 'Experience Enablers',
     hashGroup: 17,
+  },
+  {
+    Component: OutroSection,
+    chapterLabel: 'Outro',
+    hashGroup: 18,
   },
 ]
