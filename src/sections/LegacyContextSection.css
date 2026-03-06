@@ -26,21 +26,21 @@
   margin-bottom: clamp(4rem, 10vh, 7rem);
   display: flex;
   flex-direction: column;
-  gap: clamp(1rem, 3.704vh, 2.5rem);
+  gap: clamp(0.2rem, 1.15vh, 0.75rem);
 }
 
 .legacy-intro {
-  margin: 0;
+  margin: 0 0 clamp(0.35rem, 1.2vh, 0.9rem);
   color: #fff;
   font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
-  font-size: clamp(1.625rem, 2.604vw, 3.125rem);
+  font-size: clamp(1.2rem, 1.8vw, 2.15rem);
   line-height: 1.2;
   letter-spacing: -0.02em;
   text-shadow: var(--gem-text-glow);
 }
 
 .legacy-row {
-  min-height: clamp(3.15rem, 10vh, 6.75rem);
+  min-height: clamp(2.2rem, 6.3vh, 4.1rem);
   display: flex;
   align-items: center;
   /* gap: clamp(0.55rem, 1.25vw, 1.5rem); */
@@ -142,7 +142,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  column-gap: clamp(0.38rem, 0.73vw, 0.88rem);
+  column-gap: clamp(0.24rem, 0.5vw, 0.6rem);
   row-gap: 0.15em;
 }
 
@@ -186,8 +186,19 @@
   height: clamp(3.15rem, 5.73vw, 6.875rem);
 }
 
+.legacy-orb-google {
+  width: clamp(3.35rem, 6.05vw, 7.15rem);
+  height: clamp(3.35rem, 6.05vw, 7.15rem);
+}
+
 .legacy-orb-android {
   isolation: isolate;
+}
+
+.legacy-google-image {
+  width: 56%;
+  height: auto;
+  display: block;
 }
 
 .legacy-android-video {
@@ -295,5 +306,9 @@
 
   .legacy-row-google .legacy-copy {
     margin-left: 0;
+  }
+
+  .legacy-orb-google {
+    margin-inline: clamp(0.15rem, 1.15vw, 0.35rem);
   }
 }

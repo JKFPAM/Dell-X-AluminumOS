@@ -264,9 +264,14 @@
   will-change: opacity, top, transform;
   z-index: 1;
   transition:
-    opacity 820ms var(--gem-ease-out),
+    opacity var(--narrative-line-opacity-duration, 820ms) var(--gem-ease-out) var(--narrative-line-opacity-delay, 0ms),
     top 1320ms var(--gem-ease-fluid),
     transform 1320ms var(--gem-ease-fluid);
+}
+
+.narrative-line--purchase {
+  --narrative-line-opacity-duration: 1420ms;
+  --narrative-line-opacity-delay: 220ms;
 }
 
 .narrative-line.is-visible {

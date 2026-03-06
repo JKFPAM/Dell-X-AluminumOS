@@ -24,6 +24,26 @@
   isolation: isolate;
 }
 
+.system-shift-bg-image {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  pointer-events: none;
+  width: 100vw;
+  height: 100vh;
+  transform: translate(-50%, -50%);
+  background: url('/assets/section-four/gem-background.jpg') center center / cover no-repeat;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition:
+    opacity 1800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.system-shift-content.is-active .system-shift-bg-image {
+  transform: translate(-50%, -50%);
+}
+
 .system-shift-ambient {
   position: absolute;
   inset: -10% -8%;
@@ -193,17 +213,21 @@
   letter-spacing: -0.03em;
   text-shadow: var(--gem-text-glow);
   opacity: 0;
-  transform: translateY(20px);
+  transform: translate3d(0, 56px, 0) scale(0.985);
+  filter: blur(5px);
   will-change: opacity, transform;
   transition:
-    opacity 1200ms var(--gem-ease-out),
-    transform 1200ms var(--gem-ease-out);
+    opacity 1500ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1850ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 1650ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .system-shift-intro {
   top: clamp(4rem, 9.259vh, 6.25rem);
   left: clamp(1.25rem, 5.208vw, 6.25rem);
   width: min(39.284vw, 754.256px);
+  transform: translate3d(0, 34px, 0) scale(0.988);
+  transition-delay: 0ms;
 }
 
 .system-shift-outro {
@@ -211,16 +235,19 @@
   bottom: clamp(4rem, 9.259vh, 6.25rem);
   width: min(36.41vw, 699.068px);
   text-align: right;
-  transition-delay: 260ms;
+  transform: translate3d(0, 96px, 0) scale(0.98);
+  transition-delay: 520ms;
 }
 
 .system-shift-content.is-in-view .system-shift-intro,
 .system-shift-content.is-in-view .system-shift-outro {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .system-shift-bg-image,
   .system-shift-ambient,
   .system-shift-video-layer,
   .system-shift-video,
@@ -234,11 +261,16 @@
   .system-shift-content.is-active .system-shift-ambient,
   .system-shift-content.is-active .system-shift-video-layer,
   .system-shift-content.is-active .system-shift-core-glow,
+  .system-shift-content.is-in-view .system-shift-bg-image,
   .system-shift-content.is-in-view .system-shift-intro,
   .system-shift-content.is-in-view .system-shift-outro {
     opacity: 1;
     transform: none;
     filter: none;
+  }
+
+  .system-shift-content.is-in-view .system-shift-bg-image {
+    transform: translate(-50%, -50%);
   }
 }
 
@@ -256,6 +288,11 @@
   .system-shift-video-layer {
     width: min(185vw, 1260px);
     height: min(140vh, 980px);
+  }
+
+  .system-shift-bg-image {
+    width: 100vw;
+    height: 100vh;
   }
 
   .system-shift-core-glow {

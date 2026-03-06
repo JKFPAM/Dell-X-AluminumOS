@@ -40,18 +40,14 @@ function LegacyContextSection() {
         ref={contentRef}
       >
         <p className="legacy-intro" data-node-id="2735:5604">
-          For the last two decades,
+          For the last twenty years, the winners in
+          <br />
+          technology were the ones who...
         </p>
 
         <div className="legacy-row" data-node-id="2735:5605">
-          <img
-            alt=""
-            aria-hidden="true"
-            className="legacy-badge legacy-badge-apple"
-            src="/assets/section-two/apple-logo-container.svg"
-          />
           <p className="legacy-copy" data-node-id="2735:5646">
-            <span>made the iPhone</span>
+            <span>made the </span>
             <span className="legacy-orb legacy-orb-iphone" data-node-id="2735:5608">
               <img
                 alt=""
@@ -60,17 +56,11 @@ function LegacyContextSection() {
                 src="/assets/section-two/iphone-image.png"
               />
             </span>
-            <span>most people wanted.</span>
+            <span>devices most people wanted,</span>
           </p>
         </div>
 
         <div className="legacy-row" data-node-id="2735:5656">
-          <img
-            alt=""
-            aria-hidden="true"
-            className="legacy-badge legacy-badge-android"
-            src="/assets/section-two/android-wordmark.svg"
-          />
           <p className="legacy-copy" data-node-id="2735:5654">
             <span>built the platform</span>
             <span className="legacy-orb legacy-orb-android" data-node-id="2735:5615">
@@ -89,16 +79,22 @@ function LegacyContextSection() {
               </video>
               <span className={`legacy-android-mark ${isAndroidVideoReady ? 'is-hidden' : ''}`} />
             </span>
-            <span>most people used.</span>
+            <span>most people used,</span>
           </p>
         </div>
 
         <div className="legacy-row legacy-row-google" data-node-id="2735:5618">
-          <span aria-hidden="true" className="legacy-google-pill" data-node-id="2735:5653">
-            <span aria-hidden="true" className="legacy-google-wordmark" />
-          </span>
           <p className="legacy-copy" data-node-id="2735:5650">
-            <span>offered the services most people needed.</span>
+            <span>and delivered the services</span>
+            <span className="legacy-orb legacy-orb-google" data-node-id="2735:5651">
+              <img
+                alt=""
+                aria-hidden="true"
+                className="legacy-google-image"
+                src="/assets/section-two/G-icon.svg"
+              />
+            </span>
+            <span>most people needed.</span>
           </p>
         </div>
       </div>

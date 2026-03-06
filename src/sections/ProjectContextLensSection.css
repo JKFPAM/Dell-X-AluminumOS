@@ -174,7 +174,7 @@
 }
 
 .project-context-pill-item {
-  --pill-scale: 4.1;
+  --pill-scale: 3;
   position: absolute;
   line-height: 0;
   opacity: 0;
@@ -200,31 +200,31 @@
 .project-context-pill-item--material {
   left: 62%;
   top: 32%;
-  --pill-scale: 4;
+  --pill-scale: 3;
 }
 
 .project-context-pill-item--google-cloud {
   left: 25%;
   top: 49%;
-  --pill-scale: 4;
+  --pill-scale: 3;
 }
 
 .project-context-pill-item--android {
   left: 69%;
   top: 58%;
-  --pill-scale: 4;
+  --pill-scale: 3;
 }
 
 .project-context-pill-item--dell {
   left: 35%;
   top: 77%;
-  --pill-scale: 5;
+  --pill-scale: 4;
 }
 
 .project-context-pill-item--xps {
   left: 56%;
   top: 80%;
-  --pill-scale: 4;
+  --pill-scale: 3;
 }
 
 .project-context-lens-content.is-in-view .project-context-lens-kicker,

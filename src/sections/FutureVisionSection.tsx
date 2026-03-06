@@ -8,6 +8,12 @@ const CORNER_MEDIA_CLASSES = [
   'future-vision-media--bottom-left',
   'future-vision-media--bottom-right',
 ]
+const CORNER_MEDIA_SOURCES = [
+  '/assets/section-three/gem-listening.mp4',
+  '/assets/section-three/gem-search.mp4',
+  '/assets/section-three/gem-ams.mp4',
+  '/assets/section-three/gem-gems.mp4',
+]
 
 function FutureVisionSection() {
   const [isInView, setIsInView] = useState(false)
@@ -74,7 +80,7 @@ function FutureVisionSection() {
               playsInline
               preload="auto"
             >
-              <source src="/assets/shared/videos/live-with-gemini.mp4" type="video/mp4" />
+              <source src={CORNER_MEDIA_SOURCES[index]} type="video/mp4" />
             </video>
             <span
               aria-hidden="true"

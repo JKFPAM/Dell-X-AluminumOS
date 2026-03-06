@@ -65,26 +65,11 @@ function NarrativePersistentOverlay({
   activeSectionIndex,
   isActiveSectionSettled,
 }: NarrativePersistentOverlayProps) {
-  const inNarrativeCoreRange = activeSectionIndex >= 4 && activeSectionIndex <= 7
   const inNarrativeOverlayRange = activeSectionIndex >= 4 && activeSectionIndex <= 8
-  const [isLineOneLatchedVisible, setIsLineOneLatchedVisible] = useState(false)
   const [iconsPrimed, setIconsPrimed] = useState(false)
   const [iconsExitStarted, setIconsExitStarted] = useState(false)
   const [skipIconIntro, setSkipIconIntro] = useState(false)
   const previousSectionIndexRef = useRef(activeSectionIndex)
-
-  useEffect(() => {
-    const shouldLatch = activeSectionIndex === 4 && isActiveSectionSettled
-
-    if (shouldLatch) {
-      setIsLineOneLatchedVisible(true)
-      return
-    }
-
-    if (!inNarrativeCoreRange) {
-      setIsLineOneLatchedVisible(false)
-    }
-  }, [activeSectionIndex, inNarrativeCoreRange, isActiveSectionSettled])
 
   useEffect(() => {
     const previousSectionIndex = previousSectionIndexRef.current
@@ -144,7 +129,7 @@ function NarrativePersistentOverlay({
     return null
   }
 
-  const line1Visible = (activeSectionIndex >= 5 && activeSectionIndex <= 7) || (isLineOneLatchedVisible && activeSectionIndex <= 7)
+  const line1Visible = activeSectionIndex >= 4 && activeSectionIndex <= 7
   const line1Stacked = activeSectionIndex >= 5
 
   const line2Visible = activeSectionIndex >= 5 && activeSectionIndex <= 7
@@ -190,7 +175,9 @@ function NarrativePersistentOverlay({
           </span>
         ))}
       </div>
-      <p className={`narrative-line ${line1Visible ? 'is-visible' : ''} ${line1Stacked ? 'is-top row-0' : 'is-center'}`}>
+      <p
+        className={`narrative-line narrative-line--purchase ${line1Visible ? 'is-visible' : ''} ${line1Stacked ? 'is-top row-0' : 'is-center'}`}
+      >
         {PURCHASE_SHIFT_LINE}
       </p>
       <p className={`narrative-line ${line2Visible ? 'is-visible' : ''} ${line2Stacked ? 'is-top row-1' : 'is-center'}`}>
