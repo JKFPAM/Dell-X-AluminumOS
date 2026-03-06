@@ -1,4 +1,9 @@
 import type { ComponentType } from 'react'
+import ExperienceEnablersContextualSwitchingSection from './ExperienceEnablersContextualSwitchingSection'
+import ExperienceEnablersContinuitySection from './ExperienceEnablersContinuitySection'
+import ExperienceEnablersDeviceConnectivitySection from './ExperienceEnablersDeviceConnectivitySection'
+import ExperienceEnablersPassiveAutomationSection from './ExperienceEnablersPassiveAutomationSection'
+import ExperienceEnablersSharedIOSection from './ExperienceEnablersSharedIOSection'
 import ProjectContextCommandSection from './ProjectContextCommandSection'
 import ProjectContextAudienceSection from './ProjectContextAudienceSection'
 import ProjectContextModeSwitchersSection from './ProjectContextModeSwitchersSection'
@@ -65,5 +70,30 @@ export const presentationSectionConfigs: PresentationSectionConfig[] = [
     Component: ProjectContextPlaceholderSection,
     chapterLabel: 'Project Context & Vision',
     hashGroup: 12,
+  },
+  {
+    Component: ExperienceEnablersDeviceConnectivitySection,
+    chapterLabel: 'Experience Enablers',
+    hashGroup: 13,
+  },
+  {
+    Component: ExperienceEnablersContinuitySection,
+    chapterLabel: 'Experience Enablers',
+    hashGroup: 14,
+  },
+  {
+    Component: ExperienceEnablersSharedIOSection,
+    chapterLabel: 'Experience Enablers',
+    hashGroup: 15,
+  },
+  {
+    Component: ExperienceEnablersPassiveAutomationSection,
+    chapterLabel: 'Experience Enablers',
+    hashGroup: 16,
+  },
+  {
+    Component: ExperienceEnablersContextualSwitchingSection,
+    chapterLabel: 'Experience Enablers',
+    hashGroup: 17,
   },
 ]

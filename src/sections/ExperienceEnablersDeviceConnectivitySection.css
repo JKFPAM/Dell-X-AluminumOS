@@ -1,0 +1,291 @@
+.experience-enabler-connectivity {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+
+.experience-enabler-connectivity-content {
+  --experience-enabler-scene-two-right-gap: clamp(1rem, 2vw, 2.2rem);
+  position: relative;
+  width: min(100vw, 1920px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: clamp(2.2rem, 5.8vh, 4.6rem) clamp(1.25rem, 2.5vw, 3.2rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.experience-enabler-connectivity-layout {
+  width: min(97vw, 1860px);
+  display: grid;
+  grid-template-columns: minmax(18rem, 42%) minmax(34rem, 58%);
+  align-items: start;
+  column-gap: clamp(1.5rem, 2.9vw, 3.4rem);
+  transform: translateY(clamp(0.8rem, 2.8vh, 2.2rem));
+}
+
+.experience-enabler-connectivity-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1.35rem, 2.9vh, 2.6rem);
+}
+
+.experience-enabler-connectivity-sub {
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 980ms var(--gem-ease-out),
+    transform 1100ms var(--gem-ease-fluid);
+}
+
+.experience-enabler-connectivity-sub p {
+  margin: 0;
+  color: #eef2fe;
+  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(1rem, 1.354vw, 1.625rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.experience-enabler-connectivity-headline {
+  z-index: 2;
+  width: min(100%, 686px);
+  margin: 0;
+  color: #eef2fe;
+  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(2rem, 3.385vw, 4.0625rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 1100ms var(--gem-ease-out),
+    transform 1220ms var(--gem-ease-fluid);
+}
+
+.experience-enabler-connectivity-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.experience-enabler-scene-stack {
+  position: relative;
+  width: 100%;
+  padding-right: var(--experience-enabler-scene-two-right-gap);
+  overflow: visible;
+}
+
+.experience-enabler-scene {
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.8rem, 1.302vw, 1.5625rem);
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 1100ms var(--gem-ease-out),
+    transform 1220ms var(--gem-ease-fluid);
+}
+
+.experience-enabler-scene--one {
+  width: min(24.3229vw, 467px);
+  transition-delay: 180ms;
+}
+
+.experience-enabler-scene--two {
+  width: min(34.7222vw, 666.667px);
+  max-width: 666.667px;
+  margin-top: clamp(-8.6rem, -13vh, -5.8rem);
+  margin-left: auto;
+  margin-right: var(--experience-enabler-scene-two-right-gap);
+  transform: translateX(clamp(-2.5rem, -4.2vw, -4.8rem));
+  transition-delay: 300ms;
+  position: relative;
+  z-index: 2;
+}
+
+.experience-enabler-scene--one {
+  position: relative;
+  z-index: 1;
+}
+
+.experience-enabler-scene-media {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: clamp(1.5rem, 2.604vw, 3.125rem);
+}
+
+.experience-enabler-scene--one .experience-enabler-scene-media {
+  aspect-ratio: 467 / 417;
+}
+
+.experience-enabler-scene--two .experience-enabler-scene-media {
+  aspect-ratio: 1920 / 1080;
+}
+
+.experience-enabler-scene-video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 320ms ease;
+}
+
+.experience-enabler-scene-video.is-ready {
+  opacity: 1;
+}
+
+.experience-enabler-scene-fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(110% 110% at 16% 14%, rgba(195, 220, 255, 0.42) 0%, rgba(195, 220, 255, 0) 64%),
+    radial-gradient(100% 100% at 84% 86%, rgba(112, 160, 235, 0.42) 0%, rgba(112, 160, 235, 0) 74%),
+    rgba(42, 49, 71, 0.74);
+  transition: opacity 260ms ease;
+}
+
+.experience-enabler-scene-fallback.is-hidden {
+  opacity: 0;
+}
+
+.experience-enabler-scene-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-left: clamp(1.8rem, 2.604vw, 3.125rem);
+  color: #eef2fe;
+  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(0.9rem, 0.938vw, 1.125rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.experience-enabler-scene-copy p {
+  margin: 0;
+}
+
+.experience-enabler-scene-copy--one {
+  width: min(19.2188vw, 369px);
+  position: relative;
+  z-index: 4;
+}
+
+.experience-enabler-scene-copy--two {
+  width: min(29.4792vw, 566px);
+}
+
+.experience-enabler-connectivity-content.is-in-view .experience-enabler-connectivity-sub,
+.experience-enabler-connectivity-content.is-in-view .experience-enabler-connectivity-headline,
+.experience-enabler-connectivity-content.is-in-view .experience-enabler-scene {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+@media (max-width: 1360px) {
+  .experience-enabler-connectivity-content {
+    align-items: stretch;
+    padding: clamp(2rem, 6vh, 4rem) clamp(1.2rem, 3vw, 2.2rem);
+    overflow: visible;
+  }
+
+  .experience-enabler-connectivity-layout {
+    width: 100%;
+    grid-template-columns: 1fr 1fr;
+    column-gap: clamp(1.2rem, 2.6vw, 2rem);
+    transform: none;
+  }
+
+  .experience-enabler-scene--one,
+  .experience-enabler-scene--two {
+    width: 100%;
+  }
+
+  .experience-enabler-scene--one {
+    margin-left: 0;
+  }
+
+  .experience-enabler-scene-stack {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.9rem, 2vh, 1.4rem);
+    padding-right: var(--experience-enabler-scene-two-right-gap);
+  }
+
+  .experience-enabler-scene--two {
+    width: calc(100% - var(--experience-enabler-scene-two-right-gap));
+    max-width: none;
+    margin-top: 0;
+    margin-left: auto;
+    margin-right: var(--experience-enabler-scene-two-right-gap);
+    transform: none;
+  }
+
+  .experience-enabler-scene-copy--one,
+  .experience-enabler-scene-copy--two {
+    width: 100%;
+  }
+}
+
+@media (max-width: 860px) {
+  .experience-enabler-connectivity-content {
+    min-height: 100vh;
+    padding: clamp(3.2rem, 10vw, 4.5rem) 1rem 2rem;
+    align-items: flex-start;
+  }
+
+  .experience-enabler-connectivity-layout {
+    grid-template-columns: 1fr;
+    row-gap: 1.2rem;
+  }
+
+  .experience-enabler-connectivity-left {
+    gap: 0.9rem;
+  }
+
+  .experience-enabler-connectivity-sub {
+    gap: 0.2rem;
+  }
+
+  .experience-enabler-connectivity-headline {
+    width: min(95%, 30rem);
+    font-size: clamp(1.85rem, 9vw, 3rem);
+  }
+
+  .experience-enabler-connectivity-right {
+    width: min(100%, 34rem);
+  }
+
+  .experience-enabler-scene-copy {
+    padding-left: 0.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .experience-enabler-connectivity-sub,
+  .experience-enabler-connectivity-headline,
+  .experience-enabler-scene,
+  .experience-enabler-scene-video,
+  .experience-enabler-scene-fallback {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
