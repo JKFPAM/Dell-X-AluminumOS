@@ -5,6 +5,7 @@ import { presentationSectionConfigs } from './sections'
 const forwardKeys = new Set(['ArrowDown', 'ArrowRight'])
 const backwardKeys = new Set(['ArrowUp', 'ArrowLeft'])
 const logoutHoldDurationMs = 2500
+const chapterLabelSwapDurationMs = 420
 const ROMAN_STEPS = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'] as const
 
 const formatHashValue = (value: number) => `#${String(value).padStart(2, '0')}`
@@ -50,6 +51,49 @@ const getIndexForHashGroup = (hashGroup: number, sectionCount: number) => {
   return null
 }
 
+type ChapterSegment = {
+  key: string
+  label: string
+  startIndex: number
+  endIndex: number
+  sectionCount: number
+}
+
+const chapterSegments = presentationSectionConfigs.reduce<ChapterSegment[]>((segments, config, index) => {
+  const label = config.chapterLabel?.trim() || `Section ${index + 1}`
+  const previousSegment = segments[segments.length - 1]
+
+  if (previousSegment && previousSegment.label === label) {
+    previousSegment.endIndex = index
+    previousSegment.sectionCount += 1
+    return segments
+  }
+
+  segments.push({
+    key: `${label}-${index}`,
+    label,
+    startIndex: index,
+    endIndex: index,
+    sectionCount: 1,
+  })
+
+  return segments
+}, [])
+
+const chapterBoundaryPercents = (() => {
+  let cumulative = 0
+
+  return chapterSegments.flatMap((segment, index) => {
+    cumulative += segment.sectionCount
+
+    if (index >= chapterSegments.length - 1) {
+      return []
+    }
+
+    return [(cumulative / presentationSectionConfigs.length) * 100]
+  })
+})()
+
 type PresentationDeckProps = {
   onSectionChange?: (index: number, totalSections: number) => void
   onLogout?: () => void
@@ -60,6 +104,8 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
   const scrollPreviewRef = useRef<HTMLDivElement | null>(null)
   const logoutHoldRef = useRef<HTMLDivElement | null>(null)
   const sectionRefs = useRef<Array<HTMLDivElement | null>>([])
+  const loopCloneRef = useRef<HTMLDivElement | null>(null)
+  const isLoopTransitionActiveRef = useRef(false)
   const logoutHoldStartRef = useRef<number | null>(null)
   const logoutHoldRafRef = useRef(0)
   const isLogoutHoldActiveRef = useRef(false)
@@ -67,7 +113,54 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
   const [isLogoutHoldVisible, setIsLogoutHoldVisible] = useState(false)
   const [activeSectionIndex, setActiveSectionIndex] = useState(0)
   const [isActiveSectionSettled, setIsActiveSectionSettled] = useState(false)
+  const [hoveredChapterLabel, setHoveredChapterLabel] = useState<string | null>(null)
+  const chapterLabelSwapTimeoutRef = useRef(0)
   const activeChapterLabel = presentationSectionConfigs[activeSectionIndex]?.chapterLabel ?? ''
+  const visibleChapterLabel = hoveredChapterLabel || activeChapterLabel
+  const [displayChapterLabel, setDisplayChapterLabel] = useState(visibleChapterLabel)
+  const [incomingChapterLabel, setIncomingChapterLabel] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!visibleChapterLabel || visibleChapterLabel === displayChapterLabel) {
+      return
+    }
+
+    if (chapterLabelSwapTimeoutRef.current) {
+      window.clearTimeout(chapterLabelSwapTimeoutRef.current)
+    }
+
+    setIncomingChapterLabel(visibleChapterLabel)
+    chapterLabelSwapTimeoutRef.current = window.setTimeout(() => {
+      setDisplayChapterLabel(visibleChapterLabel)
+      setIncomingChapterLabel(null)
+      chapterLabelSwapTimeoutRef.current = 0
+    }, chapterLabelSwapDurationMs + 20)
+  }, [displayChapterLabel, visibleChapterLabel])
+
+  useEffect(() => {
+    return () => {
+      if (!chapterLabelSwapTimeoutRef.current) {
+        return
+      }
+
+      window.clearTimeout(chapterLabelSwapTimeoutRef.current)
+      chapterLabelSwapTimeoutRef.current = 0
+    }
+  }, [])
+
+  const jumpToSection = (index: number) => {
+    const targetSection = sectionRefs.current[index]
+
+    if (!targetSection) {
+      return
+    }
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    targetSection.scrollIntoView({
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      block: 'start',
+    })
+  }
 
   useEffect(() => {
     const container = appRef.current
@@ -79,6 +172,7 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let scrollRaf = 0
     let initRaf = 0
+    let loopResetRaf = 0
     let activeSectionIndex = -1
     let isScrollPreviewVisible = false
     let hasInitializedHash = false
@@ -161,6 +255,22 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       })
     }
 
+    const jumpToFirstSectionInstant = () => {
+      container.style.setProperty('scroll-behavior', 'auto')
+      container.style.setProperty('scroll-snap-type', 'none')
+      container.scrollTop = 0
+
+      if (loopResetRaf) {
+        window.cancelAnimationFrame(loopResetRaf)
+      }
+
+      loopResetRaf = window.requestAnimationFrame(() => {
+        loopResetRaf = 0
+        container.style.removeProperty('scroll-behavior')
+        container.style.removeProperty('scroll-snap-type')
+      })
+    }
+
     const moveSection = (direction: 1 | -1) => {
       const sections = getSections()
 
@@ -169,6 +279,23 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       }
 
       const currentIndex = getActiveSectionIndex()
+      const isAtLastSection = currentIndex === sections.length - 1
+
+      if (direction === 1 && isAtLastSection) {
+        const loopCloneSection = loopCloneRef.current
+
+        if (loopCloneSection) {
+          isLoopTransitionActiveRef.current = true
+          loopCloneSection.scrollIntoView({
+            behavior: prefersReducedMotion ? 'auto' : 'smooth',
+            block: 'start',
+          })
+          return
+        }
+      }
+
+      isLoopTransitionActiveRef.current = false
+
       const nextIndex = Math.max(0, Math.min(sections.length - 1, currentIndex + direction))
 
       if (nextIndex === currentIndex) {
@@ -245,10 +372,40 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
     const updateSectionMotion = () => {
       const viewportHeight = container.clientHeight || 1
       const viewportCenter = viewportHeight * 0.5
-      const maxScroll = container.scrollHeight - container.clientHeight
-      const scrollProgress = maxScroll > 0 ? container.scrollTop / maxScroll : 0
+      const sections = getSections()
+      const loopCloneSection = loopCloneRef.current
+
+      if (
+        isLoopTransitionActiveRef.current &&
+        loopCloneSection &&
+        Math.abs(container.scrollTop - loopCloneSection.offsetTop) <= 2
+      ) {
+        isLoopTransitionActiveRef.current = false
+        jumpToFirstSectionInstant()
+        container.style.setProperty('--scroll-progress', '0')
+        setScrollPreviewVisibility(false)
+        setIsActiveSectionSettled(true)
+        setHoveredChapterLabel(null)
+
+        if (activeSectionIndex !== 0) {
+          activeSectionIndex = 0
+          setActiveSectionIndex(0)
+
+          if (hasInitializedHash) {
+            syncHashToIndex(0)
+          }
+
+          notifySectionChange(0)
+        }
+
+        return
+      }
+
+      const lastRealSection = sections[sections.length - 1] ?? null
+      const maxScroll = lastRealSection?.offsetTop ?? container.scrollHeight - container.clientHeight
+      const scrollProgress = maxScroll > 0 ? Math.min(1, container.scrollTop / maxScroll) : 0
       const currentIndex = getActiveSectionIndex()
-      const currentSection = getSections()[currentIndex] ?? null
+      const currentSection = sections[currentIndex] ?? null
       const settleTolerancePx = 8
       const isSettled = currentSection
         ? Math.abs(container.scrollTop - currentSection.offsetTop) <= settleTolerancePx
@@ -396,12 +553,18 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
 
     return () => {
       stopLogoutHold()
+      isLoopTransitionActiveRef.current = false
       if (scrollRaf) {
         window.cancelAnimationFrame(scrollRaf)
       }
       if (initRaf) {
         window.cancelAnimationFrame(initRaf)
       }
+      if (loopResetRaf) {
+        window.cancelAnimationFrame(loopResetRaf)
+      }
+      container.style.removeProperty('scroll-behavior')
+      container.style.removeProperty('scroll-snap-type')
       container.removeEventListener('scroll', scheduleSectionMotion)
       window.removeEventListener('resize', scheduleSectionMotion)
       window.removeEventListener('keydown', handleKeydown)
@@ -422,12 +585,49 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
         <span className="logout-hold-fill" />
         <span className="logout-hold-label">Hold Q to log out</span>
       </div>
-      <div aria-hidden="true" className="scroll-preview" ref={scrollPreviewRef}>
-        {activeChapterLabel && <span className="scroll-preview-chapter">{activeChapterLabel}</span>}
+      <nav aria-label="Presentation chapter navigation" className="scroll-preview" ref={scrollPreviewRef}>
+        {displayChapterLabel && (
+          <span aria-live="polite" className="scroll-preview-chapter">
+            <span className={`scroll-preview-chapter-text ${incomingChapterLabel ? 'is-out' : ''}`}>
+              {displayChapterLabel}
+            </span>
+            {incomingChapterLabel && (
+              <span className="scroll-preview-chapter-text is-in">{incomingChapterLabel}</span>
+            )}
+          </span>
+        )}
         <div className="scroll-preview-track">
           <span className="scroll-preview-fill" />
+          <div aria-hidden="true" className="scroll-preview-dividers">
+            {chapterBoundaryPercents.map((percent) => (
+              <span className="scroll-preview-divider" key={`scroll-preview-divider-${percent}`} style={{ left: `${percent}%` }} />
+            ))}
+          </div>
+          <div className="scroll-preview-segments">
+            {chapterSegments.map((segment) => {
+              const isActive =
+                activeSectionIndex >= segment.startIndex && activeSectionIndex <= segment.endIndex
+
+              return (
+                <button
+                  aria-label={`Jump to ${segment.label}`}
+                  className={`scroll-preview-segment ${isActive ? 'is-active' : ''}`}
+                  key={segment.key}
+                  onBlur={() => setHoveredChapterLabel(null)}
+                  onClick={() => jumpToSection(segment.startIndex)}
+                  onFocus={() => setHoveredChapterLabel(segment.label)}
+                  onMouseEnter={() => setHoveredChapterLabel(segment.label)}
+                  onMouseLeave={() => setHoveredChapterLabel(null)}
+                  style={{ flexGrow: segment.sectionCount }}
+                  type="button"
+                >
+                  <span aria-hidden="true" className="scroll-preview-segment-hit" />
+                </button>
+              )
+            })}
+          </div>
         </div>
-      </div>
+      </nav>
       <NarrativePersistentOverlay
         activeSectionIndex={activeSectionIndex}
         isActiveSectionSettled={isActiveSectionSettled}
@@ -446,9 +646,30 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
             </div>
           </div>
         ))}
+        {presentationSectionConfigs[0]?.Component && (
+          <div
+            aria-hidden="true"
+            className="presentation-section is-parallax-disabled presentation-section--loop-clone"
+            ref={loopCloneRef}
+          >
+            <div className="presentation-section-content">
+              <LoopCloneSection />
+            </div>
+          </div>
+        )}
       </div>
     </main>
   )
+}
+
+function LoopCloneSection() {
+  const FirstSectionComponent = presentationSectionConfigs[0]?.Component
+
+  if (!FirstSectionComponent) {
+    return null
+  }
+
+  return <FirstSectionComponent />
 }
 
 export default PresentationDeck

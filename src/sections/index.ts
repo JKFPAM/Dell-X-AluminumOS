@@ -14,6 +14,7 @@ import IntroSection from './IntroSection'
 import LegacyContextSection from './LegacyContextSection'
 import LifeDimensionsSection from './LifeDimensionsSection'
 import MultiProductShiftSection from './MultiProductShiftSection'
+import OutroFinalSection from './OutroFinalSection'
 import OutroSection from './OutroSection'
 import ProjectContextLensSection from './ProjectContextLensSection'
 import ProjectContextQuestionsSection from './ProjectContextQuestionsSection'
@@ -101,5 +102,10 @@ export const presentationSectionConfigs: PresentationSectionConfig[] = [
     Component: OutroSection,
     chapterLabel: 'Outro',
     hashGroup: 18,
+  },
+  {
+    Component: OutroFinalSection,
+    chapterLabel: 'Outro',
+    hashGroup: 19,
   },
 ]

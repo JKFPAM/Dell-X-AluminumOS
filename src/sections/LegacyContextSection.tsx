@@ -41,7 +41,6 @@ function LegacyContextSection() {
       >
         <p className="legacy-intro" data-node-id="2735:5604">
           For the last twenty years, the winners in
-          <br />
           technology were the ones who...
         </p>
 
