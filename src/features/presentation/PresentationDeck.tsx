@@ -7,11 +7,14 @@ import { presentationSectionConfigs } from '@/sections'
 
 const forwardKeys = new Set(['ArrowDown', 'ArrowRight'])
 const backwardKeys = new Set(['ArrowUp', 'ArrowLeft'])
-const logoutHoldDurationMs = 2500
+const logoutHoldDurationMs = 2000
+const fullscreenHoldDurationMs = 2000
+const restartHoldDurationMs = 2000
 const chapterLabelSwapDurationMs = 420
 const finalSectionLoopHoldMs = 320
 const finalSectionLoopFadeMs = 900
 const finalSectionLoopRevealMs = 320
+const sectionNavigationDurationMs = 760
 
 type ChapterSegment = {
   key: string
@@ -74,13 +77,25 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
   const appRef = useRef<HTMLElement | null>(null)
   const scrollPreviewRef = useRef<HTMLDivElement | null>(null)
   const logoutHoldRef = useRef<HTMLDivElement | null>(null)
+  const fullscreenHoldRef = useRef<HTMLDivElement | null>(null)
+  const restartHoldRef = useRef<HTMLDivElement | null>(null)
   const sectionRefs = useRef<Array<HTMLDivElement | null>>([])
   const logoutHoldStartRef = useRef<number | null>(null)
   const logoutHoldRafRef = useRef(0)
+  const fullscreenHoldStartRef = useRef<number | null>(null)
+  const fullscreenHoldRafRef = useRef(0)
+  const restartHoldStartRef = useRef<number | null>(null)
+  const restartHoldRafRef = useRef(0)
   const isLogoutHoldActiveRef = useRef(false)
   const hasTriggeredLogoutRef = useRef(false)
+  const isFullscreenHoldActiveRef = useRef(false)
+  const hasTriggeredFullscreenRef = useRef(false)
+  const isRestartHoldActiveRef = useRef(false)
+  const hasTriggeredRestartRef = useRef(false)
   const isLoopFadeVisibleRef = useRef(false)
   const [isLogoutHoldVisible, setIsLogoutHoldVisible] = useState(false)
+  const [isFullscreenHoldVisible, setIsFullscreenHoldVisible] = useState(false)
+  const [isRestartHoldVisible, setIsRestartHoldVisible] = useState(false)
   const [isLoopFadeVisible, setIsLoopFadeVisible] = useState(false)
   const [activeSectionIndex, setActiveSectionIndex] = useState(0)
   const [isActiveSectionSettled, setIsActiveSectionSettled] = useState(false)
@@ -135,16 +150,17 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
   }, [])
 
   const jumpToSection = (index: number) => {
+    const container = appRef.current
     const targetSection = sectionRefs.current[index]
 
-    if (!targetSection) {
+    if (!container || !targetSection) {
       return
     }
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    targetSection.scrollIntoView({
+    container.scrollTo({
+      top: targetSection.offsetTop,
       behavior: prefersReducedMotion ? 'auto' : 'smooth',
-      block: 'start',
     })
   }
 
@@ -159,6 +175,9 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
     let scrollRaf = 0
     let initRaf = 0
     let loopResetRaf = 0
+    let navigationScrollRaf = 0
+    let restoreScrollBehaviorRaf = 0
+    let isProgrammaticNavigationActive = false
     let activeSectionIndex = -1
     let isScrollPreviewVisible = false
     let hasInitializedHash = false
@@ -209,15 +228,66 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
 
     const scrollToSection = (index: number, behavior: ScrollBehavior) => {
       const sections = getSections()
+      const targetSection = sections[index]
 
-      if (!sections.length || index < 0 || index >= sections.length) {
+      if (!sections.length || index < 0 || index >= sections.length || !targetSection) {
         return
       }
 
-      sections[index].scrollIntoView({
-        behavior,
-        block: 'start',
-      })
+      const targetTop = targetSection.offsetTop
+
+      if (navigationScrollRaf) {
+        window.cancelAnimationFrame(navigationScrollRaf)
+        navigationScrollRaf = 0
+      }
+      if (restoreScrollBehaviorRaf) {
+        window.cancelAnimationFrame(restoreScrollBehaviorRaf)
+        restoreScrollBehaviorRaf = 0
+      }
+
+      if (behavior === 'auto' || prefersReducedMotion) {
+        isProgrammaticNavigationActive = false
+        container.scrollTop = targetTop
+        return
+      }
+
+      const startTop = container.scrollTop
+      const distance = targetTop - startTop
+
+      if (Math.abs(distance) < 1) {
+        isProgrammaticNavigationActive = false
+        container.scrollTop = targetTop
+        return
+      }
+
+      const startTime = performance.now()
+      const easeOutCubic = (t: number) => 1 - (1 - t) ** 3
+      isProgrammaticNavigationActive = true
+      container.style.setProperty('scroll-snap-type', 'none')
+      container.style.setProperty('scroll-behavior', 'auto')
+
+      const tick = (now: number) => {
+        const elapsed = now - startTime
+        const progress = Math.min(1, elapsed / sectionNavigationDurationMs)
+        const easedProgress = easeOutCubic(progress)
+
+        container.scrollTop = startTop + distance * easedProgress
+
+        if (progress < 1) {
+          navigationScrollRaf = window.requestAnimationFrame(tick)
+          return
+        }
+
+        navigationScrollRaf = 0
+        isProgrammaticNavigationActive = false
+        restoreScrollBehaviorRaf = window.requestAnimationFrame(() => {
+          restoreScrollBehaviorRaf = 0
+          container.style.removeProperty('scroll-snap-type')
+          container.style.removeProperty('scroll-behavior')
+        })
+      }
+
+      navigationScrollRaf = window.requestAnimationFrame(tick)
     }
 
     const jumpToFirstSectionInstant = () => {
@@ -333,6 +403,12 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
     const setLogoutProgress = (progress: number) => {
       logoutHoldRef.current?.style.setProperty('--logout-hold-progress', progress.toFixed(4))
     }
+    const setFullscreenProgress = (progress: number) => {
+      fullscreenHoldRef.current?.style.setProperty('--logout-hold-progress', progress.toFixed(4))
+    }
+    const setRestartProgress = (progress: number) => {
+      restartHoldRef.current?.style.setProperty('--logout-hold-progress', progress.toFixed(4))
+    }
 
     const stopLogoutHold = () => {
       isLogoutHoldActiveRef.current = false
@@ -345,6 +421,116 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
 
       setLogoutProgress(0)
       setIsLogoutHoldVisible(false)
+    }
+    const requestPresentationFullscreen = async () => {
+      const root = appRef.current ?? document.documentElement
+      const rootWithWebkit = root as HTMLElement & { webkitRequestFullscreen?: () => Promise<void> | void }
+      const documentWithWebkit = document as Document & {
+        webkitFullscreenElement?: Element | null
+      }
+
+      if (document.fullscreenElement || documentWithWebkit.webkitFullscreenElement) {
+        return
+      }
+
+      try {
+        if (root.requestFullscreen) {
+          await root.requestFullscreen()
+          return
+        }
+
+        if (rootWithWebkit.webkitRequestFullscreen) {
+          await rootWithWebkit.webkitRequestFullscreen()
+        }
+      } catch {
+        // no-op: fullscreen requires activation + may be blocked by browser/user settings
+      }
+    }
+    const stopFullscreenHold = () => {
+      isFullscreenHoldActiveRef.current = false
+      fullscreenHoldStartRef.current = null
+
+      if (fullscreenHoldRafRef.current) {
+        window.cancelAnimationFrame(fullscreenHoldRafRef.current)
+        fullscreenHoldRafRef.current = 0
+      }
+
+      setFullscreenProgress(0)
+      setIsFullscreenHoldVisible(false)
+    }
+    const stopRestartHold = () => {
+      isRestartHoldActiveRef.current = false
+      restartHoldStartRef.current = null
+
+      if (restartHoldRafRef.current) {
+        window.cancelAnimationFrame(restartHoldRafRef.current)
+        restartHoldRafRef.current = 0
+      }
+
+      setRestartProgress(0)
+      setIsRestartHoldVisible(false)
+    }
+    const tickFullscreenHold = (now: number) => {
+      if (!isFullscreenHoldActiveRef.current || fullscreenHoldStartRef.current === null) {
+        return
+      }
+
+      const elapsed = now - fullscreenHoldStartRef.current
+      const progress = Math.min(1, elapsed / fullscreenHoldDurationMs)
+
+      setFullscreenProgress(progress)
+
+      if (progress >= 1 && !hasTriggeredFullscreenRef.current) {
+        hasTriggeredFullscreenRef.current = true
+        stopFullscreenHold()
+        void requestPresentationFullscreen()
+        return
+      }
+
+      fullscreenHoldRafRef.current = window.requestAnimationFrame(tickFullscreenHold)
+    }
+    const startFullscreenHold = () => {
+      if (isFullscreenHoldActiveRef.current) {
+        return
+      }
+
+      hasTriggeredFullscreenRef.current = false
+      isFullscreenHoldActiveRef.current = true
+      fullscreenHoldStartRef.current = performance.now()
+      setFullscreenProgress(0)
+      setIsFullscreenHoldVisible(true)
+      fullscreenHoldRafRef.current = window.requestAnimationFrame(tickFullscreenHold)
+    }
+    const tickRestartHold = (now: number) => {
+      if (!isRestartHoldActiveRef.current || restartHoldStartRef.current === null) {
+        return
+      }
+
+      const elapsed = now - restartHoldStartRef.current
+      const progress = Math.min(1, elapsed / restartHoldDurationMs)
+
+      setRestartProgress(progress)
+
+      if (progress >= 1 && !hasTriggeredRestartRef.current) {
+        hasTriggeredRestartRef.current = true
+        stopRestartHold()
+        scrollToSection(0, prefersReducedMotion ? 'auto' : 'smooth')
+        return
+      }
+
+      restartHoldRafRef.current = window.requestAnimationFrame(tickRestartHold)
+    }
+    const startRestartHold = () => {
+      if (isRestartHoldActiveRef.current) {
+        return
+      }
+
+      hasTriggeredRestartRef.current = false
+      isRestartHoldActiveRef.current = true
+      restartHoldStartRef.current = performance.now()
+      setRestartProgress(0)
+      setIsRestartHoldVisible(true)
+      restartHoldRafRef.current = window.requestAnimationFrame(tickRestartHold)
     }
 
     const tickLogoutHold = (now: number) => {
@@ -413,20 +599,22 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
         clearFinalSectionLoopTimers()
       }
 
-      sectionRefs.current.forEach((section, index) => {
-        if (!section) {
-          return
-        }
+      if (!isProgrammaticNavigationActive) {
+        sectionRefs.current.forEach((section, index) => {
+          if (!section) {
+            return
+          }
 
-        const rect = section.getBoundingClientRect()
-        const containerRect = container.getBoundingClientRect()
-        const sectionCenter = rect.top - containerRect.top + rect.height * 0.5
-        const offset = (sectionCenter - viewportCenter) / viewportHeight
-        const isParallaxDisabled = Boolean(presentationSectionConfigs[index]?.disableParallax)
-        const parallaxY = prefersReducedMotion || isParallaxDisabled ? 0 : -offset * 16
+          const rect = section.getBoundingClientRect()
+          const containerRect = container.getBoundingClientRect()
+          const sectionCenter = rect.top - containerRect.top + rect.height * 0.5
+          const offset = (sectionCenter - viewportCenter) / viewportHeight
+          const isParallaxDisabled = Boolean(presentationSectionConfigs[index]?.disableParallax)
+          const parallaxY = prefersReducedMotion || isParallaxDisabled ? 0 : -offset * 16
 
-        section.style.setProperty('--section-parallax-y', `${parallaxY.toFixed(2)}px`)
-      })
+          section.style.setProperty('--section-parallax-y', `${parallaxY.toFixed(2)}px`)
+        })
+      }
 
       if (currentIndex !== activeSectionIndex) {
         activeSectionIndex = currentIndex
@@ -475,6 +663,19 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
         return
       }
 
+      if (event.key.toLowerCase() === 'f') {
+        if (!event.repeat) {
+          startFullscreenHold()
+        }
+        return
+      }
+      if (event.key.toLowerCase() === 's') {
+        if (!event.repeat) {
+          startRestartHold()
+        }
+        return
+      }
+
       if (forwardKeys.has(event.key)) {
         event.preventDefault()
         moveSection(1)
@@ -488,15 +689,26 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
     }
 
     const handleKeyup = (event: KeyboardEvent) => {
-      if (event.key.toLowerCase() !== 'q') {
+      const key = event.key.toLowerCase()
+      if (key === 'q') {
+        stopLogoutHold()
         return
       }
 
-      stopLogoutHold()
+      if (key === 'f') {
+        stopFullscreenHold()
+        return
+      }
+
+      if (key === 's') {
+        stopRestartHold()
+      }
     }
 
     const handleWindowBlur = () => {
       stopLogoutHold()
+      stopFullscreenHold()
+      stopRestartHold()
     }
 
     const handleVisibilityChange = () => {
@@ -505,6 +717,8 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       }
 
       stopLogoutHold()
+      stopFullscreenHold()
+      stopRestartHold()
     }
 
     const handleHashChange = () => {
@@ -574,6 +788,8 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
 
     return () => {
       stopLogoutHold()
+      stopFullscreenHold()
+      stopRestartHold()
       clearFinalSectionLoopTimers()
       setLoopFadeVisibility(false)
       if (scrollRaf) {
@@ -585,6 +801,13 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       if (loopResetRaf) {
         window.cancelAnimationFrame(loopResetRaf)
       }
+      if (navigationScrollRaf) {
+        window.cancelAnimationFrame(navigationScrollRaf)
+      }
+      if (restoreScrollBehaviorRaf) {
+        window.cancelAnimationFrame(restoreScrollBehaviorRaf)
+      }
+      isProgrammaticNavigationActive = false
       container.style.removeProperty('scroll-behavior')
       container.style.removeProperty('scroll-snap-type')
       container.removeEventListener('scroll', scheduleSectionMotion)
@@ -609,6 +832,22 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       >
         <span className="logout-hold-fill" />
         <span className="logout-hold-label">Hold Q to log out</span>
+      </div>
+      <div
+        aria-hidden="true"
+        className={`logout-hold-indicator fullscreen-hold-indicator ${isFullscreenHoldVisible ? 'is-visible' : ''}`}
+        ref={fullscreenHoldRef}
+      >
+        <span className="logout-hold-fill" />
+        <span className="logout-hold-label">Hold F for full screen</span>
+      </div>
+      <div
+        aria-hidden="true"
+        className={`logout-hold-indicator restart-hold-indicator ${isRestartHoldVisible ? 'is-visible' : ''}`}
+        ref={restartHoldRef}
+      >
+        <span className="logout-hold-fill" />
+        <span className="logout-hold-label">Hold S to restart</span>
       </div>
       <nav aria-label="Presentation chapter navigation" className="scroll-preview" ref={scrollPreviewRef}>
         {displayChapterLabel && (

@@ -103,6 +103,23 @@ function App() {
     setCurrentPath(normalizedNextPath)
   }, [])
 
+  const resumePresentationMedia = useCallback(() => {
+    const videos = Array.from(document.querySelectorAll<HTMLVideoElement>('video'))
+
+    videos.forEach((video) => {
+      video.muted = true
+      video.defaultMuted = true
+      video.playsInline = true
+
+      const playAttempt = video.play()
+      if (playAttempt && typeof playAttempt.catch === 'function') {
+        playAttempt.catch(() => {
+          // no-op: Safari may still gate playback until next activation
+        })
+      }
+    })
+  }, [])
+
   const handleUnlock = useCallback((email: string, introHeroTime: number) => {
     window.localStorage.setItem(GATE_UNLOCK_KEY, 'true')
     window.localStorage.setItem(GATE_EMAIL_KEY, email)
@@ -110,9 +127,31 @@ function App() {
 
     setViewerEmail(email)
     setGatePhase('unlocking')
+    resumePresentationMedia()
+    console.info(
+      'Vision developed in partnership with forpeople: https://forpeople.com/',
+    )
 
     trackPresentationEvent(TRACKING_EVENTS.presentationUnlock, { email })
-  }, [])
+  }, [resumePresentationMedia])
+
+  useEffect(() => {
+    if (gatePhase === 'locked') {
+      return
+    }
+
+    // Retry briefly after unlock while sections mount and media metadata becomes ready.
+    const retryDelaysMs = [0, 120, 320, 700, 1200]
+    const timeouts = retryDelaysMs.map((delayMs) =>
+      window.setTimeout(() => {
+        resumePresentationMedia()
+      }, delayMs),
+    )
+
+    return () => {
+      timeouts.forEach((timeoutId) => window.clearTimeout(timeoutId))
+    }
+  }, [gatePhase, resumePresentationMedia])
 
   const handleLogout = useCallback(() => {
     window.localStorage.removeItem(GATE_UNLOCK_KEY)

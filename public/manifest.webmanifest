@@ -1,0 +1,24 @@
+{
+  "name": "AluminumOS Presentation",
+  "short_name": "AluminumOS",
+  "description": "Defining a future vision for AluminumOS on Dell",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#02030a",
+  "theme_color": "#02030a",
+  "icons": [
+    {
+      "src": "/assets/favicon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

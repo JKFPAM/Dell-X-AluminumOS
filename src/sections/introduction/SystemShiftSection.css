@@ -32,16 +32,18 @@
   pointer-events: none;
   width: 100vw;
   height: 100vh;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) rotate(-22deg) scale(1.9);
+  transform-origin: center center;
   background: url('/assets/section-four/gem-background.jpg') center center / cover no-repeat;
   mix-blend-mode: screen;
   opacity: 0;
   transition:
-    opacity 1800ms cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 1800ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 2200ms cubic-bezier(0.12, 1, 0.22, 1);
 }
 
 .system-shift-content.is-active .system-shift-bg-image {
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) rotate(0deg) scale(1);
 }
 
 .system-shift-ambient {
@@ -223,7 +225,7 @@
 }
 
 .system-shift-intro {
-  top: clamp(4rem, 9.259vh, 6.25rem);
+  top: clamp(7rem, 19vh, 12rem);
   left: clamp(1.25rem, 5.208vw, 6.25rem);
   width: min(39.284vw, 754.256px);
   transform: translate3d(0, 34px, 0) scale(0.988);
@@ -232,7 +234,7 @@
 
 .system-shift-outro {
   right: clamp(1.249rem, 5.204vw, 6.246rem);
-  bottom: clamp(4rem, 9.259vh, 6.25rem);
+  bottom: clamp(7rem, 19vh, 12rem);
   width: min(36.41vw, 699.068px);
   text-align: right;
   transform: translate3d(0, 96px, 0) scale(0.98);
