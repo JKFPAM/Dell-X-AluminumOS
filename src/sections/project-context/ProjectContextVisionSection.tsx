@@ -42,7 +42,7 @@ function ProjectContextVisionSection() {
           <p className="project-context-vision-headline" data-node-id="3435:10315">
             Position
             <span className="project-context-vision-pill" data-name="Dell Pill" data-node-id="3435:10316">
-              <img alt="Dell" src="/assets/Dell-pill.svg" />
+              <img alt="Dell" src="/assets/dell-logo.svg" />
             </span>
             as the premium
             <br />

@@ -97,17 +97,24 @@
 
 .project-context-vision-pill {
   display: inline-flex;
+  padding: 20px 26px 20px 30px;
   align-items: center;
   justify-content: center;
+  border-radius: 100.841px;
+  background: #0672cb;
+  box-shadow: 0 0 20px 8px rgba(45, 144, 245, 0.38);
   vertical-align: baseline;
-  margin-inline: clamp(0.45rem, 0.88vw, 0.84rem);
+  margin-inline: clamp(0.42rem, 0.8vw, 0.78rem);
   line-height: 0;
 }
 
 .project-context-vision-pill img {
   display: block;
   width: auto;
-  height: clamp(2.8rem, 10vw, 6.75rem);
+  height: clamp(1.7rem, 2.35vw, 2.55rem);
+  max-width: none;
+  flex: 0 0 auto;
+  object-fit: contain;
 }
 
 .project-context-vision-content.is-in-view .project-context-vision-kicker,
@@ -153,7 +160,13 @@
   }
 
   .project-context-vision-pill img {
-    height: clamp(2.6rem, 11vw, 4rem);
+    width: auto;
+    height: clamp(1.55rem, 6.7vw, 2.1rem);
+  }
+
+  .project-context-vision-pill {
+    padding: clamp(0.72rem, 2.2vw, 1rem) clamp(0.86rem, 2.6vw, 1.2rem) clamp(0.72rem, 2.2vw, 1rem)
+      clamp(0.98rem, 3vw, 1.34rem);
   }
 }
 
