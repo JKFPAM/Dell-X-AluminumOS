@@ -1,14 +1,11 @@
-type EventPayload = Record<string, unknown>
-
-type TrackingEventName =
-  | 'presentation_unlock'
-  | 'presentation_load'
-  | 'section_view'
-  | 'presentation_exit'
+import type { TrackingEventName, TrackingEventPayloadMap } from '../content/trackingEvents'
 
 import { getVisitorSessionId } from './visitorSession'
 
-export const trackPresentationEvent = (eventName: TrackingEventName, payload: EventPayload = {}) => {
+export const trackPresentationEvent = <TEventName extends TrackingEventName>(
+  eventName: TEventName,
+  payload: TrackingEventPayloadMap[TEventName],
+) => {
   if (typeof window === 'undefined') {
     return
   }

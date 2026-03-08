@@ -4,7 +4,7 @@ import {
   LIFE_DIMENSIONS_LINE,
   MULTI_PRODUCT_SHIFT_LINE,
   PURCHASE_SHIFT_LINE,
-} from '../sections/stackedNarrativeLines'
+} from '../../../content/narrativeLines'
 
 type NarrativeIcon = {
   id: string
@@ -78,45 +78,66 @@ function NarrativePersistentOverlay({
     const shouldResetIcons = activeSectionIndex < 6 || activeSectionIndex > 7
     const shouldPrimeIconsFromLanding =
       activeSectionIndex === 6 && isActiveSectionSettled
+    let nextIconsPrimed = iconsPrimed
+    let nextIconsExitStarted = iconsExitStarted
+    let nextSkipIconIntro = skipIconIntro
 
-    if (hasMovedBackFromNextSection && !skipIconIntro) {
-      setSkipIconIntro(true)
+    if (hasMovedBackFromNextSection && !nextSkipIconIntro) {
+      nextSkipIconIntro = true
     }
 
     if (shouldResetIcons) {
-      if (iconsPrimed) {
-        setIconsPrimed(false)
+      if (nextIconsPrimed) {
+        nextIconsPrimed = false
       }
-      if (iconsExitStarted) {
-        setIconsExitStarted(false)
+      if (nextIconsExitStarted) {
+        nextIconsExitStarted = false
       }
-      if (activeSectionIndex > 7 && skipIconIntro) {
-        setSkipIconIntro(false)
+      if (activeSectionIndex > 7 && nextSkipIconIntro) {
+        nextSkipIconIntro = false
       }
       previousSectionIndexRef.current = activeSectionIndex
+    } else {
+      if (shouldPrimeIconsFromLanding && !nextIconsPrimed) {
+        nextIconsPrimed = true
+      }
+
+      if (activeSectionIndex === 6 && nextIconsExitStarted) {
+        nextIconsExitStarted = false
+      }
+
+      if (
+        activeSectionIndex === 7 &&
+        nextIconsPrimed &&
+        !nextIconsExitStarted
+      ) {
+        nextIconsExitStarted = true
+        if (nextSkipIconIntro) {
+          nextSkipIconIntro = false
+        }
+      }
+
+      previousSectionIndexRef.current = activeSectionIndex
+    }
+
+    const didChange =
+      nextIconsPrimed !== iconsPrimed ||
+      nextIconsExitStarted !== iconsExitStarted ||
+      nextSkipIconIntro !== skipIconIntro
+
+    if (!didChange) {
       return
     }
 
-    if (shouldPrimeIconsFromLanding && !iconsPrimed) {
-      setIconsPrimed(true)
-    }
+    const updateTimer = window.setTimeout(() => {
+      setIconsPrimed(nextIconsPrimed)
+      setIconsExitStarted(nextIconsExitStarted)
+      setSkipIconIntro(nextSkipIconIntro)
+    }, 0)
 
-    if (activeSectionIndex === 6 && iconsExitStarted) {
-      setIconsExitStarted(false)
+    return () => {
+      window.clearTimeout(updateTimer)
     }
-
-    if (
-      activeSectionIndex === 7 &&
-      iconsPrimed &&
-      !iconsExitStarted
-    ) {
-      setIconsExitStarted(true)
-      if (skipIconIntro) {
-        setSkipIconIntro(false)
-      }
-    }
-
-    previousSectionIndexRef.current = activeSectionIndex
   }, [
     activeSectionIndex,
     iconsExitStarted,

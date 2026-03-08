@@ -59,9 +59,11 @@ PASSCODE=your-secure-passcode
 AIRTABLE_API_TOKEN=pat_xxxxxxxxxxxxxxxxx
 AIRTABLE_BASE_ID=appXXXXXXXXXXXXXX
 AIRTABLE_VISITORS_TABLE=Visitors
+TRACKING_STRICT=false
 ```
 
 `PASSCODE` is required. Airtable variables are optional but required for visitor logging persistence.
+`TRACKING_STRICT` is optional. Set `TRACKING_STRICT=true` to make `/api/track` return `503` when writes fail (useful for testing/monitoring).
 
 ### 3. Run locally
 
@@ -103,7 +105,7 @@ Responses:
 
 ### `POST /api/track`
 
-Accepts presentation telemetry events and returns `202`.
+Accepts presentation telemetry events.
 
 Example payload:
 
@@ -118,6 +120,12 @@ Example payload:
   "timestamp": "2026-02-21T00:00:00.000Z"
 }
 ```
+
+Responses:
+
+- `202` with `{ ok: true, stored: true }` when write succeeds
+- `202` with `{ ok: false, stored: false, code: ... }` when write is skipped or fails (non-blocking mode)
+- `503` with `{ ok: false, stored: false, code: ... }` when `TRACKING_STRICT=true` and write fails
 
 ## Tracked Client Events
 
@@ -134,6 +142,7 @@ Example payload:
   - `AIRTABLE_API_TOKEN`
   - `AIRTABLE_BASE_ID`
   - `AIRTABLE_VISITORS_TABLE` (optional, defaults to `Visitors`)
+  - `TRACKING_STRICT` (optional, default `false`)
 - Ensure your Airtable personal access token has write access to the selected base/table.
 
 ## Airtable Table Setup

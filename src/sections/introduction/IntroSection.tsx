@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import PartnerLockup from '../components/PartnerLockup'
+import IntroScrollHint from '../../components/IntroScrollHint'
+import PartnerLockup from '../../components/PartnerLockup'
 import {
   INTRO_HERO_SYNC_EVENT,
   INTRO_HERO_SYNC_KEY,
   type IntroHeroSyncDetail,
-} from '../lib/heroSync'
+} from '../../lib/heroSync'
 import './IntroSection.css'
 
 const TAGLINE = 'Defining a future vision for AluminumOS on Dell'
@@ -135,6 +136,7 @@ function IntroSection() {
       <div className="intro-sr-only" data-node-id="2735:5630">
         Partnership presentation frame
       </div>
+      <IntroScrollHint />
     </section>
   )
 }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import NarrativePersistentOverlay from './components/NarrativePersistentOverlay'
-import { presentationSectionConfigs } from './sections'
+import { presentationSectionConfigs } from '../../sections'
 
 const forwardKeys = new Set(['ArrowDown', 'ArrowRight'])
 const backwardKeys = new Set(['ArrowUp', 'ArrowLeft'])
@@ -129,12 +129,19 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       window.clearTimeout(chapterLabelSwapTimeoutRef.current)
     }
 
-    setIncomingChapterLabel(visibleChapterLabel)
+    const incomingLabelRaf = window.requestAnimationFrame(() => {
+      setIncomingChapterLabel(visibleChapterLabel)
+    })
+
     chapterLabelSwapTimeoutRef.current = window.setTimeout(() => {
       setDisplayChapterLabel(visibleChapterLabel)
       setIncomingChapterLabel(null)
       chapterLabelSwapTimeoutRef.current = 0
     }, chapterLabelSwapDurationMs + 20)
+
+    return () => {
+      window.cancelAnimationFrame(incomingLabelRaf)
+    }
   }, [displayChapterLabel, visibleChapterLabel])
 
   useEffect(() => {

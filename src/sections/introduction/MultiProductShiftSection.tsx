@@ -1,4 +1,4 @@
-import NarrativeStageSection from './NarrativeStageSection'
+import NarrativeStageSection from '../shared/NarrativeStageSection'
 
 function MultiProductShiftSection() {
   return <NarrativeStageSection nodeId="3279:357" />

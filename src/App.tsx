@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import './App.css'
 import GateScreen from './gate/GateScreen'
+import PresentationDeck from './features/presentation/PresentationDeck'
 import LegalPage from './legal/LegalPage'
+import { TRACKING_EVENTS } from './content/trackingEvents'
 import { INTRO_HERO_SYNC_KEY } from './lib/heroSync'
 import { trackPresentationEvent } from './lib/tracking'
-import PresentationDeck from './PresentationDeck'
 
 const GATE_UNLOCK_KEY = 'gate_unlocked'
 const GATE_EMAIL_KEY = 'gate_email'
@@ -67,7 +68,7 @@ function App() {
     }
 
     enteredPresentationAtRef.current = Date.now()
-    trackPresentationEvent('presentation_load', {
+    trackPresentationEvent(TRACKING_EVENTS.presentationLoad, {
       email: viewerEmail || null,
       hash: window.location.hash || null,
     })
@@ -76,7 +77,7 @@ function App() {
       const enteredAt = enteredPresentationAtRef.current
       const elapsedMs = enteredAt ? Date.now() - enteredAt : 0
 
-      trackPresentationEvent('presentation_exit', {
+      trackPresentationEvent(TRACKING_EVENTS.presentationExit, {
         email: viewerEmail || null,
         durationMs: elapsedMs,
       })
@@ -110,7 +111,7 @@ function App() {
     setViewerEmail(email)
     setGatePhase('unlocking')
 
-    trackPresentationEvent('presentation_unlock', { email })
+    trackPresentationEvent(TRACKING_EVENTS.presentationUnlock, { email })
   }, [])
 
   const handleLogout = useCallback(() => {
@@ -130,7 +131,7 @@ function App() {
         return
       }
 
-      trackPresentationEvent('section_view', {
+      trackPresentationEvent(TRACKING_EVENTS.sectionView, {
         email: viewerEmail || null,
         sectionIndex: index + 1,
         totalSections,
