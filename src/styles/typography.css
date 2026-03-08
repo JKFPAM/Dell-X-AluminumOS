@@ -1,0 +1,28 @@
+:root {
+  --type-family-sans: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+
+  --type-enabler-kicker-size: clamp(1rem, 1.354vw, 1.625rem);
+  --type-enabler-kicker-weight: 500;
+  --type-enabler-kicker-line-height: 1.1;
+  --type-enabler-kicker-letter-spacing: -0.02em;
+  --type-enabler-kicker-transform: uppercase;
+
+  --type-enabler-headline-size: clamp(2rem, 3.385vw, 4.0625rem);
+  --type-enabler-headline-weight: 500;
+  --type-enabler-headline-line-height: 1.1;
+  --type-enabler-headline-letter-spacing: -0.03em;
+
+  --type-enabler-body-size: clamp(0.9rem, 0.938vw, 1.125rem);
+  --type-enabler-body-weight: 500;
+  --type-enabler-body-line-height: 1.1;
+  --type-enabler-body-letter-spacing: -0.02em;
+
+  --type-outro-display-size: clamp(3.1rem, 7vw, 6.2rem);
+  --type-outro-display-size-mobile: clamp(2.2rem, 11.5vw, 4rem);
+  --type-outro-display-weight: 500;
+  --type-outro-display-line-height: 0.95;
+  --type-outro-display-letter-spacing: -0.04em;
+  --type-outro-display-shadow:
+    0 0 8px rgba(221, 222, 255, 0.5),
+    0 0 20px rgba(191, 205, 255, 0.42);
+}

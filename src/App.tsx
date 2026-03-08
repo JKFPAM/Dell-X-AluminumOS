@@ -126,7 +126,7 @@ function App() {
   }, [])
 
   const handleSectionChange = useCallback(
-    (index: number, totalSections: number, sectionId: PresentationSectionId) => {
+    (sectionNumber: number, totalSections: number, sectionId: PresentationSectionId) => {
       if (!isUnlocked) {
         return
       }
@@ -134,9 +134,9 @@ function App() {
       trackPresentationEvent(TRACKING_EVENTS.sectionView, {
         email: viewerEmail || null,
         sectionId,
-        sectionIndex: index + 1,
+        sectionIndex: sectionNumber,
         totalSections,
-        sectionHash: window.location.hash || `#${String(index + 1).padStart(2, '0')}`,
+        sectionHash: window.location.hash || `#${String(sectionNumber).padStart(2, '0')}`,
       })
     },
     [isUnlocked, viewerEmail],

@@ -1,95 +1,72 @@
 import './IntroScrollHint.css'
+import { PRESENTATION_ADVANCE_REQUEST_EVENT } from '@/features/presentation/navigationEvents'
 
 function IntroScrollHint() {
+  const handleAdvance = () => {
+    window.dispatchEvent(new CustomEvent(PRESENTATION_ADVANCE_REQUEST_EVENT))
+  }
+
   return (
-    <div aria-hidden="true" className="intro-scroll-hint">
-      <svg
-        className="intro-scroll-hint-svg"
-        fill="none"
-        viewBox="0 0 200 163"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <g className="keyboard-group">
-          <rect height="40" rx="6.5" stroke="white" width="45" x="25.5" y="61.5" />
-          <path
-            d="M48.2426 76.7574L44.3536 80.6464C44.1583 80.8417 44.1583 81.1583 44.3536 81.3536L48.2426 85.2426"
-            stroke="white"
-            strokeLinecap="round"
-          />
-          <rect height="40" rx="6.5" stroke="white" width="45" x="128.5" y="61.5" />
-          <path
-            d="M150.757 76.7574L154.646 80.6464C154.842 80.8417 154.842 81.1583 154.646 81.3536L150.757 85.2426"
-            stroke="white"
-            strokeLinecap="round"
-          />
-          <path
-            d="M84 61.5H116C119.59 61.5 122.5 64.4101 122.5 68V79C122.5 79.8284 121.828 80.5 121 80.5H79C78.1716 80.5 77.5 79.8284 77.5 79V68C77.5 64.4101 80.4101 61.5 84 61.5Z"
-            stroke="white"
-          />
-          <path
-            d="M95.7574 71.2426L99.6464 67.3536C99.8417 67.1583 100.158 67.1583 100.354 67.3536L104.243 71.2426"
-            stroke="white"
-            strokeLinecap="round"
-          />
-        </g>
-        <rect
-          className="morphing-rect"
+    <div className="intro-scroll-hint">
+      <div aria-hidden="true" className="intro-scroll-hint-graphic">
+        <svg
+          className="intro-scroll-hint-svg"
           fill="none"
-          height="19"
-          rx="4"
-          stroke="white"
-          strokeWidth="1.5"
-          width="45"
-          x="77.5"
-          y="82.5"
+          height="41"
+          viewBox="0 0 150 41"
+          width="150"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <animate
-            attributeName="x"
-            dur="6s"
-            keyTimes="0;0.30;0.383;0.86;0.943;1"
-            repeatCount="indefinite"
-            values="77.5;77.5;25.5;25.5;77.5;77.5"
-          />
-          <animate
-            attributeName="y"
-            dur="6s"
-            keyTimes="0;0.30;0.383;0.86;0.943;1"
-            repeatCount="indefinite"
-            values="82.5;82.5;30;30;82.5;82.5"
-          />
-          <animate
-            attributeName="width"
-            dur="6s"
-            keyTimes="0;0.30;0.383;0.86;0.943;1"
-            repeatCount="indefinite"
-            values="45;45;148;148;45;45"
-          />
-          <animate
-            attributeName="height"
-            dur="6s"
-            keyTimes="0;0.30;0.383;0.86;0.943;1"
-            repeatCount="indefinite"
-            values="19;19;103;103;19;19"
-          />
-          <animate
-            attributeName="rx"
-            dur="6s"
-            keyTimes="0;0.30;0.383;0.86;0.943;1"
-            repeatCount="indefinite"
-            values="4;4;12;12;4;4"
-          />
-        </rect>
-        <path
-          className="down-arrow"
-          d="M104.243 91.7574L100.354 95.6464C100.158 95.6464 99.8417 95.6464 99.6464 95.6464L95.7574 91.7574"
-          stroke="white"
-          strokeLinecap="round"
+          <g className="intro-scroll-hint-key intro-scroll-hint-key--left">
+            <rect height="40" rx="6.5" stroke="currentColor" width="45" x="0.5" y="0.5" />
+            <path
+              d="M23.2426 15.7574L19.3536 19.6464C19.1583 19.8417 19.1583 20.1583 19.3536 20.3536L23.2426 24.2426"
+              stroke="currentColor"
+              strokeLinecap="round"
+            />
+          </g>
+
+          <g className="intro-scroll-hint-key intro-scroll-hint-key--up">
+            <path
+              d="M59 0.5H91C94.5899 0.500001 97.5 3.41015 97.5 7V18C97.5 18.8284 96.8284 19.5 96 19.5H54C53.1716 19.5 52.5 18.8284 52.5 18V7C52.5 3.41015 55.4101 0.5 59 0.5Z"
+              stroke="currentColor"
+            />
+            <path
+              d="M70.7574 10.2426L74.6464 6.35355C74.8417 6.15829 75.1583 6.15829 75.3536 6.35355L79.2426 10.2426"
+              stroke="currentColor"
+              strokeLinecap="round"
+            />
+          </g>
+
+          <g className="intro-scroll-hint-key intro-scroll-hint-key--down">
+            <path
+              d="M54 21.5H96C96.8284 21.5 97.5 22.1716 97.5 23V34C97.5 37.5899 94.5899 40.5 91 40.5H59C55.4101 40.5 52.5 37.5899 52.5 34V23C52.5 22.1716 53.1716 21.5 54 21.5Z"
+              stroke="currentColor"
+            />
+            <path
+              d="M79.2426 30.7574L75.3536 34.6464C75.1583 34.8417 74.8417 34.8417 74.6464 34.6464L70.7574 30.7574"
+              stroke="currentColor"
+              strokeLinecap="round"
+            />
+          </g>
+
+          <g className="intro-scroll-hint-key intro-scroll-hint-key--right">
+            <rect height="40" rx="6.5" stroke="currentColor" width="45" x="104.5" y="0.5" />
+            <path
+              d="M126.757 15.7574L130.646 19.6464C130.842 19.8417 130.842 20.1583 130.646 20.3536L126.757 24.2426"
+              stroke="currentColor"
+              strokeLinecap="round"
+            />
+          </g>
+        </svg>
+        <button
+          aria-label="Advance to next section"
+          className="intro-scroll-hint-down-hit"
+          onClick={handleAdvance}
+          type="button"
         />
-        <g className="fingers-group">
-          <circle cx="92" cy="80" fill="none" r="6" stroke="white" strokeWidth="1.5" />
-          <circle cx="108" cy="80" fill="none" r="6" stroke="white" strokeWidth="1.5" />
-        </g>
-      </svg>
+      </div>
+      <span className="intro-scroll-hint-copy">Use Arrow Keys to Advance</span>
     </div>
   )
 }

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import './SystemShiftSection.css'
 
 const TOP_COPY =
-  'Today, the focus is shifting from product-level thinking to system-level thinking...'
+  'The focus is shifting from product-level thinking to system-level thinking...'
 
 const BOTTOM_COPY_LINE_ONE = '...where devices'
 const BOTTOM_COPY_LINE_TWO = 'are only as good as the environments they live in.'

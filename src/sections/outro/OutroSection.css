@@ -28,17 +28,19 @@
   gap: clamp(1rem, 2.1vw, 2.4rem);
 }
 
+.outro-prefix,
+.outro-line {
+  color: #fff;
+  font-family: var(--type-family-sans);
+  font-size: var(--type-outro-display-size);
+  font-weight: var(--type-outro-display-weight);
+  line-height: var(--type-outro-display-line-height);
+  letter-spacing: var(--type-outro-display-letter-spacing);
+  text-shadow: var(--type-outro-display-shadow);
+}
+
 .outro-prefix {
   margin: 0;
-  color: #fff;
-  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
-  font-size: clamp(3.1rem, 7vw, 6.2rem);
-  font-weight: 500;
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  text-shadow:
-    0 0 8px rgba(221, 222, 255, 0.5),
-    0 0 20px rgba(191, 205, 255, 0.42);
   opacity: 0;
   transform: translateY(30px);
   transition:
@@ -58,15 +60,6 @@
   display: inline-flex;
   align-items: center;
   gap: clamp(0.55rem, 0.9vw, 0.85rem);
-  color: #fff;
-  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
-  font-size: clamp(3.1rem, 7vw, 6.2rem);
-  font-weight: 500;
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  text-shadow:
-    0 0 8px rgba(221, 222, 255, 0.5),
-    0 0 20px rgba(191, 205, 255, 0.42);
   opacity: 0;
   transform: translateY(36px);
   transition:
@@ -183,7 +176,7 @@
   }
 
   .outro-prefix {
-    font-size: clamp(2.2rem, 11.5vw, 4rem);
+    font-size: var(--type-outro-display-size-mobile);
   }
 
   .outro-lines {
@@ -191,7 +184,7 @@
   }
 
   .outro-line {
-    font-size: clamp(2.2rem, 11.5vw, 4rem);
+    font-size: var(--type-outro-display-size-mobile);
     gap: 0.7rem;
   }
 

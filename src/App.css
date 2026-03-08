@@ -74,9 +74,18 @@
   transition: none;
 }
 
-.presentation-section--loop-clone,
-.presentation-section--loop-clone .presentation-section-content {
+.presentation-loop-fade {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
   pointer-events: none;
+  opacity: 0;
+  background: var(--gem-bg);
+  transition: opacity 900ms var(--gem-ease-out);
+}
+
+.presentation-loop-fade.is-visible {
+  opacity: 1;
 }
 
 .narrative-persistent-overlay {

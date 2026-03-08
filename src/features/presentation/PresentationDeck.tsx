@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import NarrativePersistentOverlay from './components/NarrativePersistentOverlay'
 import { getSectionHash, parseSectionHash } from './hashNavigation'
+import { PRESENTATION_ADVANCE_REQUEST_EVENT } from './navigationEvents'
 import type { PresentationSectionId } from '@/content/presentationStructure'
 import { presentationSectionConfigs } from '@/sections'
 
@@ -8,6 +9,9 @@ const forwardKeys = new Set(['ArrowDown', 'ArrowRight'])
 const backwardKeys = new Set(['ArrowUp', 'ArrowLeft'])
 const logoutHoldDurationMs = 2500
 const chapterLabelSwapDurationMs = 420
+const finalSectionLoopHoldMs = 320
+const finalSectionLoopFadeMs = 900
+const finalSectionLoopRevealMs = 320
 
 type ChapterSegment = {
   key: string
@@ -53,22 +57,31 @@ const chapterBoundaryPercents = (() => {
 })()
 
 type PresentationDeckProps = {
-  onSectionChange?: (index: number, totalSections: number, sectionId: PresentationSectionId) => void
+  onSectionChange?: (
+    sectionNumber: number,
+    totalSections: number,
+    sectionId: PresentationSectionId,
+  ) => void
   onLogout?: () => void
 }
+
+const totalPresentationSections = presentationSectionConfigs.reduce((max, config, index) => {
+  const hashGroup = config.hashGroup ?? index + 1
+  return Math.max(max, hashGroup)
+}, 0)
 
 function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) {
   const appRef = useRef<HTMLElement | null>(null)
   const scrollPreviewRef = useRef<HTMLDivElement | null>(null)
   const logoutHoldRef = useRef<HTMLDivElement | null>(null)
   const sectionRefs = useRef<Array<HTMLDivElement | null>>([])
-  const loopCloneRef = useRef<HTMLDivElement | null>(null)
-  const isLoopTransitionActiveRef = useRef(false)
   const logoutHoldStartRef = useRef<number | null>(null)
   const logoutHoldRafRef = useRef(0)
   const isLogoutHoldActiveRef = useRef(false)
   const hasTriggeredLogoutRef = useRef(false)
+  const isLoopFadeVisibleRef = useRef(false)
   const [isLogoutHoldVisible, setIsLogoutHoldVisible] = useState(false)
+  const [isLoopFadeVisible, setIsLoopFadeVisible] = useState(false)
   const [activeSectionIndex, setActiveSectionIndex] = useState(0)
   const [isActiveSectionSettled, setIsActiveSectionSettled] = useState(false)
   const [hoveredChapterLabel, setHoveredChapterLabel] = useState<string | null>(null)
@@ -77,6 +90,14 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
   const visibleChapterLabel = hoveredChapterLabel || activeChapterLabel
   const [displayChapterLabel, setDisplayChapterLabel] = useState(visibleChapterLabel)
   const [incomingChapterLabel, setIncomingChapterLabel] = useState<string | null>(null)
+  const setLoopFadeVisibility = (visible: boolean) => {
+    if (isLoopFadeVisibleRef.current === visible) {
+      return
+    }
+
+    isLoopFadeVisibleRef.current = visible
+    setIsLoopFadeVisible(visible)
+  }
 
   useEffect(() => {
     if (!visibleChapterLabel || visibleChapterLabel === displayChapterLabel) {
@@ -141,6 +162,11 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
     let activeSectionIndex = -1
     let isScrollPreviewVisible = false
     let hasInitializedHash = false
+    let finalSectionLoopHoldTimeout = 0
+    let finalSectionLoopFadeTimeout = 0
+    let finalSectionLoopRevealTimeout = 0
+    let hasQueuedFinalSectionLoop = false
+    const finalSectionIndex = presentationSectionConfigs.length - 1
 
     const getSections = () => sectionRefs.current.filter(Boolean) as HTMLDivElement[]
 
@@ -210,6 +236,69 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       })
     }
 
+    const clearFinalSectionLoopTimers = () => {
+      hasQueuedFinalSectionLoop = false
+
+      if (finalSectionLoopHoldTimeout) {
+        window.clearTimeout(finalSectionLoopHoldTimeout)
+        finalSectionLoopHoldTimeout = 0
+      }
+
+      if (finalSectionLoopFadeTimeout) {
+        window.clearTimeout(finalSectionLoopFadeTimeout)
+        finalSectionLoopFadeTimeout = 0
+      }
+
+      if (finalSectionLoopRevealTimeout) {
+        window.clearTimeout(finalSectionLoopRevealTimeout)
+        finalSectionLoopRevealTimeout = 0
+      }
+    }
+
+    const queueFinalSectionLoop = () => {
+      if (hasQueuedFinalSectionLoop) {
+        return
+      }
+
+      hasQueuedFinalSectionLoop = true
+      finalSectionLoopHoldTimeout = window.setTimeout(() => {
+        setLoopFadeVisibility(true)
+
+        finalSectionLoopFadeTimeout = window.setTimeout(() => {
+          jumpToFirstSectionInstant()
+          container.style.setProperty('--scroll-progress', '0')
+          setScrollPreviewVisibility(false)
+          setIsActiveSectionSettled(true)
+          setHoveredChapterLabel(null)
+
+          if (activeSectionIndex !== 0) {
+            activeSectionIndex = 0
+            setActiveSectionIndex(0)
+
+            if (hasInitializedHash) {
+              syncHashToIndex(0)
+            }
+
+            notifySectionChange(0)
+          }
+
+          finalSectionLoopRevealTimeout = window.setTimeout(() => {
+            setLoopFadeVisibility(false)
+          }, finalSectionLoopRevealMs)
+        }, prefersReducedMotion ? 0 : finalSectionLoopFadeMs)
+      }, prefersReducedMotion ? 0 : finalSectionLoopHoldMs)
+    }
+
+    const isAtFinalSection = () => {
+      const sections = getSections()
+
+      if (!sections.length) {
+        return false
+      }
+
+      return getActiveSectionIndex() === finalSectionIndex
+    }
+
     const moveSection = (direction: 1 | -1) => {
       const sections = getSections()
 
@@ -218,26 +307,12 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       }
 
       const currentIndex = getActiveSectionIndex()
-      const isAtLastSection = currentIndex === sections.length - 1
-
-      if (direction === 1 && isAtLastSection) {
-        const loopCloneSection = loopCloneRef.current
-
-        if (loopCloneSection) {
-          isLoopTransitionActiveRef.current = true
-          loopCloneSection.scrollIntoView({
-            behavior: prefersReducedMotion ? 'auto' : 'smooth',
-            block: 'start',
-          })
-          return
-        }
-      }
-
-      isLoopTransitionActiveRef.current = false
-
       const nextIndex = Math.max(0, Math.min(sections.length - 1, currentIndex + direction))
 
       if (nextIndex === currentIndex) {
+        if (direction === 1 && currentIndex === finalSectionIndex) {
+          queueFinalSectionLoop()
+        }
         return
       }
 
@@ -245,14 +320,14 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
     }
 
     const notifySectionChange = (index: number) => {
-      const sectionCount = getSections().length
+      const sectionNumber = presentationSectionConfigs[index]?.hashGroup ?? index + 1
       const sectionId = presentationSectionConfigs[index]?.sectionId
 
       if (!sectionId) {
         return
       }
 
-      onSectionChange?.(index, sectionCount, sectionId)
+      onSectionChange?.(sectionNumber, totalPresentationSections, sectionId)
     }
 
     const setLogoutProgress = (progress: number) => {
@@ -318,33 +393,6 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       const viewportHeight = container.clientHeight || 1
       const viewportCenter = viewportHeight * 0.5
       const sections = getSections()
-      const loopCloneSection = loopCloneRef.current
-
-      if (
-        isLoopTransitionActiveRef.current &&
-        loopCloneSection &&
-        Math.abs(container.scrollTop - loopCloneSection.offsetTop) <= 2
-      ) {
-        isLoopTransitionActiveRef.current = false
-        jumpToFirstSectionInstant()
-        container.style.setProperty('--scroll-progress', '0')
-        setScrollPreviewVisibility(false)
-        setIsActiveSectionSettled(true)
-        setHoveredChapterLabel(null)
-
-        if (activeSectionIndex !== 0) {
-          activeSectionIndex = 0
-          setActiveSectionIndex(0)
-
-          if (hasInitializedHash) {
-            syncHashToIndex(0)
-          }
-
-          notifySectionChange(0)
-        }
-
-        return
-      }
 
       const lastRealSection = sections[sections.length - 1] ?? null
       const maxScroll = lastRealSection?.offsetTop ?? container.scrollHeight - container.clientHeight
@@ -360,6 +408,10 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       container.style.setProperty('--scroll-progress', scrollProgress.toFixed(4))
       setScrollPreviewVisibility(shouldShowScrollPreview)
       setIsActiveSectionSettled(isSettled)
+
+      if (!isLoopFadeVisibleRef.current) {
+        clearFinalSectionLoopTimers()
+      }
 
       sectionRefs.current.forEach((section, index) => {
         if (!section) {
@@ -469,6 +521,20 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       scrollToSection(targetIndex, prefersReducedMotion ? 'auto' : 'smooth')
     }
 
+    const handleWheel = (event: WheelEvent) => {
+      if (event.deltaY <= 0) {
+        return
+      }
+
+      if (isAtFinalSection()) {
+        queueFinalSectionLoop()
+      }
+    }
+
+    const handleAdvanceRequest = () => {
+      moveSection(1)
+    }
+
     const initializeSectionHash = () => {
       const targetIndex = parseSectionHash(
         window.location.hash,
@@ -502,11 +568,14 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
     window.addEventListener('blur', handleWindowBlur)
     document.addEventListener('visibilitychange', handleVisibilityChange)
     window.addEventListener('hashchange', handleHashChange)
+    window.addEventListener(PRESENTATION_ADVANCE_REQUEST_EVENT, handleAdvanceRequest)
+    container.addEventListener('wheel', handleWheel, { passive: true })
     initRaf = window.requestAnimationFrame(initializeSectionHash)
 
     return () => {
       stopLogoutHold()
-      isLoopTransitionActiveRef.current = false
+      clearFinalSectionLoopTimers()
+      setLoopFadeVisibility(false)
       if (scrollRaf) {
         window.cancelAnimationFrame(scrollRaf)
       }
@@ -525,11 +594,14 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       window.removeEventListener('blur', handleWindowBlur)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       window.removeEventListener('hashchange', handleHashChange)
+      window.removeEventListener(PRESENTATION_ADVANCE_REQUEST_EVENT, handleAdvanceRequest)
+      container.removeEventListener('wheel', handleWheel)
     }
   }, [onLogout, onSectionChange])
 
   return (
     <main className="presentation-app" ref={appRef}>
+      <div aria-hidden="true" className={`presentation-loop-fade ${isLoopFadeVisible ? 'is-visible' : ''}`} />
       <div
         aria-hidden="true"
         className={`logout-hold-indicator ${isLogoutHoldVisible ? 'is-visible' : ''}`}
@@ -599,30 +671,9 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
             </div>
           </div>
         ))}
-        {presentationSectionConfigs[0]?.Component && (
-          <div
-            aria-hidden="true"
-            className="presentation-section is-parallax-disabled presentation-section--loop-clone"
-            ref={loopCloneRef}
-          >
-            <div className="presentation-section-content">
-              <LoopCloneSection />
-            </div>
-          </div>
-        )}
       </div>
     </main>
   )
-}
-
-function LoopCloneSection() {
-  const FirstSectionComponent = presentationSectionConfigs[0]?.Component
-
-  if (!FirstSectionComponent) {
-    return null
-  }
-
-  return <FirstSectionComponent />
 }
 
 export default PresentationDeck

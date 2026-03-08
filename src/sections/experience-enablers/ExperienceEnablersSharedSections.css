@@ -22,17 +22,17 @@
   gap: 0.375rem;
   width: min(34.2188vw, 657px);
   color: #eef2fe;
-  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-family: var(--type-family-sans);
   opacity: 0.85;
 }
 
 .experience-enabler-shared-sub p {
   margin: 0;
-  font-size: clamp(1rem, 1.354vw, 1.625rem);
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
+  font-size: var(--type-enabler-kicker-size);
+  font-weight: var(--type-enabler-kicker-weight);
+  line-height: var(--type-enabler-kicker-line-height);
+  letter-spacing: var(--type-enabler-kicker-letter-spacing);
+  text-transform: var(--type-enabler-kicker-transform);
 }
 
 .experience-enabler-shared-headline {
@@ -42,11 +42,11 @@
   width: min(35.7292vw, 686px);
   margin: 0;
   color: #eef2fe;
-  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
-  font-size: clamp(2rem, 3.385vw, 4.0625rem);
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
+  font-family: var(--type-family-sans);
+  font-size: var(--type-enabler-headline-size);
+  font-weight: var(--type-enabler-headline-weight);
+  line-height: var(--type-enabler-headline-line-height);
+  letter-spacing: var(--type-enabler-headline-letter-spacing);
   white-space: pre-line;
 }
 
@@ -148,11 +148,11 @@
   gap: 0.25rem;
   padding-left: clamp(1.8rem, 2.604vw, 3.125rem);
   color: #eef2fe;
-  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
-  font-size: clamp(0.9rem, 0.938vw, 1.125rem);
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-family: var(--type-family-sans);
+  font-size: var(--type-enabler-body-size);
+  font-weight: var(--type-enabler-body-weight);
+  line-height: var(--type-enabler-body-line-height);
+  letter-spacing: var(--type-enabler-body-letter-spacing);
 }
 
 .experience-enabler-shared-copy p {
@@ -257,11 +257,11 @@
   gap: 0.25rem;
   padding-left: clamp(1.8rem, 2.604vw, 3.125rem);
   color: #eef2fe;
-  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
-  font-size: clamp(0.9rem, 0.938vw, 1.125rem);
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-family: var(--type-family-sans);
+  font-size: var(--type-enabler-body-size);
+  font-weight: var(--type-enabler-body-weight);
+  line-height: var(--type-enabler-body-line-height);
+  letter-spacing: var(--type-enabler-body-letter-spacing);
 }
 
 .experience-enabler-shared-io-copy p {
