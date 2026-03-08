@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import DellLogo from './DellLogo'
+import BrandLogo from './BrandLogo'
 import './PartnerLockup.css'
 
 type PartnerLockupProps = {
@@ -18,7 +18,7 @@ function PartnerLockup({ className, nodeId }: PartnerLockupProps) {
 
   return (
     <div className={classes} data-node-id={nodeId}>
-      <DellLogo className="partner-dell-logo" />
+      <BrandLogo className="partner-brand-logo" />
       <span aria-hidden="true" className="partner-spark">
         <video
           autoPlay

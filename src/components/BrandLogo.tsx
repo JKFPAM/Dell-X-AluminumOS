@@ -1,15 +1,15 @@
 import type { SVGProps } from 'react'
 
-type DellLogoProps = SVGProps<SVGSVGElement>
+type BrandLogoProps = SVGProps<SVGSVGElement>
 
-function DellLogo(props: DellLogoProps) {
+function BrandLogo(props: BrandLogoProps) {
   return (
     <svg
-      data-name="Dell logo"
+      data-name="Brand logo"
       data-node-id="2701:5557"
       viewBox="0 0 136 55"
       xmlns="http://www.w3.org/2000/svg"
-      aria-label="Dell"
+      aria-label="Brand"
       role="img"
       {...props}
     >
@@ -23,4 +23,4 @@ function DellLogo(props: DellLogoProps) {
   )
 }
 
-export default DellLogo
+export default BrandLogo
