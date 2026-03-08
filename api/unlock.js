@@ -1,4 +1,5 @@
 import { writeVisitorEvent } from './_lib/airtable.js'
+import { getPasscode } from './_lib/env.js'
 import { getRequestMeta, parseBody } from './_lib/request.js'
 
 const EMAIL_REGEX =
@@ -23,7 +24,7 @@ export default async function handler(req, res) {
   const email = typeof body.email === 'string' ? body.email.trim() : ''
   const passcode = typeof body.passcode === 'string' ? body.passcode.trim() : ''
   const sessionId = getSessionId(body.sessionId)
-  const expectedPasscode = typeof process.env.PASSCODE === 'string' ? process.env.PASSCODE.trim() : ''
+  const expectedPasscode = getPasscode()
   const requestMeta = getRequestMeta(req)
 
   if (!email || !EMAIL_REGEX.test(email)) {

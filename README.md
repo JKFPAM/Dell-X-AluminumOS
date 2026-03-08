@@ -87,6 +87,8 @@ Open either URL printed by Vite:
 - `npm run build` - Type-check and build production assets
 - `npm run preview` - Preview production build on local + LAN host
 - `npm run lint` - Run ESLint
+- `npm run test` - Run tests in watch mode
+- `npm run test:run` - Run tests once (CI mode)
 
 ## API Endpoints
 
@@ -168,3 +170,8 @@ Create a table named `Visitors` (or set your own name in `AIRTABLE_VISITORS_TABL
 - `Reached Last Section` (checkbox)
 
 If Airtable is not configured, the app still works and API endpoints continue returning success responses.
+
+## Contributing
+
+See `/Users/jack/Sites/Dell ALOS/CONTRIBUTING.md` for conventions and local quality checks.
+For AI coding agents, see `/Users/jack/Sites/Dell ALOS/AGENTS.md`.

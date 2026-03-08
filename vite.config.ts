@@ -3,6 +3,7 @@ import { createRequire } from 'node:module'
 import { fileURLToPath, URL } from 'node:url'
 import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv, type Plugin } from 'vite'
+import { applyServerEnvFrom } from './api/_lib/env.js'
 
 const readJsonBody = async (req: IncomingMessage): Promise<Record<string, unknown>> => {
   const chunks: Uint8Array[] = []
@@ -88,20 +89,7 @@ const createLocalApiPlugin = (): Plugin => ({
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const setProcessEnv = (key: string, value: string | undefined) => {
-    if (!value) {
-      return
-    }
-
-    process.env[key] = value
-  }
-
-  setProcessEnv('PASSCODE', env.PASSCODE)
-  setProcessEnv('AIRTABLE_API_TOKEN', env.AIRTABLE_API_TOKEN)
-  setProcessEnv('AIRTABLE_BASE_ID', env.AIRTABLE_BASE_ID)
-  setProcessEnv('AIRTABLE_VISITORS_TABLE', env.AIRTABLE_VISITORS_TABLE)
-  setProcessEnv('AIRTABLE_EVENTS_TABLE', env.AIRTABLE_EVENTS_TABLE)
-  setProcessEnv('TRACKING_STRICT', env.TRACKING_STRICT)
+  applyServerEnvFrom(env)
 
   return {
     plugins: [react(), createLocalApiPlugin()],

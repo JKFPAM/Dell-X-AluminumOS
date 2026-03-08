@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import NarrativePersistentOverlay from './components/NarrativePersistentOverlay'
+import { getSectionHash, parseSectionHash } from './hashNavigation'
 import type { PresentationSectionId } from '@/content/presentationStructure'
 import { presentationSectionConfigs } from '@/sections'
 
@@ -7,50 +8,6 @@ const forwardKeys = new Set(['ArrowDown', 'ArrowRight'])
 const backwardKeys = new Set(['ArrowUp', 'ArrowLeft'])
 const logoutHoldDurationMs = 2500
 const chapterLabelSwapDurationMs = 420
-const ROMAN_STEPS = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'] as const
-
-const formatHashValue = (value: number) => `#${String(value).padStart(2, '0')}`
-
-const getHashGroupForIndex = (index: number) => presentationSectionConfigs[index]?.hashGroup ?? index + 1
-
-const getSectionFiveIndices = () =>
-  presentationSectionConfigs.reduce<number[]>((indices, config, index) => {
-    if ((config.hashGroup ?? index + 1) === 5) {
-      indices.push(index)
-    }
-
-    return indices
-  }, [])
-
-const getSectionHash = (index: number) => {
-  const hashGroup = getHashGroupForIndex(index)
-
-  if (hashGroup !== 5) {
-    return formatHashValue(hashGroup)
-  }
-
-  const sectionFiveIndices = getSectionFiveIndices()
-  const sectionFiveStepIndex = sectionFiveIndices.indexOf(index)
-
-  if (sectionFiveStepIndex < 0) {
-    return formatHashValue(hashGroup)
-  }
-
-  const romanStep = ROMAN_STEPS[sectionFiveStepIndex] ?? String(sectionFiveStepIndex + 1)
-  return `${formatHashValue(hashGroup)}-${romanStep}`
-}
-
-const getIndexForHashGroup = (hashGroup: number, sectionCount: number) => {
-  for (let index = 0; index < sectionCount; index += 1) {
-    const configHashGroup = presentationSectionConfigs[index]?.hashGroup ?? index + 1
-
-    if (configHashGroup === hashGroup) {
-      return index
-    }
-  }
-
-  return null
-}
 
 type ChapterSegment = {
   key: string
@@ -187,34 +144,8 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
 
     const getSections = () => sectionRefs.current.filter(Boolean) as HTMLDivElement[]
 
-    const parseSectionHash = (hashValue: string) => {
-      const match = hashValue.trim().toLowerCase().match(/^#?(\d{1,2})(?:-([ivxlcdm]+))?$/)
-
-      if (!match) {
-        return null
-      }
-
-      const number = Number(match[1])
-      const subStep = match[2]
-
-      if (!Number.isInteger(number) || number < 1) {
-        return null
-      }
-
-      if (number === 5 && subStep) {
-        const sectionFiveIndices = getSectionFiveIndices()
-        const subStepIndex = ROMAN_STEPS.findIndex((step) => step === subStep)
-
-        if (subStepIndex >= 0) {
-          return sectionFiveIndices[subStepIndex] ?? sectionFiveIndices[0] ?? null
-        }
-      }
-
-      return getIndexForHashGroup(number, getSections().length)
-    }
-
     const syncHashToIndex = (index: number) => {
-      const nextHash = getSectionHash(index)
+      const nextHash = getSectionHash(index, presentationSectionConfigs)
 
       if (window.location.hash === nextHash) {
         return
@@ -525,7 +456,11 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
     }
 
     const handleHashChange = () => {
-      const targetIndex = parseSectionHash(window.location.hash)
+      const targetIndex = parseSectionHash(
+        window.location.hash,
+        getSections().length,
+        presentationSectionConfigs,
+      )
 
       if (targetIndex === null) {
         return
@@ -535,7 +470,11 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
     }
 
     const initializeSectionHash = () => {
-      const targetIndex = parseSectionHash(window.location.hash)
+      const targetIndex = parseSectionHash(
+        window.location.hash,
+        getSections().length,
+        presentationSectionConfigs,
+      )
 
       if (targetIndex !== null) {
         scrollToSection(targetIndex, 'auto')

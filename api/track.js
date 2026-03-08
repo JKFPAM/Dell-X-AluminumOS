@@ -1,4 +1,5 @@
 import { isAirtableConfigured, writeVisitorEvent } from './_lib/airtable.js'
+import { isTrackingStrictMode } from './_lib/env.js'
 import { getRequestMeta, parseBody } from './_lib/request.js'
 
 const getSessionId = (value) => {
@@ -17,11 +18,6 @@ const getEventName = (value) => {
 
   const trimmed = value.trim()
   return trimmed || 'unknown'
-}
-
-const isTrackingStrictMode = () => {
-  const value = (process.env.TRACKING_STRICT || '').trim().toLowerCase()
-  return value === '1' || value === 'true' || value === 'yes'
 }
 
 export default async function handler(req, res) {

@@ -1,14 +1,6 @@
-const AIRTABLE_API_ROOT = 'https://api.airtable.com/v0'
+import { getAirtableConfig } from './env.js'
 
-const getConfig = () => ({
-  token: (process.env.AIRTABLE_API_TOKEN || '').trim(),
-  baseId: (process.env.AIRTABLE_BASE_ID || '').trim(),
-  visitorsTable: (
-    process.env.AIRTABLE_VISITORS_TABLE ||
-    process.env.AIRTABLE_EVENTS_TABLE ||
-    'Visitors'
-  ).trim(),
-})
+const AIRTABLE_API_ROOT = 'https://api.airtable.com/v0'
 
 const sanitizeFields = (fields) =>
   Object.fromEntries(
@@ -62,7 +54,7 @@ const escapeFormulaValue = (value) =>
     .replaceAll("'", "\\'")
 
 const requestAirtable = async (path, init) => {
-  const { token, baseId } = getConfig()
+  const { token, baseId } = getAirtableConfig()
   const response = await fetch(`${AIRTABLE_API_ROOT}/${baseId}/${path}`, {
     ...init,
     headers: {
@@ -176,7 +168,7 @@ const writeWithOptionalFallback = async (writeFn, fields) => {
 }
 
 export const isAirtableConfigured = () => {
-  const { token, baseId, visitorsTable } = getConfig()
+  const { token, baseId, visitorsTable } = getAirtableConfig()
   return Boolean(token && baseId && visitorsTable)
 }
 
@@ -203,7 +195,7 @@ export const writeVisitorEvent = async ({
   const { date, time } = getDateAndTime(timestamp)
   const isPresentationLoad = eventName === 'presentation_load'
 
-  const { visitorsTable } = getConfig()
+  const { visitorsTable } = getAirtableConfig()
   const existingRecord = await findRecordBySessionId(visitorsTable, normalizedSessionId)
   const existingVisitCount = getVisitCount(existingRecord?.fields)
   const nextVisitCount = isPresentationLoad ? existingVisitCount + 1 : existingVisitCount
