@@ -8,8 +8,197 @@
 
 .project-context-placeholder-content {
   position: relative;
-  width: min(100vw, 1920px);
+  width: 100vw;
   min-height: 100vh;
-  margin: 0 auto;
-  color: #000;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.project-context-placeholder-video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  mix-blend-mode: screen;
+  opacity: 0.9;
+}
+
+.project-context-placeholder-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.project-context-placeholder-kicker {
+  position: absolute;
+  left: 50%;
+  top: clamp(13rem, 40vh, 21rem);
+  transform: translateX(-50%);
+  margin: 0;
+  color: #000f19;
+  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(1.4rem, 1.82vw, 2.1875rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.project-context-placeholder-headline {
+  position: absolute;
+  left: 50%;
+  top: 49%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  width: 100vw;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(4rem, 12vw, 11rem) minmax(0, 1fr);
+  align-items: baseline;
+  justify-content: stretch;
+}
+
+.project-context-placeholder-word {
+  color: #000f19;
+  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(5.2rem, 14vw, 13rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.042em;
+  white-space: nowrap;
+}
+
+.project-context-placeholder-word--left {
+  justify-self: end;
+  text-align: right;
+}
+
+.project-context-placeholder-center-gap {
+  width: 100%;
+}
+
+.project-context-placeholder-word--right {
+  justify-self: start;
+  text-align: left;
+}
+
+.project-context-placeholder-points {
+  position: absolute;
+  left: clamp(16vw, 24vw, 16rem);
+  bottom: clamp(4.2rem, 14vh, 12rem);
+  margin: 0;
+  padding: 0;
+  width: min(86vw, 70rem);
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.1rem, 2.2vh, 1.8rem);
+}
+
+.project-context-placeholder-point {
+  display: grid;
+  grid-template-columns: clamp(1.2rem, 1.8vw, 1.95rem) 1fr;
+  align-items: center;
+  column-gap: clamp(0.85rem, 1.15vw, 1.2rem);
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 980ms var(--gem-ease-out),
+    transform 1220ms var(--gem-ease-fluid);
+}
+
+.project-context-placeholder-point-icon {
+  color: #000f19;
+  line-height: 0;
+}
+
+.project-context-placeholder-point:nth-child(2) .project-context-placeholder-point-icon {
+  width: clamp(1.35rem, 2vw, 2.15rem);
+}
+
+.project-context-placeholder-point:nth-child(3) .project-context-placeholder-point-icon {
+  width: clamp(1rem, 1.5vw, 1.45rem);
+}
+
+.project-context-placeholder-point-icon svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.project-context-placeholder-point p {
+  margin: 0;
+  color: #000f19;
+  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(1.4rem, 1.82vw, 2.1875rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.project-context-placeholder.is-in-view .project-context-placeholder-point {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.project-context-placeholder.is-in-view .project-context-placeholder-point:nth-child(1) {
+  transition-delay: 180ms;
+}
+
+.project-context-placeholder.is-in-view .project-context-placeholder-point:nth-child(2) {
+  transition-delay: 320ms;
+}
+
+.project-context-placeholder.is-in-view .project-context-placeholder-point:nth-child(3) {
+  transition-delay: 460ms;
+}
+
+@media (max-width: 980px) {
+  .project-context-placeholder-kicker {
+    top: clamp(8.5rem, 34vh, 12rem);
+    font-size: clamp(1.15rem, 4vw, 1.75rem);
+    white-space: normal;
+    text-align: center;
+    max-width: min(92vw, 34rem);
+  }
+
+  .project-context-placeholder-headline {
+    top: 50%;
+    width: 100vw;
+    grid-template-columns: minmax(0, 1fr) clamp(1.35rem, 6vw, 3.4rem) minmax(0, 1fr);
+  }
+
+  .project-context-placeholder-word {
+    font-size: clamp(3rem, 14vw, 6.2rem);
+  }
+
+  .project-context-placeholder-points {
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(92vw, 36rem);
+    bottom: clamp(2.8rem, 8.2vh, 4.6rem);
+    gap: clamp(0.75rem, 1.5vh, 1rem);
+  }
+
+  .project-context-placeholder-point {
+    grid-template-columns: clamp(1rem, 3.8vw, 1.25rem) 1fr;
+    column-gap: clamp(0.65rem, 2.2vw, 0.9rem);
+  }
+
+  .project-context-placeholder-point p {
+    font-size: clamp(1.2rem, 4.2vw, 1.75rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-context-placeholder-point {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

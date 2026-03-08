@@ -265,6 +265,9 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       isProgrammaticNavigationActive = true
       container.style.setProperty('scroll-snap-type', 'none')
       container.style.setProperty('scroll-behavior', 'auto')
+      sectionRefs.current.forEach((section) => {
+        section?.style.setProperty('--section-parallax-y', '0px')
+      })
 
       const tick = (now: number) => {
         const elapsed = now - startTime
@@ -280,6 +283,7 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
 
         navigationScrollRaf = 0
         isProgrammaticNavigationActive = false
+        scheduleSectionMotion()
         restoreScrollBehaviorRaf = window.requestAnimationFrame(() => {
           restoreScrollBehaviorRaf = 0
           container.style.removeProperty('scroll-snap-type')
@@ -783,7 +787,9 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
     }
 
     container.addEventListener('scroll', scheduleSectionMotion, { passive: true })
+    const visualViewport = window.visualViewport
     window.addEventListener('resize', scheduleSectionMotion)
+    visualViewport?.addEventListener('resize', scheduleSectionMotion)
     window.addEventListener('keydown', handleKeydown)
     window.addEventListener('keyup', handleKeyup)
     window.addEventListener('blur', handleWindowBlur)
@@ -819,6 +825,7 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       container.style.removeProperty('scroll-snap-type')
       container.removeEventListener('scroll', scheduleSectionMotion)
       window.removeEventListener('resize', scheduleSectionMotion)
+      visualViewport?.removeEventListener('resize', scheduleSectionMotion)
       window.removeEventListener('keydown', handleKeydown)
       window.removeEventListener('keyup', handleKeyup)
       window.removeEventListener('blur', handleWindowBlur)

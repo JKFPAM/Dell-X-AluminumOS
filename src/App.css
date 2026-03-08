@@ -1,6 +1,6 @@
 .app-root {
   position: relative;
-  min-height: 100vh;
+  min-height: var(--presentation-vh);
   width: 100%;
   background: var(--gem-bg);
 }
@@ -19,7 +19,7 @@
   --scroll-progress: 0;
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: var(--presentation-vh);
   overflow-y: auto;
   overflow-x: hidden;
   background:
@@ -53,10 +53,14 @@
 .presentation-section {
   --section-parallax-y: 0px;
   position: relative;
-  min-height: 100vh;
+  min-height: var(--presentation-vh);
   overflow: hidden;
   scroll-snap-align: start;
   scroll-snap-stop: always;
+}
+
+.presentation-section-content {
+  min-height: var(--presentation-vh);
 }
 
 .presentation-track > .presentation-section + .presentation-section {

@@ -26,6 +26,7 @@ import { OutroFinalSection, OutroSection } from './outro'
 import {
   ProjectContextAudienceSection,
   ProjectContextCommandSection,
+  ProjectContextIntelligenceSection,
   ProjectContextLensSection,
   ProjectContextModeSwitchersSection,
   ProjectContextPlaceholderSection,
@@ -57,6 +58,7 @@ const sectionComponentRegistry: Record<PresentationSectionComponentKey, Componen
   ProjectContextAudienceSection,
   ProjectContextModeSwitchersSection,
   ProjectContextPlaceholderSection,
+  ProjectContextIntelligenceSection,
   ExperienceEnablersDeviceConnectivitySection,
   ExperienceEnablersContinuitySection,
   ExperienceEnablersSharedIOSection,

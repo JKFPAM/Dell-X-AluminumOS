@@ -36,6 +36,48 @@ function App() {
   const shouldRenderDeck = gatePhase !== 'locked'
 
   useEffect(() => {
+    let rafId = 0
+    const visualViewport = window.visualViewport
+    let lastAppliedViewportHeight = 0
+
+    const applyViewportHeight = () => {
+      const viewportHeight = visualViewport?.height ?? window.innerHeight
+      if (Math.abs(viewportHeight - lastAppliedViewportHeight) < 0.5) {
+        return
+      }
+
+      lastAppliedViewportHeight = viewportHeight
+      document.documentElement.style.setProperty('--presentation-vh', `${viewportHeight}px`)
+    }
+
+    const scheduleViewportHeightUpdate = () => {
+      if (rafId) {
+        window.cancelAnimationFrame(rafId)
+      }
+
+      rafId = window.requestAnimationFrame(() => {
+        rafId = 0
+        applyViewportHeight()
+      })
+    }
+
+    applyViewportHeight()
+    window.addEventListener('resize', scheduleViewportHeightUpdate, { passive: true })
+    window.addEventListener('orientationchange', scheduleViewportHeightUpdate, { passive: true })
+    visualViewport?.addEventListener('resize', scheduleViewportHeightUpdate)
+
+    return () => {
+      if (rafId) {
+        window.cancelAnimationFrame(rafId)
+      }
+
+      window.removeEventListener('resize', scheduleViewportHeightUpdate)
+      window.removeEventListener('orientationchange', scheduleViewportHeightUpdate)
+      visualViewport?.removeEventListener('resize', scheduleViewportHeightUpdate)
+    }
+  }, [])
+
+  useEffect(() => {
     const syncPath = () => {
       setCurrentPath(getCurrentPath())
     }
