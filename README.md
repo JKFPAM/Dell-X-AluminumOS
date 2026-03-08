@@ -33,11 +33,14 @@ Visitors must submit an email and passcode before viewing the presentation. Once
 │   └── track.js          # Tracking event intake endpoint
 ├── public/               # Static assets and media
 ├── src/
+│   ├── content/          # Typed content contracts (chapters, events, section defs)
+│   ├── features/
+│   │   └── presentation/ # Deck shell + persistent overlay
 │   ├── gate/             # Gate UI + unlock flow
 │   ├── legal/            # Legal page
-│   ├── sections/         # Presentation sections
+│   ├── sections/         # Section components grouped by chapter/domain
 │   ├── lib/              # Tracking + hero sync helpers
-│   └── PresentationDeck.tsx
+│   └── components/       # Shared UI components
 ├── vite.config.ts        # Vite config + local API middleware
 └── vercel.json           # Vercel build/runtime config
 ```
@@ -50,7 +53,7 @@ Visitors must submit an email and passcode before viewing the presentation. Once
 npm install
 ```
 
-### 2. Configure environment
+### 2. Configure environment (required before local run)
 
 Create a `.env.local` file in the project root:
 
@@ -62,7 +65,10 @@ AIRTABLE_VISITORS_TABLE=Visitors
 TRACKING_STRICT=false
 ```
 
-`PASSCODE` is required. Airtable variables are optional but required for visitor logging persistence.
+`PASSCODE` is mandatory for local development.
+If `PASSCODE` is missing, `/api/unlock` returns `500` and you cannot enter the deck.
+
+Airtable variables are optional but required for visitor logging persistence.
 `TRACKING_STRICT` is optional. Set `TRACKING_STRICT=true` to make `/api/track` return `503` when writes fail (useful for testing/monitoring).
 
 ### 3. Run locally
@@ -71,13 +77,15 @@ TRACKING_STRICT=false
 npm run dev
 ```
 
-Open the local URL printed by Vite.
+Open either URL printed by Vite:
+- `Local` (`localhost`) for your machine
+- `Network` (`http://<your-ip>:5173`) for other devices on the same network
 
 ## Available Scripts
 
-- `npm run dev` - Start Vite dev server
+- `npm run dev` - Start Vite dev server on local + LAN host
 - `npm run build` - Type-check and build production assets
-- `npm run preview` - Preview production build locally
+- `npm run preview` - Preview production build on local + LAN host
 - `npm run lint` - Run ESLint
 
 ## API Endpoints
