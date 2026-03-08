@@ -290,10 +290,17 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       navigationScrollRaf = window.requestAnimationFrame(tick)
     }
 
+    const resetSectionParallax = () => {
+      sectionRefs.current.forEach((section) => {
+        section?.style.setProperty('--section-parallax-y', '0px')
+      })
+    }
+
     const jumpToFirstSectionInstant = () => {
       container.style.setProperty('scroll-behavior', 'auto')
       container.style.setProperty('scroll-snap-type', 'none')
       container.scrollTop = 0
+      resetSectionParallax()
 
       if (loopResetRaf) {
         window.cancelAnimationFrame(loopResetRaf)
@@ -514,7 +521,7 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       if (progress >= 1 && !hasTriggeredRestartRef.current) {
         hasTriggeredRestartRef.current = true
         stopRestartHold()
-        scrollToSection(0, prefersReducedMotion ? 'auto' : 'smooth')
+        queueFinalSectionLoop()
         return
       }
 
