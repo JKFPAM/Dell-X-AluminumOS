@@ -4,7 +4,7 @@ import {
   LIFE_DIMENSIONS_LINE,
   MULTI_PRODUCT_SHIFT_LINE,
   PURCHASE_SHIFT_LINE,
-} from '../../../content/narrativeLines'
+} from '@/content/narrativeLines'
 
 type NarrativeIcon = {
   id: string

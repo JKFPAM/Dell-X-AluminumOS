@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
-import PartnerLockup from '../components/PartnerLockup'
-import { INTRO_HERO_SYNC_EVENT, type IntroHeroSyncDetail } from '../lib/heroSync'
-import { getVisitorSessionId } from '../lib/visitorSession'
+import { PartnerLockup } from '@/components'
+import { INTRO_HERO_SYNC_EVENT, getVisitorSessionId, type IntroHeroSyncDetail } from '@/lib'
 import './GateScreen.css'
 
 type GateScreenProps = {

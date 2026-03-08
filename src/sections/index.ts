@@ -1,37 +1,47 @@
 import type { ComponentType } from 'react'
-import type { ChapterLabel } from '../content/chapters'
-import { presentationSectionDefinitions } from '../content/presentationStructure'
-import ExperienceEnablersContextualSwitchingSection from './experience-enablers/ExperienceEnablersContextualSwitchingSection'
-import ExperienceEnablersContinuitySection from './experience-enablers/ExperienceEnablersContinuitySection'
-import ExperienceEnablersDeviceConnectivitySection from './experience-enablers/ExperienceEnablersDeviceConnectivitySection'
-import ExperienceEnablersPassiveAutomationSection from './experience-enablers/ExperienceEnablersPassiveAutomationSection'
-import ExperienceEnablersSharedIOSection from './experience-enablers/ExperienceEnablersSharedIOSection'
-import EcosystemShiftSection from './introduction/EcosystemShiftSection'
-import FutureVisionSection from './introduction/FutureVisionSection'
-import IntroSection from './introduction/IntroSection'
-import LegacyContextSection from './introduction/LegacyContextSection'
-import LifeDimensionsSection from './introduction/LifeDimensionsSection'
-import MultiProductShiftSection from './introduction/MultiProductShiftSection'
-import PurchaseShiftSection from './introduction/PurchaseShiftSection'
-import SystemShiftSection from './introduction/SystemShiftSection'
-import OutroFinalSection from './outro/OutroFinalSection'
-import OutroSection from './outro/OutroSection'
-import ProjectContextAudienceSection from './project-context/ProjectContextAudienceSection'
-import ProjectContextCommandSection from './project-context/ProjectContextCommandSection'
-import ProjectContextLensSection from './project-context/ProjectContextLensSection'
-import ProjectContextModeSwitchersSection from './project-context/ProjectContextModeSwitchersSection'
-import ProjectContextPlaceholderSection from './project-context/ProjectContextPlaceholderSection'
-import ProjectContextQuestionsSection from './project-context/ProjectContextQuestionsSection'
-import ProjectContextVisionSection from './project-context/ProjectContextVisionSection'
+import type { ChapterLabel } from '@/content/chapters'
+import {
+  type PresentationSectionComponentKey,
+  type PresentationSectionId,
+  presentationSectionDefinitions,
+} from '@/content/presentationStructure'
+import {
+  ExperienceEnablersContextualSwitchingSection,
+  ExperienceEnablersContinuitySection,
+  ExperienceEnablersDeviceConnectivitySection,
+  ExperienceEnablersPassiveAutomationSection,
+  ExperienceEnablersSharedIOSection,
+} from './experience-enablers'
+import {
+  EcosystemShiftSection,
+  FutureVisionSection,
+  IntroSection,
+  LegacyContextSection,
+  LifeDimensionsSection,
+  MultiProductShiftSection,
+  PurchaseShiftSection,
+  SystemShiftSection,
+} from './introduction'
+import { OutroFinalSection, OutroSection } from './outro'
+import {
+  ProjectContextAudienceSection,
+  ProjectContextCommandSection,
+  ProjectContextLensSection,
+  ProjectContextModeSwitchersSection,
+  ProjectContextPlaceholderSection,
+  ProjectContextQuestionsSection,
+  ProjectContextVisionSection,
+} from './project-context'
 
 export type PresentationSectionConfig = {
+  sectionId: PresentationSectionId
   Component: ComponentType
   disableParallax?: boolean
   chapterLabel?: ChapterLabel
   hashGroup?: number
 }
 
-const sectionComponentRegistry: Record<string, ComponentType> = {
+const sectionComponentRegistry: Record<PresentationSectionComponentKey, ComponentType> = {
   IntroSection,
   LegacyContextSection,
   FutureVisionSection,
@@ -56,7 +66,7 @@ const sectionComponentRegistry: Record<string, ComponentType> = {
   OutroFinalSection,
 }
 
-const resolveSectionComponent = (key: string): ComponentType => {
+const resolveSectionComponent = (key: PresentationSectionComponentKey): ComponentType => {
   const component = sectionComponentRegistry[key]
 
   if (!component) {
@@ -67,7 +77,8 @@ const resolveSectionComponent = (key: string): ComponentType => {
 }
 
 export const presentationSectionConfigs: PresentationSectionConfig[] = presentationSectionDefinitions.map(
-  ({ component, chapterLabel, disableParallax, hashGroup }) => ({
+  ({ sectionId, component, chapterLabel, disableParallax, hashGroup }) => ({
+    sectionId,
     Component: resolveSectionComponent(component),
     chapterLabel,
     disableParallax,

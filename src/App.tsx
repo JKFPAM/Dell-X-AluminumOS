@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { TRACKING_EVENTS } from '@/content/trackingEvents'
+import PresentationDeck from '@/features/presentation/PresentationDeck'
+import GateScreen from '@/gate/GateScreen'
+import LegalPage from '@/legal/LegalPage'
+import type { PresentationSectionId } from '@/content/presentationStructure'
+import { INTRO_HERO_SYNC_KEY, trackPresentationEvent } from '@/lib'
 import './App.css'
-import GateScreen from './gate/GateScreen'
-import PresentationDeck from './features/presentation/PresentationDeck'
-import LegalPage from './legal/LegalPage'
-import { TRACKING_EVENTS } from './content/trackingEvents'
-import { INTRO_HERO_SYNC_KEY } from './lib/heroSync'
-import { trackPresentationEvent } from './lib/tracking'
 
 const GATE_UNLOCK_KEY = 'gate_unlocked'
 const GATE_EMAIL_KEY = 'gate_email'
@@ -126,13 +126,14 @@ function App() {
   }, [])
 
   const handleSectionChange = useCallback(
-    (index: number, totalSections: number) => {
+    (index: number, totalSections: number, sectionId: PresentationSectionId) => {
       if (!isUnlocked) {
         return
       }
 
       trackPresentationEvent(TRACKING_EVENTS.sectionView, {
         email: viewerEmail || null,
+        sectionId,
         sectionIndex: index + 1,
         totalSections,
         sectionHash: window.location.hash || `#${String(index + 1).padStart(2, '0')}`,

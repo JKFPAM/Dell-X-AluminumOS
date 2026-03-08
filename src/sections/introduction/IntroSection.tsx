@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import IntroScrollHint from '../../components/IntroScrollHint'
-import PartnerLockup from '../../components/PartnerLockup'
+import { IntroScrollHint, PartnerLockup } from '@/components'
 import {
   INTRO_HERO_SYNC_EVENT,
   INTRO_HERO_SYNC_KEY,
   type IntroHeroSyncDetail,
-} from '../../lib/heroSync'
+} from '@/lib'
 import './IntroSection.css'
 
 const TAGLINE = 'Defining a future vision for AluminumOS on Dell'

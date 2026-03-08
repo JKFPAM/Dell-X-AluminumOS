@@ -1,4 +1,4 @@
-import type { TrackingEventName, TrackingEventPayloadMap } from '../content/trackingEvents'
+import type { TrackingEventName, TrackingEventPayloadMap } from '@/content/trackingEvents'
 
 import { getVisitorSessionId } from './visitorSession'
 

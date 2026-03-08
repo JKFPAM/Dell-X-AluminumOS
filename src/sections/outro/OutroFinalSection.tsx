@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import PartnerLockup from '../../components/PartnerLockup'
+import { PartnerLockup } from '@/components'
 import './OutroFinalSection.css'
 
 const OUTRO_TAGLINE = 'Defining a future vision for AluminumOS on Dell'

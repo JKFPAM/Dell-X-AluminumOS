@@ -1,3 +1,5 @@
+import type { PresentationSectionId } from './presentationStructure'
+
 export const TRACKING_EVENTS = {
   presentationUnlock: 'presentation_unlock',
   presentationLoad: 'presentation_load',
@@ -17,6 +19,7 @@ export type TrackingEventPayloadMap = {
   }
   [TRACKING_EVENTS.sectionView]: {
     email: string | null
+    sectionId: PresentationSectionId
     sectionIndex: number
     totalSections: number
     sectionHash: string

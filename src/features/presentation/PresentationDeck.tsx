@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import NarrativePersistentOverlay from './components/NarrativePersistentOverlay'
-import { presentationSectionConfigs } from '../../sections'
+import type { PresentationSectionId } from '@/content/presentationStructure'
+import { presentationSectionConfigs } from '@/sections'
 
 const forwardKeys = new Set(['ArrowDown', 'ArrowRight'])
 const backwardKeys = new Set(['ArrowUp', 'ArrowLeft'])
@@ -95,7 +96,7 @@ const chapterBoundaryPercents = (() => {
 })()
 
 type PresentationDeckProps = {
-  onSectionChange?: (index: number, totalSections: number) => void
+  onSectionChange?: (index: number, totalSections: number, sectionId: PresentationSectionId) => void
   onLogout?: () => void
 }
 
@@ -314,7 +315,13 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
 
     const notifySectionChange = (index: number) => {
       const sectionCount = getSections().length
-      onSectionChange?.(index, sectionCount)
+      const sectionId = presentationSectionConfigs[index]?.sectionId
+
+      if (!sectionId) {
+        return
+      }
+
+      onSectionChange?.(index, sectionCount, sectionId)
     }
 
     const setLogoutProgress = (progress: number) => {
