@@ -278,6 +278,14 @@
   box-shadow: 0 1.3rem 10rem rgba(72, 181, 249, 0.52);
 }
 
+.gate-screen .partner-master-brand {
+  transition: opacity 140ms ease;
+}
+
+.gate-screen.is-unlocking .partner-master-brand {
+  opacity: 0;
+}
+
 .gate-screen.is-unlocking .gate-form-wrap,
 .gate-screen.is-unlocking .gate-footer {
   opacity: 0;
