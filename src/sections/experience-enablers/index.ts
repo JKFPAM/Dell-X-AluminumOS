@@ -5,3 +5,7 @@ export { default as ExperienceEnablersPassiveAutomationSection } from './Experie
 export { default as ExperienceEnablersSectionShell } from './ExperienceEnablersSectionShell'
 export { default as ExperienceEnablersSharedIOSection } from './ExperienceEnablersSharedIOSection'
 export { default as ExperienceEnablersSharedMedia } from './ExperienceEnablersSharedMedia'
+export {
+  default as ExperienceEnablersSequencedMedia,
+  type ExperienceEnablersSequencedClip,
+} from './ExperienceEnablersSequencedMedia'

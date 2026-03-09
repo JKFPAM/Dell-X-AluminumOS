@@ -11,9 +11,15 @@ const TAGLINE = 'Defining a future vision for AluminumOS on Dell'
 
 function IntroSection() {
   const heroVideoRef = useRef<HTMLVideoElement>(null)
+  const sparkVideoRef = useRef<HTMLVideoElement>(null)
   const hasAppliedSyncRef = useRef(false)
   const isLiveSyncActiveRef = useRef(false)
   const [isHeroVideoReady, setIsHeroVideoReady] = useState(false)
+  const [isSparkVideoReady, setIsSparkVideoReady] = useState(false)
+  const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : ''
+  const isSafari =
+    /safari/i.test(userAgent) &&
+    !/chrome|chromium|android|crios|fxios|edgios|opr\//i.test(userAgent)
 
   const syncHeroToTime = useCallback((time: number, duration: number | null) => {
     const video = heroVideoRef.current
@@ -124,11 +130,31 @@ function IntroSection() {
           </video>
           <div className={`intro-hero-fallback ${isHeroVideoReady ? 'is-hidden' : ''}`} />
 
-          <PartnerLockup nodeId="2735:5634" />
+          <PartnerLockup nodeId="2735:5634" showPartnership />
         </div>
 
         <p className="intro-tagline" data-node-id="2735:5631">
-          {TAGLINE}
+          <span>{TAGLINE}</span>
+          <span aria-hidden="true" className="intro-tagline-spark">
+            <video
+              autoPlay
+              className={`intro-tagline-spark-video ${isSparkVideoReady ? 'is-visible' : ''}`}
+              loop
+              muted
+              onCanPlay={() => setIsSparkVideoReady(true)}
+              onError={() => setIsSparkVideoReady(false)}
+              playsInline
+              preload="auto"
+              ref={sparkVideoRef}
+            >
+              {isSafari && (
+                <source src="/assets/section-one/videos/gem-loop-alpha.mov" type="video/quicktime" />
+              )}
+              <source src="/assets/section-one/videos/gem-loop-alpha.webm" type="video/webm" />
+              <source src="/assets/section-one/videos/gem-loop-alpha.mp4" type="video/mp4" />
+            </video>
+            <span className={`intro-tagline-spark-fallback ${isSparkVideoReady ? 'is-hidden' : ''}`} />
+          </span>
         </p>
       </div>
 

@@ -113,9 +113,50 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: clamp(0.34rem, 0.6vw, 0.58rem);
   text-align: center;
   white-space: nowrap;
   animation: intro-tagline-rise 900ms var(--gem-ease-out) 380ms both;
+}
+
+.intro-tagline-spark {
+  position: relative;
+  width: clamp(1.1875rem, 1.875vw, 1.71875rem);
+  aspect-ratio: 1;
+  overflow: hidden;
+  flex-shrink: 0;
+  line-height: 0;
+  filter: drop-shadow(0 0 5px rgba(120, 205, 255, 0.42));
+}
+
+.intro-tagline-spark-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 320ms ease;
+}
+
+.intro-tagline-spark-video.is-visible {
+  opacity: 1;
+}
+
+.intro-tagline-spark-fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 120% at 18% 14%, #ffd659 0%, rgba(255, 214, 89, 0) 54%),
+    radial-gradient(120% 120% at 84% 16%, #53b7ff 0%, rgba(83, 183, 255, 0) 56%),
+    radial-gradient(120% 120% at 20% 88%, #7be4ca 0%, rgba(123, 228, 202, 0) 55%),
+    radial-gradient(120% 120% at 84% 86%, #4b8ff8 0%, rgba(75, 143, 248, 0) 56%);
+  transition: opacity 260ms ease;
+}
+
+.intro-tagline-spark-fallback.is-hidden {
+  opacity: 0;
 }
 
 .intro-sr-only {
@@ -200,5 +241,9 @@
     padding: 0.4rem 0.74rem;
     font-size: min(clamp(0.5rem, 2.7vw, 0.8rem), calc((100vw - 1rem) / 44));
     letter-spacing: -0.02em;
+  }
+
+  .intro-tagline-spark {
+    width: clamp(0.96875rem, 3.90625vw, 1.40625rem);
   }
 }

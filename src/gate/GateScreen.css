@@ -24,10 +24,10 @@
 
 .gate-hero {
   position: relative;
-  width: min(45rem, 100vw);
+  width: min(30rem, 100vw);
   height: clamp(15rem, 36.2vw, 33.6rem);
-  border-bottom-left-radius: clamp(2.25rem, 6vw, 6.3rem);
-  border-bottom-right-radius: clamp(2.25rem, 6vw, 6.3rem);
+  border-bottom-left-radius: clamp(2rem, 4vw, 5rem);
+  border-bottom-right-radius: clamp(2rem, 4vw, 5rem);
   overflow: hidden;
   background:
     radial-gradient(58% 82% at 50% 90%, rgba(91, 133, 255, 0.88) 0%, rgba(91, 133, 255, 0) 74%),

@@ -76,7 +76,7 @@
 
 .future-vision-media--bottom-left {
   left: clamp(2.1rem, 10vw, 13.4rem);
-  bottom: clamp(4.2rem, 10vh, 8.8rem);
+  bottom: clamp(2rem, 2vh, 2rem);
   width: clamp(9.2rem, 17.8vw, 17.06rem);
   transition-delay: 540ms;
 }
@@ -182,7 +182,7 @@
 
   .future-vision-media--bottom-left {
     left: clamp(2.1rem, 10vw, 13.4rem);
-    bottom: clamp(4.2rem, 10vh, 8.8rem);
+    bottom: clamp(2rem, 2vh, 2rem);
     width: clamp(9.2rem, 17.8vw, 17.06rem);
   }
 

@@ -190,10 +190,10 @@ function GateScreen({ isUnlocking, onUnlocked }: GateScreenProps) {
         </p>
 
         <footer className="gate-footer" data-node-id="2784:5791">
-          This presentation is strictly confidential and intended solely for authorised recipients
-          at Dell Technologies and Google. By continuing, you confirm you are an authorised
-          recipient. Your email, device information, and viewing activity will be recorded and
-          shared with Experience Design Group at Dell Technologies.
+          This presentation is strictly confidential and intended solely for authorized recipients
+          at Dell Technologies and their Partners. By continuing, you confirm you are an
+          authorized recipient. Your email, device information, and viewing activity will be
+          captured and shared with Dell Technologies.
         </footer>
       </section>
     </main>

@@ -1,48 +1,78 @@
-import { useState } from 'react'
-import BrandLogo from './BrandLogo'
+import { useEffect, useRef, useState } from 'react'
 import './PartnerLockup.css'
 
 type PartnerLockupProps = {
   className?: string
   nodeId?: string
+  showPartnership?: boolean
 }
 
-function PartnerLockup({ className, nodeId }: PartnerLockupProps) {
-  const [isSparkVideoReady, setIsSparkVideoReady] = useState(false)
-  const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : ''
-  const isSafari =
-    /safari/i.test(userAgent) &&
-    !/chrome|chromium|android|crios|fxios|edgios|opr\//i.test(userAgent)
+function PartnerLockup({ className, nodeId, showPartnership = false }: PartnerLockupProps) {
+  const lockupRef = useRef<HTMLDivElement>(null)
+  const [isInView, setIsInView] = useState(false)
 
-  const classes = ['partner-lockup', className].filter(Boolean).join(' ')
+  useEffect(() => {
+    if (!showPartnership) {
+      return
+    }
+
+    const node = lockupRef.current
+
+    if (!node) {
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries
+        setIsInView(Boolean(entry?.isIntersecting))
+      },
+      { threshold: 0.6 },
+    )
+
+    observer.observe(node)
+
+    return () => observer.disconnect()
+  }, [showPartnership])
+
+  const classes = [
+    'partner-lockup',
+    showPartnership ? 'is-partnership' : '',
+    showPartnership && isInView ? 'is-in-view' : '',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ')
 
   return (
-    <div className={classes} data-node-id={nodeId}>
-      <BrandLogo className="partner-brand-logo" />
-      <span aria-hidden="true" className="partner-spark">
-        <video
-          autoPlay
-          className={`partner-spark-video ${isSparkVideoReady ? 'is-visible' : ''}`}
-          loop
-          muted
-          onCanPlay={() => setIsSparkVideoReady(true)}
-          onError={() => setIsSparkVideoReady(false)}
-          playsInline
-          preload="auto"
-        >
-          {isSafari && <source src="/assets/section-one/videos/gem-loop-alpha.mov" type="video/quicktime" />}
-          <source src="/assets/section-one/videos/gem-loop-alpha.webm" type="video/webm" />
-          <source src="/assets/section-one/videos/gem-loop-alpha.mp4" type="video/mp4" />
-        </video>
-        <span className={`partner-spark-fallback ${isSparkVideoReady ? 'is-hidden' : ''}`} />
-      </span>
+    <div className={classes} data-node-id={nodeId} ref={lockupRef}>
       <img
-        alt="Google"
-        className="partner-google-wordmark"
+        alt="Dell Technologies"
+        className="partner-master-brand"
         decoding="async"
         loading="eager"
-        src="/assets/section-two/google-wordmark.svg"
+        src="/assets/dell-technologies.svg"
       />
+
+      {showPartnership && (
+        <>
+          <img
+            alt=""
+            aria-hidden="true"
+            className="partner-multiplication"
+            decoding="async"
+            loading="eager"
+            src="/assets/multiplication.svg"
+          />
+          <img
+            alt="Google"
+            className="partner-google-wordmark"
+            decoding="async"
+            loading="eager"
+            src="/assets/Google.svg"
+          />
+        </>
+      )}
     </div>
   )
 }

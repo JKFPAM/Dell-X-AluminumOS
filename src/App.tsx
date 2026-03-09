@@ -146,7 +146,9 @@ function App() {
   }, [])
 
   const resumePresentationMedia = useCallback(() => {
-    const videos = Array.from(document.querySelectorAll<HTMLVideoElement>('video'))
+    const videos = Array.from(
+      document.querySelectorAll<HTMLVideoElement>('video:not([data-managed-playback="sequenced"])'),
+    )
 
     videos.forEach((video) => {
       video.muted = true

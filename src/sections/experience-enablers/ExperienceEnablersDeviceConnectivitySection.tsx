@@ -1,20 +1,36 @@
 import { useEffect, useRef, useState } from 'react'
+import ExperienceEnablersSequencedMedia, {
+  type ExperienceEnablersSequencedClip,
+} from './ExperienceEnablersSequencedMedia'
 import './ExperienceEnablersDeviceConnectivitySection.css'
 
-const VIDEO_SOURCES = [
-  '/assets/experience-enablers/Scene01_1.mp4',
-  '/assets/experience-enablers/Scene01_2.mp4',
+const ACTIVE_VISIBILITY_THRESHOLD = 0.55
+
+const DEVICE_CONNECTIVITY_CLIPS: ExperienceEnablersSequencedClip[] = [
+  {
+    caption: 'Seamlessly connect your new Dell XPS to your Google ecosystem.',
+    id: 'device-connectivity-01',
+    label: '01',
+    videoSrc: '/assets/experience-enablers/Scene01_1.mp4',
+  },
+  {
+    caption:
+      'Once connected, your XPS is part of the entire ecosystem: apps, I/O, and every other Google enabled device.',
+    id: 'device-connectivity-02',
+    label: '02',
+    videoSrc: '/assets/experience-enablers/Scene01_2.mp4',
+  },
 ]
 
 function ExperienceEnablersDeviceConnectivitySection() {
-  const [isInView, setIsInView] = useState(false)
-  const [isVideoReady, setIsVideoReady] = useState<boolean[]>([false, false])
-  const contentRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const [hasEntered, setHasEntered] = useState(false)
+  const [isActive, setIsActive] = useState(false)
 
   useEffect(() => {
-    const node = contentRef.current
+    const node = sectionRef.current
 
-    if (!node || isInView) {
+    if (!node) {
       return
     }
 
@@ -22,117 +38,51 @@ function ExperienceEnablersDeviceConnectivitySection() {
       (entries) => {
         const [entry] = entries
 
-        if (!entry?.isIntersecting) {
+        if (!entry) {
           return
         }
 
-        setIsInView(true)
-        observer.disconnect()
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.28) {
+          setHasEntered(true)
+        }
+
+        const nextIsActive = entry.isIntersecting && entry.intersectionRatio >= ACTIVE_VISIBILITY_THRESHOLD
+        setIsActive(nextIsActive)
       },
-      { threshold: 0.38 },
+      {
+        threshold: [0, 0.28, ACTIVE_VISIBILITY_THRESHOLD, 0.75],
+      },
     )
 
     observer.observe(node)
 
     return () => observer.disconnect()
-  }, [isInView])
-
-  const markVideoReady = (index: number) => {
-    setIsVideoReady((current) => {
-      if (current[index]) {
-        return current
-      }
-
-      const next = [...current]
-      next[index] = true
-      return next
-    })
-  }
+  }, [])
 
   return (
     <section className="experience-enabler-connectivity" data-node-id="5764:13794">
       <div
-        className={`experience-enabler-connectivity-content ${isInView ? 'is-in-view' : ''}`}
-        ref={contentRef}
+        className={`experience-enabler-connectivity-content ${hasEntered ? 'is-in-view' : ''} ${isActive ? 'is-active' : ''}`}
+        ref={sectionRef}
       >
         <div className="experience-enabler-connectivity-layout">
-          <div className="experience-enabler-connectivity-left">
-            <div className="experience-enabler-connectivity-sub" data-name="sub" data-node-id="5764:13796">
-              <p data-node-id="5764:13797">01/05</p>
-              <p data-node-id="5764:13798">DEVICE CONNECTIVITY</p>
-            </div>
-
-            <h2 className="experience-enabler-connectivity-headline" data-node-id="5764:13795">
-              Your laptop is no longer
-              <br />
-              an isolated machine.
-              <br />
-              It&apos;s one point in a much
-              <br />
-              larger ecosystem.
-            </h2>
+          <div className="experience-enabler-connectivity-sub" data-name="sub" data-node-id="5764:13796">
+            <p data-node-id="5764:13797">1/5</p>
+            <p data-node-id="5764:13798">Device Connectivity</p>
           </div>
 
-          <div className="experience-enabler-connectivity-right">
-            <div className="experience-enabler-scene-stack">
-              <article className="experience-enabler-scene experience-enabler-scene--one" data-node-id="5764:13799">
-                <div className="experience-enabler-scene-media" data-node-id="5764:13800">
-                  <video
-                    aria-hidden="true"
-                    autoPlay
-                    className={`experience-enabler-scene-video ${isVideoReady[0] ? 'is-ready' : ''}`}
-                    loop
-                    muted
-                    onCanPlay={() => markVideoReady(0)}
-                    onError={() => markVideoReady(0)}
-                    playsInline
-                    preload="auto"
-                  >
-                    <source src={VIDEO_SOURCES[0]} type="video/mp4" />
-                  </video>
-                  <span
-                    aria-hidden="true"
-                    className={`experience-enabler-scene-fallback ${isVideoReady[0] ? 'is-hidden' : ''}`}
-                  />
-                </div>
-                <div className="experience-enabler-scene-copy experience-enabler-scene-copy--one" data-node-id="5764:13801">
-                  <p data-node-id="5764:13802">01—</p>
-                  <p data-node-id="5764:13803">
-                    Seamlessly connect your new Dell XPS to your Google ecosystem.
-                  </p>
-                </div>
-              </article>
+          <h2 className="experience-enabler-connectivity-headline" data-node-id="5764:13795">
+            Your laptop is no longer an isolated machine.
+            <br />
+            It&apos;s one point in a much larger ecosystem.
+          </h2>
 
-              <article className="experience-enabler-scene experience-enabler-scene--two" data-node-id="5764:13804">
-                <div className="experience-enabler-scene-media" data-node-id="5764:13805">
-                  <video
-                    aria-hidden="true"
-                    autoPlay
-                    className={`experience-enabler-scene-video ${isVideoReady[1] ? 'is-ready' : ''}`}
-                    loop
-                    muted
-                    onCanPlay={() => markVideoReady(1)}
-                    onError={() => markVideoReady(1)}
-                    playsInline
-                    preload="auto"
-                  >
-                    <source src={VIDEO_SOURCES[1]} type="video/mp4" />
-                  </video>
-                  <span
-                    aria-hidden="true"
-                    className={`experience-enabler-scene-fallback ${isVideoReady[1] ? 'is-hidden' : ''}`}
-                  />
-                </div>
-                <div className="experience-enabler-scene-copy experience-enabler-scene-copy--two" data-node-id="5764:13806">
-                  <p data-node-id="5764:13807">02—</p>
-                  <p data-node-id="5764:13808">
-                    Once connected, your XPS is part of the entire ecosystem: apps, I/O, and every other
-                    Google enabled device.
-                  </p>
-                </div>
-              </article>
-            </div>
-          </div>
+          <ExperienceEnablersSequencedMedia
+            className="experience-enabler-connectivity-sequencer"
+            clips={DEVICE_CONNECTIVITY_CLIPS}
+            isActive={isActive}
+            isInView={hasEntered}
+          />
         </div>
       </div>
     </section>
