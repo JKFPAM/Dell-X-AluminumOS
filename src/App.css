@@ -17,6 +17,9 @@
 
 .presentation-app {
   --scroll-progress: 0;
+  --project-context-intelligence-fade: 0;
+  --project-context-intelligence-background-visibility: 0;
+  --project-context-intelligence-anchor-visibility: 0;
   position: relative;
   width: 100%;
   height: var(--presentation-vh);
@@ -44,10 +47,68 @@
 
 .presentation-track {
   position: relative;
-  z-index: 1;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   min-height: 100%;
+}
+
+.presentation-intelligence-crossfade {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--project-context-intelligence-background-visibility);
+  transition: opacity 280ms var(--gem-ease-out);
+}
+
+.presentation-intelligence-crossfade-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.presentation-intelligence-crossfade-layer--blue {
+  background: #2766b5;
+  opacity: calc(1 - var(--project-context-intelligence-fade));
+}
+
+.presentation-intelligence-crossfade-layer--black {
+  background: #000;
+  opacity: var(--project-context-intelligence-fade);
+}
+
+.presentation-intelligence-anchor-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: var(--project-context-intelligence-anchor-visibility);
+  transition: opacity 0ms linear;
+}
+
+.presentation-intelligence-anchor-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(92vw, 1249px);
+  margin: 0;
+  transform: translate(-50%, -88%);
+  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(2.1rem, 3.385vw, 4.0625rem);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.03em;
+  text-align: center;
+  text-wrap: balance;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 980px) {
+  .presentation-intelligence-anchor-text {
+    font-size: clamp(2rem, 8.6vw, 3.3rem);
+    line-height: 1.2;
+    transform: translate(-50%, -85%);
+  }
 }
 
 .presentation-section {

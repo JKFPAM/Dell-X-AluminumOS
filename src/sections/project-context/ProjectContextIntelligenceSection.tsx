@@ -26,15 +26,11 @@ function ProjectContextIntelligenceSection() {
   }, [])
 
   return (
-    <section className="project-context-intelligence" data-node-id="section-13-intelligence">
+    <section className="project-context-intelligence" data-node-id="6151:16792">
       <div className={`project-context-intelligence-content ${isInView ? 'is-in-view' : ''}`} ref={contentRef}>
         <div className="project-context-intelligence-main">
-          <p>What you get is intelligence</p>
-          <p>that feels premium, reliable, and powerful.</p>
-          <p>powered by Dell</p>
+          <p className="project-context-intelligence-detail">that feels premium, reliable, and powerful.</p>
         </div>
-
-        <p className="project-context-intelligence-kicker">And that can unfold in many ways…</p>
       </div>
     </section>
   )

@@ -73,6 +73,14 @@ const totalPresentationSections = presentationSectionConfigs.reduce((max, config
   return Math.max(max, hashGroup)
 }, 0)
 
+const intelligenceSectionIndex = presentationSectionConfigs.findIndex(
+  ({ sectionId }) => sectionId === 'project-context-intelligence',
+)
+
+const intelligencePoweredSectionIndex = presentationSectionConfigs.findIndex(
+  ({ sectionId }) => sectionId === 'project-context-intelligence-powered',
+)
+
 function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) {
   const appRef = useRef<HTMLElement | null>(null)
   const scrollPreviewRef = useRef<HTMLDivElement | null>(null)
@@ -188,6 +196,51 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
     const finalSectionIndex = presentationSectionConfigs.length - 1
 
     const getSections = () => sectionRefs.current.filter(Boolean) as HTMLDivElement[]
+
+    const updateIntelligenceCrossfade = (sections: HTMLDivElement[]) => {
+      if (intelligenceSectionIndex < 0 || intelligencePoweredSectionIndex < 0) {
+        container.style.setProperty('--project-context-intelligence-fade', '0')
+        container.style.setProperty('--project-context-intelligence-background-visibility', '0')
+        container.style.setProperty('--project-context-intelligence-anchor-visibility', '0')
+        return
+      }
+
+      const firstSection = sections[intelligenceSectionIndex]
+      const secondSection = sections[intelligencePoweredSectionIndex]
+
+      if (!firstSection || !secondSection) {
+        container.style.setProperty('--project-context-intelligence-fade', '0')
+        container.style.setProperty('--project-context-intelligence-background-visibility', '0')
+        container.style.setProperty('--project-context-intelligence-anchor-visibility', '0')
+        return
+      }
+
+      const viewportHeight = Math.max(1, container.clientHeight)
+      const scrollTop = container.scrollTop
+      const firstTop = firstSection.offsetTop
+      const secondTop = secondSection.offsetTop
+
+      const transitionRange = Math.max(1, secondTop - firstTop)
+      const fadeProgress = Math.max(0, Math.min(1, (scrollTop - firstTop) / transitionRange))
+
+      const quickFadeDistance = Math.max(1, viewportHeight * 0.03)
+      const backgroundStart = firstTop - viewportHeight
+      const backgroundEnd = secondTop + viewportHeight
+      let anchorVisibility = 1
+      const backgroundVisibility = scrollTop >= backgroundStart && scrollTop <= backgroundEnd ? 1 : 0
+
+      if (scrollTop < firstTop) {
+        const distanceFromBoundary = firstTop - scrollTop
+        anchorVisibility = Math.max(0, 1 - distanceFromBoundary / quickFadeDistance)
+      } else if (scrollTop > secondTop) {
+        const distanceFromBoundary = scrollTop - secondTop
+        anchorVisibility = Math.max(0, 1 - distanceFromBoundary / quickFadeDistance)
+      }
+
+      container.style.setProperty('--project-context-intelligence-fade', fadeProgress.toFixed(4))
+      container.style.setProperty('--project-context-intelligence-background-visibility', backgroundVisibility.toFixed(4))
+      container.style.setProperty('--project-context-intelligence-anchor-visibility', anchorVisibility.toFixed(4))
+    }
 
     const syncHashToIndex = (index: number) => {
       const nextHash = getSectionHash(index, presentationSectionConfigs)
@@ -603,6 +656,7 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       const shouldShowScrollPreview = currentIndex > 0
 
       container.style.setProperty('--scroll-progress', scrollProgress.toFixed(4))
+      updateIntelligenceCrossfade(sections)
       setScrollPreviewVisibility(shouldShowScrollPreview)
       setIsActiveSectionSettled(isSettled)
 
@@ -823,6 +877,9 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
       isProgrammaticNavigationActive = false
       container.style.removeProperty('scroll-behavior')
       container.style.removeProperty('scroll-snap-type')
+      container.style.removeProperty('--project-context-intelligence-fade')
+      container.style.removeProperty('--project-context-intelligence-background-visibility')
+      container.style.removeProperty('--project-context-intelligence-anchor-visibility')
       container.removeEventListener('scroll', scheduleSectionMotion)
       window.removeEventListener('resize', scheduleSectionMotion)
       visualViewport?.removeEventListener('resize', scheduleSectionMotion)
@@ -839,6 +896,13 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
   return (
     <main className="presentation-app" ref={appRef}>
       <div aria-hidden="true" className={`presentation-loop-fade ${isLoopFadeVisible ? 'is-visible' : ''}`} />
+      <div aria-hidden="true" className="presentation-intelligence-crossfade">
+        <span className="presentation-intelligence-crossfade-layer presentation-intelligence-crossfade-layer--blue" />
+        <span className="presentation-intelligence-crossfade-layer presentation-intelligence-crossfade-layer--black" />
+      </div>
+      <div aria-hidden="true" className="presentation-intelligence-anchor-overlay">
+        <p className="presentation-intelligence-anchor-text">What you get is intelligence</p>
+      </div>
       <div
         aria-hidden="true"
         className={`logout-hold-indicator ${isLogoutHoldVisible ? 'is-visible' : ''}`}

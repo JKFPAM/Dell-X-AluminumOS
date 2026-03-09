@@ -1,0 +1,127 @@
+.project-context-intelligence-powered {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  background: transparent;
+}
+
+.project-context-intelligence-powered-content {
+  position: relative;
+  z-index: 1;
+  width: min(100vw, 1920px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: clamp(2rem, 4.5vh, 3.5rem) clamp(1rem, 3vw, 2rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-context-intelligence-powered-main {
+  position: relative;
+  width: min(100%, 1249px);
+  min-height: clamp(8rem, 20vh, 12rem);
+}
+
+.project-context-intelligence-powered-row {
+  position: absolute;
+  left: 50%;
+  width: min(100%, 1249px);
+  margin: 0;
+  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(2.1rem, 3.385vw, 4.0625rem);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.03em;
+  text-align: center;
+  text-wrap: balance;
+  opacity: 0;
+  transition:
+    opacity 980ms var(--gem-ease-out),
+    transform 1220ms var(--gem-ease-fluid);
+}
+
+.project-context-intelligence-powered-row {
+  top: 50%;
+  transform: translate(-50%, 10%) translateY(20px);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.45rem, 0.8vw, 0.75rem);
+  justify-content: center;
+}
+
+.project-context-intelligence-powered-pill {
+  display: inline-flex;
+  padding: 20px 26px 20px 30px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100.841px;
+  background: #0672cb;
+  box-shadow: 0 0 20px 8px rgba(45, 144, 245, 0.38);
+  line-height: 0;
+  transform: translateY(2px);
+}
+
+.project-context-intelligence-powered-pill img {
+  display: block;
+  width: auto;
+  height: clamp(1.7rem, 2.35vw, 2.55rem);
+  max-width: none;
+  object-fit: contain;
+}
+
+.project-context-intelligence-powered-content.is-in-view .project-context-intelligence-powered-row {
+  opacity: 1;
+  transform: translate(-50%, 10%) translateY(0);
+}
+
+.project-context-intelligence-powered-content.is-in-view .project-context-intelligence-powered-row {
+  transition-delay: 180ms;
+}
+
+@media (max-width: 980px) {
+  .project-context-intelligence-powered-content {
+    padding: clamp(1.5rem, 4vh, 2.2rem) clamp(1rem, 4vw, 1.25rem);
+  }
+
+  .project-context-intelligence-powered-main {
+    min-height: clamp(7.5rem, 20vh, 11rem);
+  }
+
+  .project-context-intelligence-powered-row {
+    font-size: clamp(2rem, 8.6vw, 3.3rem);
+    line-height: 1.2;
+    width: min(92vw, 1249px);
+  }
+
+  .project-context-intelligence-powered-row {
+    gap: clamp(0.4rem, 1.8vw, 0.6rem);
+  }
+
+  .project-context-intelligence-powered-pill {
+    padding: clamp(0.72rem, 2.2vw, 1rem) clamp(0.86rem, 2.6vw, 1.2rem) clamp(0.72rem, 2.2vw, 1rem)
+      clamp(0.98rem, 3vw, 1.34rem);
+  }
+
+  .project-context-intelligence-powered-pill img {
+    height: clamp(1.55rem, 6.7vw, 2.1rem);
+  }
+
+  .project-context-intelligence-powered-row {
+    transform: translate(-50%, 12%) translateY(20px);
+  }
+
+  .project-context-intelligence-powered-content.is-in-view .project-context-intelligence-powered-row {
+    transform: translate(-50%, 12%) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-context-intelligence-powered-row {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
