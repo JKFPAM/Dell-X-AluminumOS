@@ -17,7 +17,7 @@
 .project-context-placeholder-video {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: 1;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -29,7 +29,7 @@
 .project-context-placeholder-overlay {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 0;
 }
 
 .project-context-placeholder-kicker {
@@ -54,34 +54,14 @@
   transform: translate(-50%, -50%);
   margin: 0;
   width: 100vw;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(4rem, 12vw, 11rem) minmax(0, 1fr);
-  align-items: baseline;
-  justify-content: stretch;
-}
-
-.project-context-placeholder-word {
   color: #000f19;
   font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
   font-size: clamp(5.2rem, 14vw, 13rem);
   font-weight: 700;
   line-height: 0.92;
   letter-spacing: -0.042em;
+  text-align: center;
   white-space: nowrap;
-}
-
-.project-context-placeholder-word--left {
-  justify-self: end;
-  text-align: right;
-}
-
-.project-context-placeholder-center-gap {
-  width: 100%;
-}
-
-.project-context-placeholder-word--right {
-  justify-self: start;
-  text-align: left;
 }
 
 .project-context-placeholder-points {
@@ -168,10 +148,6 @@
   .project-context-placeholder-headline {
     top: 50%;
     width: 100vw;
-    grid-template-columns: minmax(0, 1fr) clamp(1.35rem, 6vw, 3.4rem) minmax(0, 1fr);
-  }
-
-  .project-context-placeholder-word {
     font-size: clamp(3rem, 14vw, 6.2rem);
   }
 

@@ -133,11 +133,7 @@ function ProjectContextPlaceholderSection() {
           <p className="project-context-placeholder-kicker">Now take that experience and</p>
 
           <h2 aria-label="amplify it" className="project-context-placeholder-headline">
-            <span className="project-context-placeholder-word project-context-placeholder-word--left">
-              amplify
-            </span>
-            <span aria-hidden="true" className="project-context-placeholder-center-gap" />
-            <span className="project-context-placeholder-word project-context-placeholder-word--right">it</span>
+            amplify it
           </h2>
 
           <ul className="project-context-placeholder-points" data-node-id="6068:24062">
