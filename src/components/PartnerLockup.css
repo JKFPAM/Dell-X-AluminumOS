@@ -76,8 +76,8 @@
 
 @media (max-width: 1080px) {
   .partner-lockup {
-    width: min(45%, 13.8rem);
-    top: 78%;
+    width: min(35%, 13.8rem);
+    top: 50%;
   }
 
   .partner-lockup.is-partnership {
