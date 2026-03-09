@@ -18,6 +18,22 @@
   justify-content: center;
 }
 
+.project-context-intelligence-powered-footer {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.5rem, 3.4vh, 2.8rem);
+  transform: translateX(-50%);
+  margin: 0;
+  color: #eef2fe;
+  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(1.4rem, 1.82vw, 2.1875rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-align: center;
+  white-space: nowrap;
+}
+
 .project-context-intelligence-powered-main {
   position: relative;
   width: min(100%, 1249px);
@@ -115,6 +131,14 @@
 
   .project-context-intelligence-powered-content.is-in-view .project-context-intelligence-powered-row {
     transform: translate(-50%, 12%) translateY(0);
+  }
+
+  .project-context-intelligence-powered-footer {
+    bottom: clamp(1rem, 2.4vh, 1.6rem);
+    font-size: clamp(1.2rem, 4.2vw, 1.75rem);
+    white-space: normal;
+    width: min(92vw, 32rem);
+    line-height: 1.1;
   }
 }
 

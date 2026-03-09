@@ -39,6 +39,7 @@ function ProjectContextIntelligencePoweredSection() {
             </span>
           </p>
         </div>
+        <p className="project-context-intelligence-powered-footer">And that can unfold in many ways…</p>
       </div>
     </section>
   )

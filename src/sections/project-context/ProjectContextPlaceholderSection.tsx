@@ -11,11 +11,6 @@ type AmplifyCard = {
 
 const amplifyCards: AmplifyCard[] = [
   {
-    id: 'scale',
-    icon: 'scale',
-    copy: "Scale it across a whole new range of devices and PC's",
-  },
-  {
     id: 'security',
     icon: 'shield',
     copy: 'Embed it with airtight security, from chip to cloud',
@@ -24,6 +19,11 @@ const amplifyCards: AmplifyCard[] = [
     id: 'performance',
     icon: 'bolt',
     copy: 'Drive it with high-performance computing muscle',
+  },
+  {
+    id: 'scale',
+    icon: 'scale',
+    copy: "Scale it across a whole new range of devices and PC's",
   },
 ]
 
@@ -136,13 +136,17 @@ function ProjectContextPlaceholderSection() {
             amplify it
           </h2>
 
-          <ul className="project-context-placeholder-points" data-node-id="6068:24062">
+          <ul className="project-context-placeholder-cards" data-node-id="6151:29124">
             {amplifyCards.map((card) => (
-              <li className="project-context-placeholder-point" key={card.id}>
-                <span aria-hidden="true" className="project-context-placeholder-point-icon">
+              <li className="project-context-placeholder-card" key={card.id}>
+                <span
+                  aria-hidden="true"
+                  className="project-context-placeholder-card-icon"
+                  data-icon={card.icon}
+                >
                   <AmplifyCardIconSvg icon={card.icon} />
                 </span>
-                <p>{card.copy}</p>
+                <p className="project-context-placeholder-card-copy">{card.copy}</p>
               </li>
             ))}
           </ul>

@@ -64,24 +64,32 @@
   white-space: nowrap;
 }
 
-.project-context-placeholder-points {
+.project-context-placeholder-cards {
   position: absolute;
-  left: clamp(16vw, 24vw, 16rem);
-  bottom: clamp(4.2rem, 14vh, 12rem);
+  left: 50%;
+  bottom: clamp(3rem, 9.5vh, 6.75rem);
+  transform: translateX(-50%);
   margin: 0;
   padding: 0;
-  width: min(86vw, 70rem);
+  width: min(95vw, 98.125rem);
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1.1rem, 2.2vh, 1.8rem);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.8rem, 1.2vw, 1.5rem);
 }
 
-.project-context-placeholder-point {
+.project-context-placeholder-card {
+  position: relative;
   display: grid;
-  grid-template-columns: clamp(1.2rem, 1.8vw, 1.95rem) 1fr;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  column-gap: clamp(0.85rem, 1.15vw, 1.2rem);
+  column-gap: clamp(0.9rem, 1.2vw, 1.5rem);
+  padding: clamp(1rem, 2.1vw, 2.5rem) clamp(1rem, 2.45vw, 3.125rem);
+  border: 2px solid rgba(255, 255, 255, 0.32);
+  border-radius: clamp(2rem, 2.62vw, 3.323rem);
+  box-shadow: 0 0 clamp(3.8rem, 8.8vw, 11.25rem) rgba(255, 255, 255, 0.3);
+  aspect-ratio: 501 / 132;
+  overflow: hidden;
   opacity: 0;
   transform: translateY(20px);
   transition:
@@ -89,50 +97,68 @@
     transform 1220ms var(--gem-ease-fluid);
 }
 
-.project-context-placeholder-point-icon {
+.project-context-placeholder-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.2);
+  mix-blend-mode: screen;
+  backdrop-filter: blur(16.801px);
+  pointer-events: none;
+}
+
+.project-context-placeholder-card-icon,
+.project-context-placeholder-card-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.project-context-placeholder-card-icon {
   color: #000f19;
   line-height: 0;
+  width: clamp(1.8rem, 2.25vw, 2.88rem);
 }
 
-.project-context-placeholder-point:nth-child(2) .project-context-placeholder-point-icon {
-  width: clamp(1.35rem, 2vw, 2.15rem);
+.project-context-placeholder-card-icon[data-icon='bolt'] {
+  width: clamp(1.05rem, 1.26vw, 1.56rem);
 }
 
-.project-context-placeholder-point:nth-child(3) .project-context-placeholder-point-icon {
-  width: clamp(1rem, 1.5vw, 1.45rem);
+.project-context-placeholder-card-icon[data-icon='scale'] {
+  width: clamp(1.7rem, 2.01vw, 2.56rem);
 }
 
-.project-context-placeholder-point-icon svg {
+.project-context-placeholder-card-icon svg {
   display: block;
   width: 100%;
   height: auto;
 }
 
-.project-context-placeholder-point p {
+.project-context-placeholder-card-copy {
   margin: 0;
   color: #000f19;
   font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
-  font-size: clamp(1.4rem, 1.82vw, 2.1875rem);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -0.02em;
+  font-size: clamp(0.92rem, 1.22vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
-.project-context-placeholder.is-in-view .project-context-placeholder-point {
+.project-context-placeholder.is-in-view .project-context-placeholder-card {
   opacity: 1;
   transform: translateY(0);
 }
 
-.project-context-placeholder.is-in-view .project-context-placeholder-point:nth-child(1) {
+.project-context-placeholder.is-in-view .project-context-placeholder-card:nth-child(1) {
   transition-delay: 180ms;
 }
 
-.project-context-placeholder.is-in-view .project-context-placeholder-point:nth-child(2) {
+.project-context-placeholder.is-in-view .project-context-placeholder-card:nth-child(2) {
   transition-delay: 320ms;
 }
 
-.project-context-placeholder.is-in-view .project-context-placeholder-point:nth-child(3) {
+.project-context-placeholder.is-in-view .project-context-placeholder-card:nth-child(3) {
   transition-delay: 460ms;
 }
 
@@ -151,28 +177,27 @@
     font-size: clamp(3rem, 14vw, 6.2rem);
   }
 
-  .project-context-placeholder-points {
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(92vw, 36rem);
+  .project-context-placeholder-cards {
+    width: min(92vw, 44rem);
     bottom: clamp(2.8rem, 8.2vh, 4.6rem);
-    gap: clamp(0.75rem, 1.5vh, 1rem);
+    grid-template-columns: 1fr;
+    gap: clamp(0.7rem, 1.5vh, 0.95rem);
   }
 
-  .project-context-placeholder-point {
-    grid-template-columns: clamp(1rem, 3.8vw, 1.25rem) 1fr;
-    column-gap: clamp(0.65rem, 2.2vw, 0.9rem);
+  .project-context-placeholder-card {
+    column-gap: clamp(0.7rem, 2.2vw, 1rem);
+    padding: clamp(0.85rem, 2.3vw, 1.25rem) clamp(1rem, 3.4vw, 1.45rem);
+    aspect-ratio: 501 / 138;
   }
 
-  .project-context-placeholder-point p {
-    font-size: clamp(1.2rem, 4.2vw, 1.75rem);
-    line-height: 1;
-    letter-spacing: -0.02em;
+  .project-context-placeholder-card-copy {
+    font-size: clamp(0.95rem, 3.3vw, 1.25rem);
+    line-height: 1.08;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .project-context-placeholder-point {
+  .project-context-placeholder-card {
     opacity: 1;
     transform: none;
     transition: none;
