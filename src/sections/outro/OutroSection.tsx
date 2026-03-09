@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import './OutroSection.css'
 
 const OUTRO_LINES = [
@@ -10,6 +10,7 @@ const OUTRO_LINES = [
 
 function OutroSection() {
   const [isInView, setIsInView] = useState(false)
+  const [lineStepIndex, setLineStepIndex] = useState(0)
   const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -38,13 +39,32 @@ function OutroSection() {
     return () => observer.disconnect()
   }, [isInView])
 
+  useEffect(() => {
+    if (!isInView) {
+      return
+    }
+
+    const stepOneTimeout = window.setTimeout(() => setLineStepIndex(1), 900)
+    const stepTwoTimeout = window.setTimeout(() => setLineStepIndex(2), 1800)
+    const stepThreeTimeout = window.setTimeout(() => setLineStepIndex(3), 2700)
+
+    return () => {
+      window.clearTimeout(stepOneTimeout)
+      window.clearTimeout(stepTwoTimeout)
+      window.clearTimeout(stepThreeTimeout)
+    }
+  }, [isInView])
+
   return (
     <section className="outro-section" data-node-id="outro-section">
       <div className={`outro-content ${isInView ? 'is-in-view' : ''}`} ref={contentRef}>
         <div className="outro-hero" role="presentation">
           <p className="outro-prefix">Your</p>
 
-          <div className="outro-lines">
+          <div
+            className="outro-lines"
+            style={{ '--outro-line-index': lineStepIndex } as CSSProperties}
+          >
             {OUTRO_LINES.map((line) => (
               <p className="outro-line" key={line.label}>
                 <span>{line.label}</span>

@@ -61,32 +61,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-}
-
-.outro-final-tagline {
-  margin: clamp(22vh, 22vh, 23vh) 0 0;
-  min-height: clamp(2.6rem, 4.1vw, 5rem);
-  width: fit-content;
-  max-width: calc(100% - 1rem);
-  padding: clamp(0.48rem, 0.96vw, 0.9rem) clamp(1.18rem, 2.15vw, 2.2rem);
-  border-radius: 999px;
-  background: #06202d;
-  color: #fff;
-  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
-  font-size: clamp(0.9rem, 1.25vw, 1.625rem);
-  font-weight: 600;
-  letter-spacing: -0.04em;
-  line-height: 1.1;
-  display: inline-flex;
-  align-items: center;
   justify-content: center;
-  text-align: center;
-  white-space: nowrap;
+  gap: clamp(0.8rem, 1.8vh, 1.8rem);
 }
 
 .outro-final-headline {
-  margin: clamp(1rem, 2.6vh, 2.6rem) 0 0;
+  margin: 0;
   width: min(90vw, 98rem);
   color: #fff;
   text-align: center;
@@ -96,13 +76,6 @@
   line-height: 1.1;
   letter-spacing: -0.03em;
   text-shadow: 0 0 11.5px rgba(202, 157, 248, 0.7);
-}
-
-.outro-final-lockup.partner-lockup {
-  top: 73.4%;
-  width: min(35vw, 35.52rem);
-  gap: 10.3%;
-  animation: none;
 }
 
 .outro-final-credit {
@@ -122,38 +95,15 @@
 }
 
 @media (max-width: 1200px) {
-  .outro-final-tagline {
-    margin-top: clamp(19vh, 21vh, 23vh);
-  }
-
-  .outro-final-lockup.partner-lockup {
-    top: 74.8%;
-    width: min(50vw, 34rem);
-  }
-
   .outro-final-credit {
     top: 89%;
   }
 }
 
 @media (max-width: 860px) {
-  .outro-final-tagline {
-    margin-top: 20vh;
-    max-width: calc(100% - 1.2rem);
-    min-height: 2.3rem;
-    padding: 0.46rem 0.9rem;
-    font-size: clamp(0.68rem, 2.15vw, 0.94rem);
-  }
-
   .outro-final-headline {
-    margin-top: 1.3rem;
     width: min(92vw, 44rem);
     font-size: clamp(2rem, 7.4vw, 3.1rem);
-  }
-
-  .outro-final-lockup.partner-lockup {
-    top: 72%;
-    width: min(72vw, 28rem);
   }
 
   .outro-final-credit {

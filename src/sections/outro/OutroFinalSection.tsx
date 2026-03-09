@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import { PartnerLockup } from '@/components'
 import './OutroFinalSection.css'
 
-const OUTRO_TAGLINE = 'Defining a future vision for AluminumOS on Dell'
 const OUTRO_HEADLINE = 'And we’re just getting started.'
+const OUTRO_LEAD_HEADLINE = 'This is Dell on AluminiumOS'
 const OUTRO_CREDIT = 'Dell Technologies, Experience Design Group – March 2026'
 
 function OutroFinalSection() {
@@ -29,15 +28,13 @@ function OutroFinalSection() {
       <div aria-hidden="true" className="outro-final-vignette" />
 
       <div className="outro-final-content" data-node-id="5972:18256">
-        <p className="outro-final-tagline" data-node-id="5982:19866">
-          {OUTRO_TAGLINE}
-        </p>
+        <h2 className="outro-final-headline outro-final-headline--lead">
+          {OUTRO_LEAD_HEADLINE}
+        </h2>
 
         <h2 className="outro-final-headline" data-node-id="5972:18258">
           {OUTRO_HEADLINE}
         </h2>
-
-        <PartnerLockup className="outro-final-lockup" nodeId="5982:19870" />
 
         <p className="outro-final-credit" data-node-id="5972:18259">
           {OUTRO_CREDIT}
