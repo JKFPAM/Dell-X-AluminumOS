@@ -1,7 +1,7 @@
 .partner-lockup {
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 83%;
   z-index: 1;
   transform: translate(-50%, -50%);
   width: min(33%, 16rem);
