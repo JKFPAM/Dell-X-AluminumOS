@@ -164,10 +164,10 @@
   position: absolute;
   right: clamp(1.25rem, 2.4vw, 2.8rem);
   top: clamp(6rem, 14vh, 11.5rem);
-  width: min(60vw, 1160px);
+  width: min(68vw, 1310px);
   display: flex;
   flex-direction: column;
-  gap: clamp(1rem, 2vh, 1.8rem);
+  gap: clamp(0.9rem, 1.6vh, 1.25rem);
   opacity: 0;
   transform: translateY(22px);
   transition:
@@ -186,23 +186,22 @@
   gap: clamp(0.7rem, 1.1vw, 1.25rem);
 }
 
-.experience-enabler-shared-io-scene--top {
-  width: min(45.05vw, 865px);
+.experience-enabler-shared-io-row {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(0.85rem, 1.45vw, 1.4rem);
 }
 
-.experience-enabler-shared-io-bottom-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: clamp(1rem, 2vw, 2rem);
+.experience-enabler-shared-io-scene--top {
+  width: min(26vw, 500px);
 }
 
 .experience-enabler-shared-io-scene--bottom-left {
-  width: min(24.01vw, 461px);
+  width: min(14.58vw, 280px);
 }
 
 .experience-enabler-shared-io-scene--bottom-right {
-  width: min(33.854vw, 650px);
+  width: min(16.93vw, 325px);
 }
 
 .experience-enabler-shared-io-scene-media {
@@ -213,11 +212,11 @@
 }
 
 .experience-enabler-shared-io-scene--top .experience-enabler-shared-io-scene-media {
-  aspect-ratio: 865 / 486;
+  aspect-ratio: 16 / 9;
 }
 
 .experience-enabler-shared-io-scene--bottom-left .experience-enabler-shared-io-scene-media {
-  aspect-ratio: 461 / 259;
+  aspect-ratio: 1 / 1;
 }
 
 .experience-enabler-shared-io-scene--bottom-right .experience-enabler-shared-io-scene-media {
@@ -266,7 +265,7 @@
 
 .experience-enabler-shared-io-copy p {
   margin: 0;
-  width: min(100%, 36rem);
+  width: 100%;
 }
 
 @media (max-width: 860px) {
@@ -325,9 +324,10 @@
     width: 100%;
   }
 
-  .experience-enabler-shared-io-bottom-row {
+  .experience-enabler-shared-io-row {
     flex-direction: column;
     gap: 1rem;
+    align-items: stretch;
   }
 
   .experience-enabler-shared-io-copy {
@@ -355,21 +355,19 @@
   .experience-enabler-shared-io-media {
     top: clamp(5rem, 12vh, 8rem);
     right: clamp(0.75rem, 1.8vw, 1.5rem);
-    width: min(52vw, 780px);
+    width: min(60vw, 900px);
+  }
+
+  .experience-enabler-shared-io-row {
+    display: grid;
+    align-items: end;
+    grid-template-columns: 0.86fr 1.5fr 0.9fr;
+    gap: clamp(0.7rem, 1.15vw, 1rem);
   }
 
   .experience-enabler-shared-io-scene--top,
+  .experience-enabler-shared-io-scene--bottom-left,
   .experience-enabler-shared-io-scene--bottom-right {
-    width: 100%;
-  }
-
-  .experience-enabler-shared-io-bottom-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(0.8rem, 1.4vw, 1.2rem);
-  }
-
-  .experience-enabler-shared-io-scene--bottom-left {
     width: 100%;
   }
 }

@@ -1,0 +1,67 @@
+.experience-enabler-shared-io-row {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(0.7rem, 1.3vw, 1rem);
+}
+
+.experience-enabler-shared-io-loop-card {
+  width: min(17.2vw, 328px);
+  flex: 0 0 auto;
+}
+
+.experience-enabler-shared-io-loop-card .experience-enabler-sequencer-media {
+  aspect-ratio: 1 / 1;
+  border-radius: clamp(0.95rem, 1.45vw, 1.5rem);
+}
+
+.experience-enabler-shared-io-loop-card .experience-enabler-sequencer-caption-text {
+  max-width: 32ch;
+}
+
+.experience-enabler-shared-io-sequencer {
+  flex: 1 1 auto;
+  margin-top: 0;
+}
+
+.experience-enabler-shared-io-sequencer .experience-enabler-sequencer-track {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.7fr);
+  align-items: flex-end;
+}
+
+.experience-enabler-shared-io-sequencer .experience-enabler-sequencer-card {
+  width: auto;
+  flex: 0 0 auto;
+}
+
+.experience-enabler-shared-io-loop-card .experience-enabler-sequencer-media {
+  box-shadow: none !important;
+}
+
+.experience-enabler-shared-io-loop-card .experience-enabler-sequencer-media::after {
+  opacity: 0 !important;
+}
+
+@media (max-width: 1360px) {
+  .experience-enabler-shared-io-loop-card {
+    width: min(20.8vw, 291px);
+  }
+}
+
+@media (max-width: 980px) {
+  .experience-enabler-shared-io-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .experience-enabler-shared-io-loop-card,
+  .experience-enabler-shared-io-sequencer {
+    width: 100%;
+  }
+
+  .experience-enabler-shared-io-sequencer .experience-enabler-sequencer-track {
+    grid-template-columns: 1fr;
+  }
+
+}

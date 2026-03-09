@@ -51,11 +51,12 @@
   width: min(100%, 85rem);
   margin: 0;
   color: #eef2fe;
-  font-family: var(--type-family-sans);
-  font-size: var(--type-enabler-headline-size);
-  font-weight: var(--type-enabler-headline-weight);
-  line-height: var(--type-enabler-headline-line-height);
-  letter-spacing: var(--type-enabler-headline-letter-spacing);
+  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(2.1rem, 3.385vw, 4.0625rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
   opacity: 0;
   transform: translateY(22px);
   transition:
@@ -64,7 +65,7 @@
 }
 
 .experience-enabler-connectivity-sequencer {
-  margin-top: clamp(0.55rem, 0.9vh, 0.85rem);
+  margin-top: clamp(2rem, 4vh, 4rem);
 }
 
 .experience-enabler-connectivity-sequencer .experience-enabler-sequencer-media {
@@ -105,11 +106,12 @@
 
   .experience-enabler-connectivity-headline {
     width: min(100%, 32rem);
-    font-size: clamp(1.85rem, 9vw, 3.25rem);
+    font-size: clamp(2rem, 8.6vw, 3.3rem);
+    line-height: 1.04;
   }
 
   .experience-enabler-connectivity-sequencer {
-    margin-top: 0.45rem;
+    margin-top: 1rem;
   }
 }
 

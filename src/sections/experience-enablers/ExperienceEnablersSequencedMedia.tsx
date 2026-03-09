@@ -246,7 +246,7 @@ function ExperienceEnablersSequencedMedia({
       setClipProgressState((current) =>
         current.map((value, index) => {
           if (index === currentIndex) {
-            return 1
+            return 0
           }
 
           if (index === nextClipIndex) {
@@ -360,7 +360,7 @@ function ExperienceEnablersSequencedMedia({
       }
 
       clearLoadingTimeout()
-      setClipProgressState((current) => current.map((value, index) => (index === clipIndex ? 1 : value)))
+      setClipProgressState((current) => current.map((value, index) => (index === clipIndex ? 0 : value)))
 
       clearTransitionTimers()
       transitionTimeoutRef.current = window.setTimeout(() => {
