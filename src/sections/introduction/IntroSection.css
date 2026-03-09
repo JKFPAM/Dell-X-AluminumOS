@@ -84,6 +84,12 @@
   animation: intro-aurora-edge 14s linear infinite;
 }
 
+.intro-partner-lockup.partner-lockup {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .intro-tagline {
   position: absolute;
   left: 50%;

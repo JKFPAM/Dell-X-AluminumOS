@@ -130,7 +130,7 @@ function IntroSection() {
           </video>
           <div className={`intro-hero-fallback ${isHeroVideoReady ? 'is-hidden' : ''}`} />
 
-          <PartnerLockup nodeId="2735:5634" showPartnership />
+          <PartnerLockup className="intro-partner-lockup" nodeId="2735:5634" showPartnership />
         </div>
 
         <p className="intro-tagline" data-node-id="2735:5631">
