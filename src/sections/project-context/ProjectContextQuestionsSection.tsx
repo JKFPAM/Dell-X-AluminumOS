@@ -31,32 +31,33 @@ function ProjectContextQuestionsSection() {
   return (
     <section className="project-context-questions" data-node-id="3285:8702">
       <div className={`project-context-questions-content ${isInView ? 'is-in-view' : ''}`} ref={contentRef}>
-        <p className="project-context-question-row project-context-question-row--line-01" data-node-id="3285:8683">
-          With Google launching a
-          <span className="project-context-pill project-context-pill--gemini" data-node-id="3285:8685">
-            <img alt="Gemini" src="/assets/Gemini.svg" />
-          </span>
-          desktop...
+        <p className="project-context-question-kicker" data-node-id="6288:13489">
+          With Google launching a desktop operating system...
         </p>
 
-        <p className="project-context-question-row project-context-question-row--line-02" data-node-id="3285:8688">
-          What kind of experience does
-          <br />
-          <span className="project-context-pill project-context-pill--brand" data-node-id="3285:8690">
-            <img alt="Dell" src="/assets/Dell-pill.svg" />
-          </span>
-          want to build with AluminumOS?
-        </p>
+        <div className="project-context-question-block" data-node-id="6288:13498">
+          <p className="project-context-question-row project-context-question-row--line-01" data-node-id="6288:13475">
+            Why is
+            <span className="project-context-pill project-context-pill--dell" data-node-id="6288:13483">
+              <img alt="Dell" src="/assets/dell-logo.svg" />
+            </span>
+            uniquely equipped to be
+            <br />
+            the best hardware partner for Google?
+          </p>
+        </div>
 
-        <p className="project-context-question-row project-context-question-row--line-03" data-node-id="3285:8696">
-          Why is Dell uniquely equipped to be the
-          <br />
-          best hardware partner for
-          <span className="project-context-pill project-context-pill--brand" data-node-id="3285:8698">
-            <img alt="Google" src="/assets/Google-pill.svg" />
-          </span>
-          ?
-        </p>
+        <div className="project-context-question-block" data-node-id="6288:13499">
+          <p className="project-context-question-row project-context-question-row--line-02" data-node-id="6288:13477">
+            What kind of experience does
+            <br />
+            Dell want to build with
+            <span className="project-context-pill project-context-pill--alos" data-node-id="6288:13491">
+              <span className="project-context-pill-label">AluminumOS</span>
+            </span>
+            ?
+          </p>
+        </div>
       </div>
     </section>
   )

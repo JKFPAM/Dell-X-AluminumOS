@@ -928,16 +928,6 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
         <span className="logout-hold-label">Hold S to restart</span>
       </div>
       <nav aria-label="Presentation chapter navigation" className="scroll-preview" ref={scrollPreviewRef}>
-        {displayChapterLabel && (
-          <span aria-live="polite" className="scroll-preview-chapter">
-            <span className={`scroll-preview-chapter-text ${incomingChapterLabel ? 'is-out' : ''}`}>
-              {displayChapterLabel}
-            </span>
-            {incomingChapterLabel && (
-              <span className="scroll-preview-chapter-text is-in">{incomingChapterLabel}</span>
-            )}
-          </span>
-        )}
         <div className="scroll-preview-track">
           <span className="scroll-preview-fill" />
           <div aria-hidden="true" className="scroll-preview-dividers">
@@ -969,6 +959,16 @@ function PresentationDeck({ onSectionChange, onLogout }: PresentationDeckProps) 
             })}
           </div>
         </div>
+        {displayChapterLabel && (
+          <span aria-live="polite" className="scroll-preview-chapter">
+            <span className={`scroll-preview-chapter-text ${incomingChapterLabel ? 'is-out' : ''}`}>
+              {displayChapterLabel}
+            </span>
+            {incomingChapterLabel && (
+              <span className="scroll-preview-chapter-text is-in">{incomingChapterLabel}</span>
+            )}
+          </span>
+        )}
       </nav>
       <NarrativePersistentOverlay
         activeSectionIndex={activeSectionIndex}

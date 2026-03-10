@@ -65,11 +65,27 @@ function NarrativePersistentOverlay({
   activeSectionIndex,
   isActiveSectionSettled,
 }: NarrativePersistentOverlayProps) {
+  const iconsPreloadStartedRef = useRef(false)
   const inNarrativeOverlayRange = activeSectionIndex >= 4 && activeSectionIndex <= 8
   const [iconsPrimed, setIconsPrimed] = useState(false)
   const [iconsExitStarted, setIconsExitStarted] = useState(false)
   const [skipIconIntro, setSkipIconIntro] = useState(false)
   const previousSectionIndexRef = useRef(activeSectionIndex)
+
+  useEffect(() => {
+    if (iconsPreloadStartedRef.current || activeSectionIndex < 4) {
+      return
+    }
+
+    iconsPreloadStartedRef.current = true
+    const preloadTargets = ['/assets/ring.png', ...NARRATIVE_ICONS.map((icon) => icon.src)]
+
+    preloadTargets.forEach((src) => {
+      const image = new Image()
+      image.decoding = 'async'
+      image.src = src
+    })
+  }, [activeSectionIndex])
 
   useEffect(() => {
     const previousSectionIndex = previousSectionIndexRef.current
@@ -159,7 +175,7 @@ function NarrativePersistentOverlay({
   const line3Visible = activeSectionIndex >= 6 && activeSectionIndex <= 7
   const line3Stacked = activeSectionIndex >= 7
 
-  const line4Visible = activeSectionIndex === 7
+  const line4Visible = activeSectionIndex === 7 && isActiveSectionSettled
   const ringsVisible = activeSectionIndex >= 5 && activeSectionIndex <= 8
   const iconsVisible =
     iconsPrimed && !iconsExitStarted && (activeSectionIndex === 6 || activeSectionIndex === 7)
@@ -207,7 +223,7 @@ function NarrativePersistentOverlay({
       <p className={`narrative-line ${line3Visible ? 'is-visible' : ''} ${line3Stacked ? 'is-top row-2' : 'is-center'}`}>
         {MULTI_PRODUCT_SHIFT_LINE}
       </p>
-      <p className={`narrative-line ${line4Visible ? 'is-visible is-center' : ''}`}>
+      <p className={`narrative-line narrative-line--life-dimensions ${line4Visible ? 'is-visible is-center' : ''}`}>
         {LIFE_DIMENSIONS_LINE}
       </p>
     </div>

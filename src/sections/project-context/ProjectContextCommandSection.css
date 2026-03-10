@@ -34,7 +34,7 @@
 .project-context-command-kicker {
   margin: 0;
   width: min(94vw, 68rem);
-  transform: translateY(18px);
+  transform: translate3d(0, 30px, 0) scale(0.992);
   color: #061423;
   font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
   font-size: clamp(0.98rem, 1.7vw, 2rem);
@@ -43,9 +43,11 @@
   letter-spacing: -0.02em;
   text-align: center;
   opacity: 0;
+  filter: blur(3px);
   transition:
     opacity 920ms var(--gem-ease-out),
-    transform 980ms var(--gem-ease-fluid);
+    transform 1180ms var(--gem-ease-fluid),
+    filter 980ms var(--gem-ease-fluid);
 }
 
 .project-context-command-main {
@@ -54,6 +56,8 @@
   display: flex;
   flex-direction: column;
   gap: clamp(0.35rem, 1.2vh, 1rem);
+  align-items: center;
+  text-align: center;
 }
 
 .project-context-command-copy {
@@ -66,20 +70,24 @@
   letter-spacing: -0.03em;
   text-wrap: balance;
   opacity: 0;
+  transform: translate3d(0, 56px, 0) scale(0.988);
+  filter: blur(5px);
+  will-change: opacity, transform, filter;
   transition:
-    opacity 980ms var(--gem-ease-out),
-    transform 1180ms var(--gem-ease-fluid);
+    opacity 980ms var(--gem-ease-out) var(--project-context-command-line-delay, 40ms),
+    transform 1400ms var(--gem-ease-fluid) var(--project-context-command-line-delay, 40ms),
+    filter 1180ms var(--gem-ease-fluid) var(--project-context-command-line-delay, 40ms);
 }
 
 .project-context-command-copy--line-one {
-  transform: translate(-30px, 16px);
-  text-align: left;
+  --project-context-command-line-delay: 180ms;
+  text-align: center;
 }
 
 .project-context-command-copy--line-two {
-  transform: translate(30px, 20px);
-  padding-left: clamp(1rem, 12vw, 18rem);
-  text-align: left;
+  --project-context-command-line-delay: 420ms;
+  padding-left: 0;
+  text-align: center;
   white-space: nowrap;
   text-wrap: nowrap;
 }
@@ -92,7 +100,8 @@
 .project-context-command-content.is-in-view .project-context-command-kicker,
 .project-context-command-content.is-in-view .project-context-command-copy--line-one,
 .project-context-command-content.is-in-view .project-context-command-copy--line-two {
-  transform: translate(0, 0);
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0);
 }
 
 @media (max-width: 980px) {
@@ -116,7 +125,7 @@
   }
 
   .project-context-command-copy--line-two {
-    padding-left: clamp(0rem, 8vw, 4rem);
+    padding-left: 0;
     white-space: normal;
     text-wrap: balance;
   }
@@ -127,6 +136,7 @@
   .project-context-command-copy {
     opacity: 1;
     transform: none;
+    filter: none;
     transition: none;
   }
 }
