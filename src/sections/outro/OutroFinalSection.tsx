@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './OutroFinalSection.css'
 
 const OUTRO_HEADLINE = 'And we’re just getting started.'
-const OUTRO_LEAD_HEADLINE = 'This is Dell on AluminiumOS.'
+const OUTRO_LEAD_HEADLINE = 'This is AluminiumOS on Dell.'
 const OUTRO_CREDIT = 'Dell Technologies, Experience Design Group – March 2026'
 
 function OutroFinalSection() {
