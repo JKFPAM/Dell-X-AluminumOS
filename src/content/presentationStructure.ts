@@ -171,31 +171,31 @@ export const presentationSectionDefinitions: PresentationSectionDefinition[] = [
   {
     sectionId: 'experience-enablers-device-connectivity',
     component: 'ExperienceEnablersDeviceConnectivitySection',
-    chapterLabel: 'Experience Enablers',
+    chapterLabel: 'Experiences',
     hashGroup: 15,
   },
   {
     sectionId: 'experience-enablers-continuity',
     component: 'ExperienceEnablersContinuitySection',
-    chapterLabel: 'Experience Enablers',
+    chapterLabel: 'Experiences',
     hashGroup: 16,
   },
   {
     sectionId: 'experience-enablers-shared-io',
     component: 'ExperienceEnablersSharedIOSection',
-    chapterLabel: 'Experience Enablers',
+    chapterLabel: 'Experiences',
     hashGroup: 17,
   },
   {
     sectionId: 'experience-enablers-passive-automation',
     component: 'ExperienceEnablersPassiveAutomationSection',
-    chapterLabel: 'Experience Enablers',
+    chapterLabel: 'Experiences',
     hashGroup: 18,
   },
   {
     sectionId: 'experience-enablers-contextual-switching',
     component: 'ExperienceEnablersContextualSwitchingSection',
-    chapterLabel: 'Experience Enablers',
+    chapterLabel: 'Experiences',
     hashGroup: 19,
   },
   {

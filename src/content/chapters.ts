@@ -1,7 +1,7 @@
 export const CHAPTER_LABELS = [
   'Introduction',
   'Project Context & Vision',
-  'Experience Enablers',
+  'Experiences',
   'Outro',
 ] as const
 

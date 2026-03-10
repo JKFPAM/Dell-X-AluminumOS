@@ -1,33 +1,40 @@
 import { useEffect, useRef, useState } from 'react'
-import ExperienceEnablersSequencedMedia, {
-  type ExperienceEnablersSequencedClip,
-} from './ExperienceEnablersSequencedMedia'
 import './ExperienceEnablersDeviceConnectivitySection.css'
 import './ExperienceEnablersSharedIOSection.css'
 
 const ACTIVE_VISIBILITY_THRESHOLD = 0.55
 
-const SHARED_IO_SEQUENCED_CLIPS: ExperienceEnablersSequencedClip[] = [
+type SharedIOClip = {
+  caption: string
+  id: string
+  videoSrc: string
+}
+
+const SHARED_IO_CLIPS: SharedIOClip[] = [
+  {
+    caption: 'On a crowded Google Meet, it\'s hard to detect voices, and clarity suffers.',
+    id: 'shared-io-01',
+    videoSrc: '/assets/experience-enablers/Scene03_1.mp4',
+  },
   {
     caption:
       'Activate Dynamic Mic and connect every active mic in the room into a single unified audio mesh, from your Dell XPS to your colleague\'s Pixel phone.',
     id: 'shared-io-02',
-    label: '02',
     videoSrc: '/assets/experience-enablers/Scene03_2.mp4',
   },
   {
     caption: 'Gemini still recognises individual speakers. No more echo and awkward mic juggling.',
     id: 'shared-io-03',
-    label: '03',
     videoSrc: '/assets/experience-enablers/Scene03_3.mp4',
   },
 ]
 
 function ExperienceEnablersSharedIOSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
   const [hasEntered, setHasEntered] = useState(false)
   const [isActive, setIsActive] = useState(false)
-  const [isLoopCardReady, setIsLoopCardReady] = useState(false)
+  const [readyByClipId, setReadyByClipId] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     const node = sectionRef.current
@@ -61,6 +68,31 @@ function ExperienceEnablersSharedIOSection() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    videoRefs.current.forEach((video) => {
+      if (!video) {
+        return
+      }
+
+      if (isActive) {
+        void video.play().catch(() => undefined)
+        return
+      }
+
+      video.pause()
+    })
+  }, [isActive])
+
+  const setClipReady = (id: string) => {
+    setReadyByClipId((prev) => {
+      if (prev[id]) {
+        return prev
+      }
+
+      return { ...prev, [id]: true }
+    })
+  }
+
   return (
     <section className="experience-enabler-connectivity experience-enabler-shared-io-section" data-node-id="experience-enablers-03">
       <div
@@ -79,43 +111,42 @@ function ExperienceEnablersSharedIOSection() {
             It’s an active participant in the conversation.
           </h2>
 
-          <div className="experience-enabler-connectivity-sequencer experience-enabler-shared-io-row">
-            <article className="experience-enabler-sequencer-card experience-enabler-shared-io-loop-card">
-              <div className="experience-enabler-sequencer-media">
-                <video
-                  aria-hidden="true"
-                  autoPlay
-                  className={`experience-enabler-sequencer-video ${isLoopCardReady ? 'is-ready' : ''}`}
-                  loop
-                  muted
-                  onCanPlay={() => setIsLoopCardReady(true)}
-                  onError={() => setIsLoopCardReady(true)}
-                  playsInline
-                  preload="auto"
-                >
-                  <source src="/assets/experience-enablers/Scene03_1.mp4" type="video/mp4" />
-                </video>
-                <span
-                  aria-hidden="true"
-                  className={`experience-enabler-sequencer-fallback ${isLoopCardReady ? 'is-hidden' : ''}`}
-                />
-              </div>
-
-              <div className="experience-enabler-sequencer-caption-item is-active">
-                <div className="experience-enabler-sequencer-caption-copy">
-                  <p className="experience-enabler-sequencer-caption-text">
-                    On a crowded Google Meet, it&apos;s hard to detect voices, and clarity suffers.
-                  </p>
+          <div className="experience-enabler-sequencer experience-enabler-connectivity-sequencer experience-enabler-shared-io-row is-in-view">
+            {SHARED_IO_CLIPS.map((clip, index) => (
+              <article
+                className={`experience-enabler-sequencer-card ${index === 0 ? 'experience-enabler-shared-io-loop-card' : ''}`}
+                key={clip.id}
+              >
+                <div className="experience-enabler-sequencer-media">
+                  <video
+                    aria-hidden="true"
+                    autoPlay
+                    className={`experience-enabler-sequencer-video ${readyByClipId[clip.id] ? 'is-ready' : ''}`}
+                    loop
+                    muted
+                    onCanPlay={() => setClipReady(clip.id)}
+                    onError={() => setClipReady(clip.id)}
+                    playsInline
+                    preload="auto"
+                    ref={(node) => {
+                      videoRefs.current[index] = node
+                    }}
+                  >
+                    <source src={clip.videoSrc} type="video/mp4" />
+                  </video>
+                  <span
+                    aria-hidden="true"
+                    className={`experience-enabler-sequencer-fallback ${readyByClipId[clip.id] ? 'is-hidden' : ''}`}
+                  />
                 </div>
-              </div>
-            </article>
 
-            <ExperienceEnablersSequencedMedia
-              className="experience-enabler-shared-io-sequencer"
-              clips={SHARED_IO_SEQUENCED_CLIPS}
-              isActive={isActive}
-              isInView={hasEntered}
-            />
+                <div className="experience-enabler-sequencer-caption-item is-active">
+                  <div className="experience-enabler-sequencer-caption-copy">
+                    <p className="experience-enabler-sequencer-caption-text">{clip.caption}</p>
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </div>
