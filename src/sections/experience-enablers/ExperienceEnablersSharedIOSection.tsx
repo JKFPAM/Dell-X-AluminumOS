@@ -10,7 +10,7 @@ const ACTIVE_VISIBILITY_THRESHOLD = 0.55
 const SHARED_IO_SEQUENCED_CLIPS: ExperienceEnablersSequencedClip[] = [
   {
     caption:
-      'Activate Dynamic Mic and merge every active mic in the room into a single unified audio mesh, from your Dell XPS to your colleague\'s Pixel phone.',
+      'Activate Dynamic Mic and connect every active mic in the room into a single unified audio mesh, from your Dell XPS to your colleague\'s Pixel phone.',
     id: 'shared-io-02',
     label: '02',
     videoSrc: '/assets/experience-enablers/Scene03_2.mp4',

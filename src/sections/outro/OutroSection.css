@@ -128,13 +128,13 @@
   transform: translateX(-50%) translateY(36px);
   margin: 0;
   color: #eef2fe;
-  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
-  font-size: clamp(2.1rem, 3.385vw, 4.0625rem);
+  font-family: var(--type-family-sans);
+  font-size: clamp(1.4rem, 1.82vw, 2.1875rem);
   font-weight: 400;
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   text-align: center;
-  text-wrap: balance;
+  white-space: nowrap;
   opacity: 0;
   transition:
     opacity 980ms cubic-bezier(0.22, 1, 0.36, 1) 840ms,
@@ -184,9 +184,10 @@
     left: 50%;
     bottom: clamp(1.6rem, 6.2vh, 3rem);
     transform: translateX(-50%) translateY(36px);
-    font-size: clamp(2rem, 8.6vw, 3.3rem);
-    line-height: 1.04;
-    width: min(92vw, 42rem);
+    font-size: clamp(1.2rem, 4.2vw, 1.75rem);
+    line-height: 1.1;
+    white-space: normal;
+    width: min(92vw, 32rem);
   }
 }
 
