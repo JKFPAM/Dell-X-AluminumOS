@@ -68,7 +68,8 @@
 }
 
 .presentation-intelligence-crossfade-layer--blue {
-  background: #2766b5;
+  /* background: #bed9f6; */
+      background: linear-gradient(180deg, #96c9ff 0%, #b6d8ff 100%);
   opacity: calc(1 - var(--project-context-intelligence-fade));
 }
 

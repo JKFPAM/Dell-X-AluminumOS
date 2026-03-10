@@ -41,7 +41,7 @@
   line-height: 1.4;
   letter-spacing: -0.02em;
   text-align: center;
-  text-shadow: 0 0 11.5px rgba(202, 157, 248, 0.7);
+  text-shadow: var(--gem-text-glow);
   opacity: 0;
   transform: translateY(22px);
   transition:
@@ -68,7 +68,7 @@
   letter-spacing: -0.03em;
   text-align: center;
   text-wrap: balance;
-  text-shadow: 0 0 16.2px rgba(255, 255, 255, 0.3);
+  text-shadow: var(--gem-text-glow);
   opacity: 0;
   transform: translateY(34px);
   filter: blur(4px);

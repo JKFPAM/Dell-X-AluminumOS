@@ -45,7 +45,7 @@
 .project-context-intelligence-detail {
   top: 50%;
   transform: translate(-50%, 10%) translateY(20px);
-  color: #fff;
+  color: #000f19;
   transition:
     opacity 980ms var(--gem-ease-out),
     transform 1220ms var(--gem-ease-fluid);

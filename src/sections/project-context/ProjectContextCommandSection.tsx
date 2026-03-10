@@ -70,7 +70,7 @@ function ProjectContextCommandSection() {
 
         <div className="project-context-command-main" data-name="content" data-node-id="4156:1765">
           <p className="project-context-command-copy project-context-command-copy--line-one" data-node-id="3435:10406">
-            From a place where work happens...
+            From a place where work happens,
           </p>
 
           <p className="project-context-command-copy project-context-command-copy--line-two" data-node-id="3435:10407">
