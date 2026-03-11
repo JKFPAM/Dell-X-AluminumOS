@@ -4,6 +4,12 @@ import './OutroFinalSection.css'
 const OUTRO_HEADLINE = 'And we’re just getting started.'
 const OUTRO_LEAD_HEADLINE = 'This is AluminiumOS on Dell.'
 const OUTRO_CREDIT = 'Dell Technologies, Experience Design Group – March 2026'
+const OUTRO_CONTACT_LABEL = 'For more information contact:'
+const OUTRO_CONTACTS = [
+  { name: 'Drew Tosh', email: 'drew.tosh@dell.com' },
+  { name: 'Banu Waldman', email: 'banu.waldman@dell.com' },
+  { name: 'Mark Ligameri', email: 'mark.ligameri@dell.com' },
+]
 
 function OutroFinalSection() {
   const [isBackgroundReady, setIsBackgroundReady] = useState(false)
@@ -39,6 +45,19 @@ function OutroFinalSection() {
         <p className="outro-final-credit" data-node-id="5972:18259">
           {OUTRO_CREDIT}
         </p>
+
+        <div className="outro-final-contacts" data-node-id="5972:18260">
+          <p className="outro-final-contacts-label">{OUTRO_CONTACT_LABEL}</p>
+          <ul className="outro-final-contacts-list">
+            {OUTRO_CONTACTS.map((contact) => (
+              <li key={contact.email}>
+                <a className="outro-final-contact-link" href={`mailto:${contact.email}`}>
+                  {contact.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   )
