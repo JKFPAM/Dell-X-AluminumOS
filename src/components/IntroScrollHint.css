@@ -133,3 +133,18 @@
     animation: none;
   }
 }
+
+@media (max-height: 860px) {
+  .intro-scroll-hint {
+    bottom: clamp(1.2rem, 3.1vh, 1.9rem);
+    transform: translateX(-50%) scale(0.94);
+    transform-origin: center bottom;
+  }
+}
+
+@media (max-height: 760px) {
+  .intro-scroll-hint {
+    bottom: clamp(1.45rem, 3.7vh, 2.2rem);
+    transform: translateX(-50%) scale(0.9);
+  }
+}
