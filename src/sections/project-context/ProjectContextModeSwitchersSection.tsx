@@ -50,6 +50,13 @@ function ProjectContextModeSwitchersSection() {
             </span>
           </div>
 
+          <div className="project-context-mode-switchers-row project-context-mode-switchers-row--sheets" data-node-id="4156:3747">
+            <p data-node-id="4156:3743">tracking their budgets with</p>
+            <span className="project-context-mode-pill" data-node-id="4156:3630">
+              <img alt="" src="/assets/Sheets-icon.svg" />
+            </span>
+          </div>
+
           <div className="project-context-mode-switchers-row project-context-mode-switchers-row--assistant" data-node-id="4156:3748">
             <p data-node-id="4156:3744">and restocking the fridge with</p>
             <span className="project-context-mode-pill" data-node-id="4156:3749">
@@ -57,12 +64,7 @@ function ProjectContextModeSwitchersSection() {
             </span>
           </div>
 
-          <div className="project-context-mode-switchers-row project-context-mode-switchers-row--sheets" data-node-id="4156:3747">
-            <p data-node-id="4156:3743">tracking their budgets with</p>
-            <span className="project-context-mode-pill" data-node-id="4156:3630">
-              <img alt="" src="/assets/Sheets-icon.svg" />
-            </span>
-          </div>
+
         </div>
       </div>
     </section>
