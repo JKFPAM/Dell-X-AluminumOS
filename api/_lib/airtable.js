@@ -150,26 +150,61 @@ const getReachedLastSection = (existingFields, eventName, payload) => {
   return alreadyReached || didReachLastSectionOnEvent(eventName, payload)
 }
 
+const getUnknownFieldNameFromError = (message) => {
+  const quotedMatch = message.match(/unknown field name:\s*"([^"]+)"/i)
+  if (quotedMatch?.[1]) {
+    return quotedMatch[1].trim()
+  }
+
+  const singleQuotedMatch = message.match(/unknown field name:\s*'([^']+)'/i)
+  if (singleQuotedMatch?.[1]) {
+    return singleQuotedMatch[1].trim()
+  }
+
+  return null
+}
+
 const writeWithOptionalFallback = async (writeFn, fields) => {
-  try {
-    await writeFn(fields)
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error)
-    const normalizedMessage = message.toLowerCase()
+  const candidateFields = { ...fields }
+  const attemptedUnknowns = new Set()
 
-    if (
-      !normalizedMessage.includes('unknown field') &&
-      !normalizedMessage.includes('unknown_field_name')
-    ) {
-      throw error
+  while (true) {
+    try {
+      await writeFn(candidateFields)
+      return
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      const normalizedMessage = message.toLowerCase()
+
+      if (
+        !normalizedMessage.includes('unknown field') &&
+        !normalizedMessage.includes('unknown_field_name')
+      ) {
+        throw error
+      }
+
+      const unknownFieldName = getUnknownFieldNameFromError(message)
+
+      if (!unknownFieldName) {
+        const fallbackFields = { ...candidateFields }
+        OPTIONAL_RETURN_FIELDS.forEach((fieldName) => {
+          delete fallbackFields[fieldName]
+        })
+        await writeFn(fallbackFields)
+        return
+      }
+
+      if (!Object.prototype.hasOwnProperty.call(candidateFields, unknownFieldName)) {
+        throw error
+      }
+
+      if (attemptedUnknowns.has(unknownFieldName)) {
+        throw error
+      }
+
+      attemptedUnknowns.add(unknownFieldName)
+      delete candidateFields[unknownFieldName]
     }
-
-    const fallbackFields = { ...fields }
-    OPTIONAL_RETURN_FIELDS.forEach((fieldName) => {
-      delete fallbackFields[fieldName]
-    })
-
-    await writeFn(fallbackFields)
   }
 }
 
