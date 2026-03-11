@@ -7,10 +7,10 @@ const sanitizeFields = (fields) =>
     Object.entries(fields).filter(([, value]) => value !== undefined && value !== null && value !== ''),
   )
 
-const OPTIONAL_RETURN_FIELDS = ['Visit Count', 'Visits', 'Returning', 'Reached Last Section']
+const OPTIONAL_RETURN_FIELDS = ['Visits', 'Returning', 'Reached Last Section']
 
 const getEmail = (payload) => {
-  const raw = payload?.email
+  const raw = typeof payload?.email === 'string' ? payload.email : payload?.Email
 
   if (typeof raw !== 'string') {
     return null
@@ -72,10 +72,9 @@ const requestAirtable = async (path, init) => {
   throw new Error(`Airtable request failed (${response.status}): ${errorText}`)
 }
 
-const findRecordBySessionId = async (tableName, sessionId) => {
-  const formula = `{Session ID}='${escapeFormulaValue(sessionId)}'`
+const findRecords = async (tableName, { formula, maxRecords = '1' }) => {
   const params = new URLSearchParams({
-    maxRecords: '1',
+    maxRecords,
     filterByFormula: formula,
   })
 
@@ -83,7 +82,18 @@ const findRecordBySessionId = async (tableName, sessionId) => {
     method: 'GET',
   })
 
-  return data.records?.[0] ?? null
+  return data.records ?? []
+}
+
+const findRecordBySessionId = async (tableName, sessionId) => {
+  const formula = `{Session ID}='${escapeFormulaValue(sessionId)}'`
+  const records = await findRecords(tableName, { formula, maxRecords: '1' })
+  return records[0] ?? null
+}
+
+const findRecordsByEmail = async (tableName, email) => {
+  const formula = `LOWER({Email})='${escapeFormulaValue(email.toLowerCase())}'`
+  return findRecords(tableName, { formula, maxRecords: '50' })
 }
 
 const createRecord = async (tableName, fields) => {
@@ -103,6 +113,12 @@ const updateRecord = async (tableName, recordId, fields) => {
       records: [{ id: recordId, fields: sanitizeFields(fields) }],
       typecast: true,
     }),
+  })
+}
+
+const deleteRecord = async (tableName, recordId) => {
+  await requestAirtable(`${encodeURIComponent(tableName)}/${encodeURIComponent(recordId)}`, {
+    method: 'DELETE',
   })
 }
 
@@ -151,10 +167,64 @@ const didReachLastSectionOnEvent = (eventName, payload) => {
   return sectionIndex >= totalSections
 }
 
-const getReachedLastSection = (existingFields, eventName, payload) => {
-  const alreadyReached =
-    existingFields?.['Reached Last Section'] === true || existingFields?.Completed === true
-  return alreadyReached || didReachLastSectionOnEvent(eventName, payload)
+const didRecordReachLastSection = (recordFields) =>
+  recordFields?.['Reached Last Section'] === true || recordFields?.Completed === true
+
+const getReachedLastSection = (existingRecords, eventName, payload) =>
+  existingRecords.some((record) => didRecordReachLastSection(record?.fields)) ||
+  didReachLastSectionOnEvent(eventName, payload)
+
+const getExistingEmail = (records) => {
+  for (const record of records) {
+    const email = getEmail(record?.fields)
+    if (email) {
+      return email
+    }
+  }
+
+  return null
+}
+
+const getTotalVisits = (records) =>
+  records.reduce((total, record) => total + getVisitCount(record?.fields), 0)
+
+const getRecordSessionId = (record) => getText(record?.fields?.['Session ID'])
+
+const getPrimaryRecord = (records, normalizedSessionId) => {
+  if (!records.length) {
+    return null
+  }
+
+  if (normalizedSessionId) {
+    const sessionMatch = records.find(
+      (record) => getRecordSessionId(record) === normalizedSessionId,
+    )
+
+    if (sessionMatch) {
+      return sessionMatch
+    }
+  }
+
+  return records[0]
+}
+
+const removeDuplicateRecords = async (tableName, duplicateRecords) => {
+  if (!duplicateRecords.length) {
+    return
+  }
+
+  const results = await Promise.allSettled(
+    duplicateRecords.map((record) => deleteRecord(tableName, record.id)),
+  )
+
+  results.forEach((result) => {
+    if (result.status === 'rejected') {
+      console.error('Failed to delete duplicate visitor record', {
+        code: 'AIRTABLE_DUPLICATE_DELETE_FAILED',
+        error: result.reason instanceof Error ? result.reason.message : String(result.reason),
+      })
+    }
+  })
 }
 
 const getUnknownFieldNameFromError = (message) => {
@@ -171,9 +241,29 @@ const getUnknownFieldNameFromError = (message) => {
   return null
 }
 
+const getInvalidFieldNameFromError = (message) => {
+  const cannotAcceptMatch = message.match(/field\s+"([^"]+)"\s+cannot accept/i)
+  if (cannotAcceptMatch?.[1]) {
+    return cannotAcceptMatch[1].trim()
+  }
+
+  const cannotAcceptSingleQuoteMatch = message.match(/field\s+'([^']+)'\s+cannot accept/i)
+  if (cannotAcceptSingleQuoteMatch?.[1]) {
+    return cannotAcceptSingleQuoteMatch[1].trim()
+  }
+
+  const invalidColumnMatch = message.match(/invalid_value_for_column.*field\s+"([^"]+)"/i)
+  if (invalidColumnMatch?.[1]) {
+    return invalidColumnMatch[1].trim()
+  }
+
+  return null
+}
+
 const writeWithOptionalFallback = async (writeFn, fields) => {
   const candidateFields = { ...fields }
   const attemptedUnknowns = new Set()
+  const attemptedInvalids = new Set()
 
   while (true) {
     try {
@@ -185,12 +275,29 @@ const writeWithOptionalFallback = async (writeFn, fields) => {
 
       if (
         !normalizedMessage.includes('unknown field') &&
-        !normalizedMessage.includes('unknown_field_name')
+        !normalizedMessage.includes('unknown_field_name') &&
+        !normalizedMessage.includes('cannot accept') &&
+        !normalizedMessage.includes('invalid_value_for_column')
       ) {
         throw error
       }
 
       const unknownFieldName = getUnknownFieldNameFromError(message)
+      const invalidFieldName = getInvalidFieldNameFromError(message)
+
+      if (invalidFieldName) {
+        if (!Object.prototype.hasOwnProperty.call(candidateFields, invalidFieldName)) {
+          throw error
+        }
+
+        if (attemptedInvalids.has(invalidFieldName)) {
+          throw error
+        }
+
+        attemptedInvalids.add(invalidFieldName)
+        delete candidateFields[invalidFieldName]
+        continue
+      }
 
       if (!unknownFieldName) {
         const fallbackFields = { ...candidateFields }
@@ -234,53 +341,75 @@ export const writeVisitorEvent = async ({
     return false
   }
 
+  const email = getEmail(payload)
   const normalizedSessionId = getText(sessionId)
 
-  if (!normalizedSessionId) {
+  if (!normalizedSessionId && !email) {
     return false
   }
 
   const browser = getText(requestMeta.browser)
   const country = getText(requestMeta.country)
-  const email = getEmail(payload)
   const { date, time } = getDateAndTime(timestamp)
   const isPresentationLoad = eventName === 'presentation_load'
 
   const { visitorsTable } = getAirtableConfig()
-  const existingRecord = await findRecordBySessionId(visitorsTable, normalizedSessionId)
-  const existingVisitCount = getVisitCount(existingRecord?.fields)
+  let matchingRecords = []
+
+  if (email) {
+    matchingRecords = await findRecordsByEmail(visitorsTable, email)
+  }
+
+  if (!matchingRecords.length && normalizedSessionId) {
+    const existingRecordBySession = await findRecordBySessionId(visitorsTable, normalizedSessionId)
+    if (existingRecordBySession) {
+      matchingRecords = [existingRecordBySession]
+    }
+  }
+
+  const primaryRecord = getPrimaryRecord(matchingRecords, normalizedSessionId)
+  const duplicateRecords = primaryRecord
+    ? matchingRecords.filter((record) => record.id !== primaryRecord.id)
+    : []
+  const existingVisitCount = getTotalVisits(matchingRecords)
   const nextVisitCount = isPresentationLoad ? existingVisitCount + 1 : existingVisitCount
-  const reachedLastSection = getReachedLastSection(existingRecord?.fields, eventName, payload)
+  const reachedLastSection = getReachedLastSection(matchingRecords, eventName, payload)
+  const normalizedEmail = email ?? getExistingEmail(matchingRecords)
+  const storedSessionId = normalizedSessionId ?? getRecordSessionId(primaryRecord)
+  const canCreateRecord =
+    eventName === 'unlock_verified' ||
+    eventName === 'presentation_load' ||
+    eventName === 'presentation_unlock'
+
+  if (!primaryRecord?.id && !canCreateRecord) {
+    return false
+  }
 
   const fields = sanitizeFields({
-    Email: email,
+    Email: normalizedEmail,
+    'Session ID': storedSessionId,
     Browser: browser,
     Country: country,
     Date: date,
     Time: time,
-    'Visit Count': nextVisitCount > 0 ? nextVisitCount : undefined,
     Visits: nextVisitCount > 0 ? nextVisitCount : undefined,
     Returning: nextVisitCount > 1,
     'Reached Last Section': reachedLastSection,
     Completed: reachedLastSection,
   })
 
-  if (existingRecord?.id) {
+  if (primaryRecord?.id) {
     await writeWithOptionalFallback(
-      (nextFields) => updateRecord(visitorsTable, existingRecord.id, nextFields),
+      (nextFields) => updateRecord(visitorsTable, primaryRecord.id, nextFields),
       fields,
     )
+    await removeDuplicateRecords(visitorsTable, duplicateRecords)
     return true
-  }
-
-  const createFields = {
-    'Session ID': normalizedSessionId,
-    ...fields,
   }
 
   await writeWithOptionalFallback(
     (nextFields) => createRecord(visitorsTable, nextFields),
-    createFields,
+    fields,
   )
 
   return true

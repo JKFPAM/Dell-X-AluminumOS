@@ -136,9 +136,12 @@ function GateScreen({ isUnlocking, onUnlocked }: GateScreenProps) {
               This presentation requires entering your email and a password to open.
             </h1>
             <p className="gate-subtitle">
-              Your email will be shared with the owner of this presentation and with their
-              collaborators.
+              This content is confidential under NDA. Screen capture, recording, and redistribution are not permitted.
             </p>
+            <p className="gate-subtitle">
+              Your email will be shared with the owner of this presentation and with their collaborators.
+            </p>
+
           </div>
 
           <form className="gate-form" onSubmit={handleSubmit}>
