@@ -7,7 +7,7 @@ const sanitizeFields = (fields) =>
     Object.entries(fields).filter(([, value]) => value !== undefined && value !== null && value !== ''),
   )
 
-const OPTIONAL_RETURN_FIELDS = ['Visit Count', 'Returning', 'Reached Last Section', 'Completed']
+const OPTIONAL_RETURN_FIELDS = ['Visit Count', 'Visits', 'Returning', 'Reached Last Section']
 
 const getEmail = (payload) => {
   const raw = payload?.email
@@ -107,8 +107,15 @@ const updateRecord = async (tableName, recordId, fields) => {
 }
 
 const getVisitCount = (fields) => {
-  const raw = fields?.['Visit Count']
-  return typeof raw === 'number' && Number.isFinite(raw) && raw >= 0 ? raw : 0
+  const primaryRaw = fields?.Visits
+  if (typeof primaryRaw === 'number' && Number.isFinite(primaryRaw) && primaryRaw >= 0) {
+    return primaryRaw
+  }
+
+  const legacyRaw = fields?.['Visit Count']
+  return typeof legacyRaw === 'number' && Number.isFinite(legacyRaw) && legacyRaw >= 0
+    ? legacyRaw
+    : 0
 }
 
 const getNumber = (value) => {
@@ -190,6 +197,9 @@ const writeWithOptionalFallback = async (writeFn, fields) => {
         OPTIONAL_RETURN_FIELDS.forEach((fieldName) => {
           delete fallbackFields[fieldName]
         })
+        if (Object.prototype.hasOwnProperty.call(fields, 'Completed')) {
+          fallbackFields.Completed = fields.Completed
+        }
         await writeFn(fallbackFields)
         return
       }
@@ -249,6 +259,7 @@ export const writeVisitorEvent = async ({
     Date: date,
     Time: time,
     'Visit Count': nextVisitCount > 0 ? nextVisitCount : undefined,
+    Visits: nextVisitCount > 0 ? nextVisitCount : undefined,
     Returning: nextVisitCount > 1,
     'Reached Last Section': reachedLastSection,
     Completed: reachedLastSection,
