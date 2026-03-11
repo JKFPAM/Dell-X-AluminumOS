@@ -11,14 +11,14 @@ const CONTINUITY_CLIPS: ExperienceEnablersSequencedClip[] = [
     caption: 'Your flow of work travels with you, whether you’re at home or riding a Waymo.',
     id: 'continuity-01',
     label: '01',
-    videoSrc: '/assets/experience-enablers/Scene02_1.mp4',
+    videoSrc: '/assets/experience-enablers-reencoded/Scene02_1.mp4',
   },
   {
     caption:
       'Platforms built on Google automatically recognize your activity and leverage the ecosystem to assist you.',
     id: 'continuity-02',
     label: '02',
-    videoSrc: '/assets/experience-enablers/Scene02_2.mp4',
+    videoSrc: '/assets/experience-enablers-reencoded/Scene02_2.mp4',
   },
 ]
 

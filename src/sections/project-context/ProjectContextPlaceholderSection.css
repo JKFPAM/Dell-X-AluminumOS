@@ -35,7 +35,7 @@
 .project-context-placeholder-kicker {
   position: absolute;
   left: 50%;
-  top: clamp(13rem, 40vh, 21rem);
+  top: clamp(9.5rem, 34vh, 18rem);
   transform: translateX(-50%);
   margin: 0;
   color: #000f19;
@@ -50,7 +50,7 @@
 .project-context-placeholder-headline {
   position: absolute;
   left: 50%;
-  top: 49%;
+  top: 52%;
   transform: translate(-50%, -50%);
   margin: 0;
   width: 100vw;
@@ -164,7 +164,7 @@
 
 @media (max-width: 980px) {
   .project-context-placeholder-kicker {
-    top: clamp(8.5rem, 34vh, 12rem);
+    top: clamp(7.25rem, 30vh, 10.5rem);
     font-size: clamp(1.15rem, 4vw, 1.75rem);
     white-space: normal;
     text-align: center;
@@ -172,7 +172,7 @@
   }
 
   .project-context-placeholder-headline {
-    top: 50%;
+    top: 53%;
     width: 100vw;
     font-size: clamp(3rem, 14vw, 6.2rem);
   }

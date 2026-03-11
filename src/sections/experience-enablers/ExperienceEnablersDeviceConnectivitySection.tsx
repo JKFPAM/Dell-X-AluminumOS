@@ -11,14 +11,14 @@ const DEVICE_CONNECTIVITY_CLIPS: ExperienceEnablersSequencedClip[] = [
     caption: 'Seamlessly connect your new Dell XPS to your Google ecosystem.',
     id: 'device-connectivity-01',
     label: '01',
-    videoSrc: '/assets/experience-enablers/Scene01_1.mp4',
+    videoSrc: '/assets/experience-enablers-reencoded/Scene01_1.mp4',
   },
   {
     caption:
       'Once connected, your XPS is part of the entire ecosystem: apps, I/O, and every other Google enabled device.',
     id: 'device-connectivity-02',
     label: '02',
-    videoSrc: '/assets/experience-enablers/Scene01_2.mp4',
+    videoSrc: '/assets/experience-enablers-reencoded/Scene01_2.mp4',
   },
 ]
 

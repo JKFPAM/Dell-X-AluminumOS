@@ -11,14 +11,14 @@ const PASSIVE_AUTOMATION_CLIPS: ExperienceEnablersSequencedClip[] = [
     caption: 'Press the Google button on your Dell XPS keyboard to summon Gemini. Use voice or text to prompt.',
     id: 'passive-automation-01',
     label: '01',
-    videoSrc: '/assets/experience-enablers/Scene04_1.mp4',
+    videoSrc: '/assets/experience-enablers-reencoded/Scene04_1.mp4',
   },
   {
     caption:
       'Ask from one device, execute on another. Gemini works in the background and lets you know when it is ready on any connected device.',
     id: 'passive-automation-02',
     label: '02',
-    videoSrc: '/assets/experience-enablers/Scene04_2.mp4',
+    videoSrc: '/assets/experience-enablers-reencoded/Scene04_2.mp4',
   },
 ]
 

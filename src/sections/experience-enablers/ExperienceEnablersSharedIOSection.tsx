@@ -14,18 +14,18 @@ const SHARED_IO_CLIPS: SharedIOClip[] = [
   {
     caption: 'On a crowded Google Meet, it\'s hard to detect voices, and clarity suffers.',
     id: 'shared-io-01',
-    videoSrc: '/assets/experience-enablers/Scene03_1.mp4',
+    videoSrc: '/assets/experience-enablers-reencoded/Scene03_1.mp4',
   },
   {
     caption:
       'Activate Dynamic Mic and connect every active mic in the room into a single unified audio mesh, from your Dell XPS to your colleague\'s Pixel phone.',
     id: 'shared-io-02',
-    videoSrc: '/assets/experience-enablers/Scene03_2.mp4',
+    videoSrc: '/assets/experience-enablers-reencoded/Scene03_2.mp4',
   },
   {
     caption: 'Gemini still recognises individual speakers. No more echo and awkward mic juggling.',
     id: 'shared-io-03',
-    videoSrc: '/assets/experience-enablers/Scene03_3.mp4',
+    videoSrc: '/assets/experience-enablers-reencoded/Scene03_3.mp4',
   },
 ]
 

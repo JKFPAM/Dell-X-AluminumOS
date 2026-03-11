@@ -12,13 +12,13 @@ const CONTEXTUAL_SWITCHING_CLIPS: ExperienceEnablersSequencedClip[] = [
       'When you dock your Dell XPS at home, your Dell peripherals automatically wake. Your system automatically switches to Home Mode.',
     id: 'contextual-switching-01',
     label: '01',
-    videoSrc: '/assets/experience-enablers/Scene05_1.mp4',
+    videoSrc: '/assets/experience-enablers-reencoded/Scene05_1.mp4',
   },
   {
     caption: 'With Chromecast built into Dell XPS, your Android TV becomes an extended display for your laptop.',
     id: 'contextual-switching-02',
     label: '02',
-    videoSrc: '/assets/experience-enablers/Scene05_2.mp4',
+    videoSrc: '/assets/experience-enablers-reencoded/Scene05_2.mp4',
   },
 ]
 
