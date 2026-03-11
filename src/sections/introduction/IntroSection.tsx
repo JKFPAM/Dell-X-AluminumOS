@@ -8,6 +8,8 @@ import {
 import './IntroSection.css'
 
 const TAGLINE = 'Defining a future vision for AluminumOS on Dell'
+const DESCRIPTOR =
+  'This initial vision, created jointly by EDG and CSG Strategy, highlights the emerging opportunity with Google’s AluminumOS and serves as a call to action for the continued work needed to bring it to life.'
 
 function IntroSection() {
   const heroVideoRef = useRef<HTMLVideoElement>(null)
@@ -155,6 +157,10 @@ function IntroSection() {
             </video>
             <span className={`intro-tagline-spark-fallback ${isSparkVideoReady ? 'is-hidden' : ''}`} />
           </span>
+        </p>
+
+        <p className="intro-descriptor">
+          {DESCRIPTOR}
         </p>
       </div>
 

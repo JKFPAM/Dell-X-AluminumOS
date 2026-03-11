@@ -66,19 +66,28 @@
 
 @keyframes intro-scroll-hint-key-press {
   0%,
-  63.9%,
+  57%,
   100% {
     transform: translateY(0) scale(1);
     opacity: 1;
     filter: brightness(1);
   }
-  64%,
-  73.2% {
-    transform: translateY(0.8px) scale(0.972);
-    opacity: 0.92;
+  64% {
+    transform: translateY(0.35px) scale(0.988);
+    opacity: 0.975;
+    filter: brightness(0.96);
+  }
+  72% {
+    transform: translateY(0.85px) scale(0.972);
+    opacity: 0.91;
     filter: brightness(0.88);
   }
-  73.3% {
+  80% {
+    transform: translateY(0.32px) scale(0.99);
+    opacity: 0.97;
+    filter: brightness(0.95);
+  }
+  86% {
     transform: translateY(0) scale(1);
     opacity: 1;
     filter: brightness(1);
@@ -86,29 +95,36 @@
 }
 
 .intro-scroll-hint-key--down {
-  animation: intro-scroll-hint-key-press 2.1s cubic-bezier(0.12, 1, 0.22, 1) infinite;
+  animation: intro-scroll-hint-key-press 2.1s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
 @keyframes intro-scroll-hint-other-keys-dim {
   0%,
-  63.9%,
+  57%,
   100% {
     opacity: 1;
     filter: brightness(1);
   }
-  64%,
-  73.2% {
-    opacity: 0.72;
+  64% {
+    opacity: 0.9;
+    filter: brightness(0.92);
+  }
+  72% {
+    opacity: 0.74;
     filter: brightness(0.8);
   }
-  73.3% {
+  80% {
+    opacity: 0.89;
+    filter: brightness(0.91);
+  }
+  86% {
     opacity: 1;
     filter: brightness(1);
   }
 }
 
 .intro-scroll-hint-key:not(.intro-scroll-hint-key--down) {
-  animation: intro-scroll-hint-other-keys-dim 2.1s cubic-bezier(0.12, 1, 0.22, 1) infinite;
+  animation: intro-scroll-hint-other-keys-dim 2.1s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
