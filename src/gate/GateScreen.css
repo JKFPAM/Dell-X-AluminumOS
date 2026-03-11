@@ -227,41 +227,6 @@
     visibility 0s linear;
 }
 
-.gate-transition-tagline {
-  margin: 0;
-  position: fixed;
-  left: 50%;
-  top: min(74.56vh, 41.94vw);
-  transform: translate(-50%, 24%);
-  min-height: 3rem;
-  width: fit-content;
-  max-width: calc(100vw - 1rem);
-  padding: clamp(0.42rem, 1.08vw, 0.98rem) clamp(0.82rem, 1.95vw, 2rem);
-  border-radius: 999px;
-  border: 1px solid var(--gem-stroke-soft);
-  background:
-    radial-gradient(124% 150% at 16% 18%, rgba(107, 147, 255, 0.26) 0%, rgba(107, 147, 255, 0) 62%),
-    var(--gem-surface-strong);
-  backdrop-filter: blur(14px);
-  box-shadow:
-    inset 0 0 24px rgba(128, 180, 255, 0.16),
-    0 18px 44px rgba(4, 18, 42, 0.55);
-  color: #fff;
-  font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
-  font-size: min(clamp(0.78rem, 1.355vw, 1.625rem), calc((100vw - 2rem) / 31));
-  line-height: 1;
-  letter-spacing: -0.04em;
-  font-weight: 600;
-  text-align: center;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 20;
-  transition:
-    opacity 620ms var(--gem-ease-out),
-    transform 860ms var(--gem-ease-out);
-}
-
 @keyframes gate-enter {
   from {
     opacity: 0;
@@ -300,12 +265,6 @@
   visibility: hidden;
   transition-delay: 0ms, 0ms, 260ms;
   pointer-events: none;
-}
-
-.gate-screen.is-unlocking .gate-transition-tagline {
-  opacity: 1;
-  transform: translate(-50%, 0);
-  transition-delay: 760ms;
 }
 
 .gate-sr-only {
@@ -414,11 +373,6 @@
   .gate-subtitle {
     font-size: 0.77rem;
   }
-
-  .gate-transition-tagline {
-    top: min(70vh, 46vw);
-    font-size: min(clamp(0.72rem, 2.75vw, 1.08rem), calc((100vw - 2rem) / 31));
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -433,8 +387,7 @@
   .gate-shell,
   .gate-hero,
   .gate-form-wrap,
-  .gate-footer,
-  .gate-transition-tagline {
+  .gate-footer {
     transition: none;
   }
 }

@@ -136,15 +136,30 @@
 
 @media (max-height: 860px) {
   .intro-scroll-hint {
-    bottom: clamp(1.2rem, 3.1vh, 1.9rem);
-    transform: translateX(-50%) scale(0.94);
+    bottom: clamp(2.9rem, 7.4vh, 4.8rem);
+    transform: translateX(-50%) scale(0.84);
     transform-origin: center bottom;
+  }
+
+  .intro-scroll-hint-copy {
+    font-size: clamp(0.5rem, 0.58vw, 0.62rem);
   }
 }
 
 @media (max-height: 760px) {
   .intro-scroll-hint {
-    bottom: clamp(1.45rem, 3.7vh, 2.2rem);
-    transform: translateX(-50%) scale(0.9);
+    bottom: clamp(3.4rem, 9vh, 5.4rem);
+    transform: translateX(-50%) scale(0.76);
+  }
+
+  .intro-scroll-hint-copy {
+    font-size: clamp(0.46rem, 0.52vw, 0.58rem);
+  }
+}
+
+@media (max-height: 700px) {
+  .intro-scroll-hint {
+    bottom: clamp(3.6rem, 10vh, 5.8rem);
+    transform: translateX(-50%) scale(0.72);
   }
 }

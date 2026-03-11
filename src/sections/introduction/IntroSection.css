@@ -168,10 +168,10 @@
 .intro-descriptor {
   position: absolute;
   left: 50%;
-  top: calc(70.4% + clamp(2.9rem, 4.6vw, 4.2rem));
+  top: calc(70.4% + clamp(3.4rem, 5.2vw, 4.8rem));
   transform: translate(-50%, 0);
   margin: 0;
-  width: min(82vw, 68rem);
+  width: min(72vw, 56rem);
   color: rgba(255, 255, 255, 0.84);
   font-family: 'Google Sans', 'Avenir Next', 'Segoe UI', sans-serif;
   font-size: clamp(0.72rem, 0.95vw, 1rem);
@@ -183,6 +183,38 @@
   text-shadow: 0 0 11px rgba(139, 186, 255, 0.24);
   opacity: 0;
   animation: intro-tagline-sub-rise 900ms var(--gem-ease-out) 520ms both;
+}
+
+@media (max-height: 900px) {
+  .intro-hero {
+    height: calc(58% + 2px);
+  }
+
+  .intro-tagline {
+    top: 66.8%;
+  }
+
+  .intro-descriptor {
+    top: calc(66.8% + clamp(3rem, 4.7vw, 4.2rem));
+    width: min(74vw, 54rem);
+  }
+}
+
+@media (max-height: 820px) {
+  .intro-hero {
+    height: calc(55% + 2px);
+  }
+
+  .intro-tagline {
+    top: 63.2%;
+  }
+
+  .intro-descriptor {
+    top: calc(63.2% + clamp(2.8rem, 4.5vw, 3.8rem));
+    width: min(78vw, 50rem);
+    font-size: clamp(0.66rem, 0.82vw, 0.9rem);
+    line-height: 1.24;
+  }
 }
 
 .intro-sr-only {
@@ -292,7 +324,7 @@
   }
 
   .intro-descriptor {
-    top: calc(76.8% + 2.3rem);
+    top: calc(76.8% + 2.95rem);
     width: min(94vw, 34rem);
     font-size: clamp(0.6rem, 2.6vw, 0.76rem);
     line-height: 1.24;

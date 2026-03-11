@@ -7,7 +7,7 @@ const sanitizeFields = (fields) =>
     Object.entries(fields).filter(([, value]) => value !== undefined && value !== null && value !== ''),
   )
 
-const OPTIONAL_RETURN_FIELDS = ['Visit Count', 'Returning', 'Reached Last Section']
+const OPTIONAL_RETURN_FIELDS = ['Visit Count', 'Returning', 'Reached Last Section', 'Completed']
 
 const getEmail = (payload) => {
   const raw = payload?.email
@@ -129,6 +129,11 @@ const didReachLastSectionOnEvent = (eventName, payload) => {
     return false
   }
 
+  const sectionId = getText(payload?.sectionId)
+  if (sectionId === 'outro' || sectionId === 'outro-final') {
+    return true
+  }
+
   const sectionIndex = getNumber(payload?.sectionIndex)
   const totalSections = getNumber(payload?.totalSections)
 
@@ -140,7 +145,8 @@ const didReachLastSectionOnEvent = (eventName, payload) => {
 }
 
 const getReachedLastSection = (existingFields, eventName, payload) => {
-  const alreadyReached = existingFields?.['Reached Last Section'] === true
+  const alreadyReached =
+    existingFields?.['Reached Last Section'] === true || existingFields?.Completed === true
   return alreadyReached || didReachLastSectionOnEvent(eventName, payload)
 }
 
@@ -210,6 +216,7 @@ export const writeVisitorEvent = async ({
     'Visit Count': nextVisitCount > 0 ? nextVisitCount : undefined,
     Returning: nextVisitCount > 1,
     'Reached Last Section': reachedLastSection,
+    Completed: reachedLastSection,
   })
 
   if (existingRecord?.id) {

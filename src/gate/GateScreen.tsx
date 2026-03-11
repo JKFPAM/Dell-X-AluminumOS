@@ -12,8 +12,6 @@ type GateScreenProps = {
 const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
 
-const INTRO_TAGLINE = 'Defining a future vision for AluminumOS on Dell'
-
 function GateScreen({ isUnlocking, onUnlocked }: GateScreenProps) {
   const heroVideoRef = useRef<HTMLVideoElement>(null)
   const syncRafRef = useRef(0)
@@ -184,10 +182,6 @@ function GateScreen({ isUnlocking, onUnlocked }: GateScreenProps) {
             </p>
           )}
         </section>
-
-        <p aria-hidden="true" className="gate-transition-tagline">
-          {INTRO_TAGLINE}
-        </p>
 
         <footer className="gate-footer" data-node-id="2784:5791">
           This presentation is strictly confidential and intended solely for authorized recipients
