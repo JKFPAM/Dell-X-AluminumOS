@@ -5,6 +5,7 @@ const OUTRO_HEADLINE = 'And we’re just getting started.'
 const OUTRO_LEAD_HEADLINE = 'This is AluminiumOS on Dell.'
 const OUTRO_CREDIT = 'Dell Technologies, Experience Design Group – March 2026'
 const OUTRO_CONTACT_LABEL = 'For more information contact:'
+const OUTRO_PARTNERSHIP_PREFIX = 'Vision developed in partnership with'
 const OUTRO_CONTACTS = [
   { name: 'Drew Tosh', email: 'drew.tosh@dell.com' },
   { name: 'Banu Waldman', email: 'banu.waldman@dell.com' },
@@ -58,6 +59,18 @@ function OutroFinalSection() {
             ))}
           </ul>
         </div>
+
+        <p className="outro-final-partnership">
+          {OUTRO_PARTNERSHIP_PREFIX}{' '}
+          <a
+            className="outro-final-partnership-link"
+            href="https://forpeople.com/"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            forpeople
+          </a>
+        </p>
       </div>
     </section>
   )
