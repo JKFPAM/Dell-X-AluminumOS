@@ -85,6 +85,23 @@ describe('POST /api/track', () => {
     expect(res.body).toEqual({ ok: true, stored: true })
   })
 
+  it('skips writes for Netlify host requests', async () => {
+    const req = createRequest({
+      body: {
+        sessionId: 'session-1',
+        eventName: 'section_view',
+        originHost: 'preview-123.netlify.app',
+      },
+    })
+    const res = createResponse()
+
+    await handler(req, res)
+
+    expect(writeVisitorEvent).not.toHaveBeenCalled()
+    expect(res.status).toHaveBeenCalledWith(202)
+    expect(res.body).toEqual({ ok: true, stored: false, code: 'TRACKING_DISABLED_FOR_HOST' })
+  })
+
   it('returns SESSION_ID_MISSING when sessionId is absent', async () => {
     writeVisitorEvent.mockResolvedValue(false)
     isAirtableConfigured.mockReturnValue(true)

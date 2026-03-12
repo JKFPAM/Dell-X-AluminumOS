@@ -8,6 +8,33 @@ const getHeader = (req, name) => {
   return typeof value === 'string' ? value : ''
 }
 
+const normalizeHost = (value) => {
+  if (typeof value !== 'string') {
+    return null
+  }
+
+  const trimmed = value.trim()
+  if (!trimmed) {
+    return null
+  }
+
+  try {
+    return new URL(trimmed).hostname.toLowerCase()
+  } catch {
+    const first = trimmed.split(',')[0]?.trim() ?? trimmed
+    const withoutPort = first.split(':')[0]?.trim() ?? first
+    return withoutPort ? withoutPort.toLowerCase() : null
+  }
+}
+
+const isNetlifyHost = (host) => {
+  if (!host) {
+    return false
+  }
+
+  return host === 'netlify.app' || host.endsWith('.netlify.app')
+}
+
 export const parseBody = (body) => {
   if (!body) {
     return {}
@@ -83,4 +110,13 @@ export const getRequestMeta = (req) => {
     browser: getBrowserName(userAgent),
     country: toCountryName(countryCode),
   }
+}
+
+export const shouldSkipTracking = (req, body = {}) => {
+  const bodyOriginHost = normalizeHost(body?.originHost)
+  const forwardedHost = normalizeHost(getHeader(req, 'x-forwarded-host'))
+  const originHost = normalizeHost(getHeader(req, 'origin'))
+  const refererHost = normalizeHost(getHeader(req, 'referer'))
+
+  return [bodyOriginHost, forwardedHost, originHost, refererHost].some(isNetlifyHost)
 }

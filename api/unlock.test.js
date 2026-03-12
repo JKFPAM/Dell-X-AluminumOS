@@ -122,4 +122,22 @@ describe('POST /api/unlock', () => {
       }),
     )
   })
+
+  it('returns 200 and skips Airtable writes for Netlify host requests', async () => {
+    const req = createRequest({
+      body: {
+        email: 'person@example.com',
+        passcode: 'test-passcode',
+        sessionId: 'session-123',
+        originHost: 'my-preview-site.netlify.app',
+      },
+    })
+    const res = createResponse()
+
+    await handler(req, res)
+
+    expect(res.status).toHaveBeenCalledWith(200)
+    expect(res.body).toEqual({ success: true })
+    expect(writeVisitorEvent).not.toHaveBeenCalled()
+  })
 })

@@ -1,6 +1,6 @@
 import { writeVisitorEvent } from './_lib/airtable.js'
 import { getPasscode } from './_lib/env.js'
-import { getRequestMeta, parseBody } from './_lib/request.js'
+import { getRequestMeta, parseBody, shouldSkipTracking } from './_lib/request.js'
 
 const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
@@ -37,6 +37,10 @@ export default async function handler(req, res) {
 
   if (passcode !== expectedPasscode) {
     return res.status(401).json({ error: 'Invalid passcode' })
+  }
+
+  if (shouldSkipTracking(req, body)) {
+    return res.status(200).json({ success: true })
   }
 
   try {

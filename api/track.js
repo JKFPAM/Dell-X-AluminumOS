@@ -1,6 +1,6 @@
 import { isAirtableConfigured, writeVisitorEvent } from './_lib/airtable.js'
 import { isTrackingStrictMode } from './_lib/env.js'
-import { getRequestMeta, parseBody } from './_lib/request.js'
+import { getRequestMeta, parseBody, shouldSkipTracking } from './_lib/request.js'
 
 const getSessionId = (value) => {
   if (typeof value !== 'string') {
@@ -30,6 +30,10 @@ export default async function handler(req, res) {
   const requestMeta = getRequestMeta(req)
   const sessionId = getSessionId(body.sessionId)
   const eventName = getEventName(body.eventName)
+
+  if (shouldSkipTracking(req, body)) {
+    return res.status(202).json({ ok: true, stored: false, code: 'TRACKING_DISABLED_FOR_HOST' })
+  }
 
   try {
     const stored = await writeVisitorEvent({

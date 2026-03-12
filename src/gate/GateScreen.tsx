@@ -48,6 +48,7 @@ function GateScreen({ isUnlocking, onUnlocked }: GateScreenProps) {
           email: trimmedEmail,
           passcode,
           sessionId: getVisitorSessionId(),
+          originHost: window.location.hostname,
         }),
       })
 

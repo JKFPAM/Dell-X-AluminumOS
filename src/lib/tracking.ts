@@ -24,6 +24,7 @@ export const trackPresentationEvent = <TEventName extends TrackingEventName>(
     timestamp: new Date().toISOString(),
     path: window.location.pathname,
     hash: window.location.hash || null,
+    originHost: window.location.hostname,
   })
 
   if (navigator.sendBeacon) {
