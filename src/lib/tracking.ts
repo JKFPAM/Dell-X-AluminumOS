@@ -2,11 +2,18 @@ import type { TrackingEventName, TrackingEventPayloadMap } from '@/content/track
 
 import { getVisitorSessionId } from './visitorSession'
 
+const isTrackingSuppressedForHost = (hostname: string) =>
+  hostname === 'localhost' ? false : hostname.endsWith('.netlify.app')
+
 export const trackPresentationEvent = <TEventName extends TrackingEventName>(
   eventName: TEventName,
   payload: TrackingEventPayloadMap[TEventName],
 ) => {
   if (typeof window === 'undefined') {
+    return
+  }
+
+  if (isTrackingSuppressedForHost(window.location.hostname)) {
     return
   }
 
