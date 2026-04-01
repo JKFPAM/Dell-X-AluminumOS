@@ -7,9 +7,9 @@ import {
 } from '@/lib'
 import './IntroSection.css'
 
-const TAGLINE = 'Defining a future vision for AluminiumOS on Dell'
+const TAGLINE = 'Defining a future vision for AluminumOS on Dell'
 const DESCRIPTOR =
-  'This initial vision, created jointly by EDG and CSG Strategy, highlights the emerging opportunity with Google’s AluminiumOS and serves as a call to action for the continued work needed to bring it to life.'
+  'This initial vision, created jointly by EDG and CSG Strategy, highlights the emerging opportunity with Google’s AluminumOS and serves as a call to action for the continued work needed to bring it to life.'
 
 function IntroSection() {
   const heroVideoRef = useRef<HTMLVideoElement>(null)
