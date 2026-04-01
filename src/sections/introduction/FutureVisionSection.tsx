@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import './FutureVisionSection.css'
 
-const HEADLINE = 'Today, the boundaries within innovation are far less siloed.'
+const HEADLINE = 'test, the boundaries within innovation are far less siloed.'
 const CORNER_MEDIA_CLASSES = [
   'future-vision-media--top-left',
   'future-vision-media--top-right',
