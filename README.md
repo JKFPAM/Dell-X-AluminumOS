@@ -147,12 +147,13 @@ Responses:
 ## Deployment Notes
 
 - Production deploy target is Vercel.
-- Set these Vercel environment variables:
+- Set these Vercel environment variables for the environments you deploy, especially `Production` and `Preview`:
   - `PASSCODE`
   - `AIRTABLE_API_TOKEN`
   - `AIRTABLE_BASE_ID`
   - `AIRTABLE_VISITORS_TABLE` (optional, defaults to `Visitors`)
   - `TRACKING_STRICT` (optional, default `false`)
+- Keep `PASSCODE` confidential: store it only in Vercel Environment Variables or a local `.env.local` file, never in client code or tracked repository files.
 - Ensure your Airtable personal access token has write access to the selected base/table.
 
 ## Airtable Table Setup
