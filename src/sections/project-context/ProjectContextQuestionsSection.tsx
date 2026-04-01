@@ -53,7 +53,7 @@ function ProjectContextQuestionsSection() {
             <br />
             Dell want to build with
             <span className="project-context-pill project-context-pill--alos" data-node-id="6288:13491">
-              <span className="project-context-pill-label">AluminumOS</span>
+              <span className="project-context-pill-label">AluminiumOS</span>
             </span>
             ?
           </p>

@@ -65,7 +65,7 @@ function ProjectContextCommandSection() {
 
       <div className={`project-context-command-content ${isInView ? 'is-in-view' : ''}`} ref={contentRef}>
         <p className="project-context-command-kicker" data-node-id="3435:10371">
-          With AluminumOS, we can redefine what it means to own a Dell.
+          With AluminiumOS, we can redefine what it means to own a Dell.
         </p>
 
         <div className="project-context-command-main" data-name="content" data-node-id="4156:1765">

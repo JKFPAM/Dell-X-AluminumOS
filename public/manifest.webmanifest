@@ -1,7 +1,7 @@
 {
-  "name": "Dell + AluminumOS Future Vision",
-  "short_name": "Dell + AluminumOS",
-  "description": "Defining a future vision for AluminumOS on Dell",
+  "name": "Dell + AluminiumOS Future Vision",
+  "short_name": "Dell + AluminiumOS",
+  "description": "Defining a future vision for AluminiumOS on Dell",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

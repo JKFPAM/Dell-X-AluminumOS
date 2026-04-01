@@ -48,7 +48,7 @@ function ProjectContextVisionSection() {
             <br />
             foundation behind the ultimate
             <br />
-            AluminumOS experience.
+            AluminiumOS experience.
           </p>
         </div>
       </div>
